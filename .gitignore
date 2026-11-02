@@ -1,0 +1,5 @@
+server.log
+backoffice/server.log
+.vercel
+.image-slots.state.json
+backoffice/.image-slots.state.json

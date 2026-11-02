@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F5EFE4;color:#1C2620;font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#1C2620;text-decoration:none}
+a:hover{color:#E2583A}
+button{font-family:inherit;cursor:pointer}
+input,textarea{font-family:inherit;outline:none}
+::selection{background:#F2C45A}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#5B6359}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#E2583A}
+.card{background:#FBF8F2;border:1px solid rgba(28,38,32,.08);border-radius:26px;box-shadow:0 36px 70px -48px rgba(28,38,32,.38)}
+.cardDark{background:#1C2620;color:#F5EFE4;border-radius:26px;box-shadow:0 36px 70px -40px rgba(0,0,0,.55)}
+.pillOn{border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:600;white-space:nowrap}
+.pillOff{border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#1C2620;border-radius:999px;padding:10px 18px;font-size:14px;white-space:nowrap;transition:border-color .2s}
+.field{border:1.5px solid rgba(28,38,32,.16);border-radius:11px;padding:10px 13px;font-size:14px;background:#FFFCF6;color:#1C2620}
+.btnPrimary{border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:14px 22px;font-weight:600;font-size:14px;transition:background .2s,transform .2s}
+.btnDark{border:0;background:#1C2620;color:#F5EFE4;border-radius:999px;padding:13px 20px;font-size:14px;font-weight:600;transition:transform .2s}
+</style>
+</helmet>
+
+<div style="display:flex;min-height:100vh">
+
+<aside style="width:260px;flex:none;background:#1C2620;color:#F5EFE4;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:26px 18px;background-image:radial-gradient(circle at 15% 0%,rgba(242,196,90,.08),transparent 55%)">
+<div style="display:flex;align-items:flex-end;gap:3px;font-weight:800;font-size:27px;letter-spacing:-.05em;line-height:1;padding:4px 8px 6px">Homer<span style="width:8px;height:8px;border-radius:50%;background:#E2583A;margin-bottom:4px"></span></div>
+<div class="label" style="padding:0 8px 28px;color:#7D877B">Panel de administración</div>
+<div class="label" style="padding:0 10px 10px;color:#5F6B61">General</div>
+<nav style="display:flex;flex-direction:column;gap:3px">
+<sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
+<sc-if value="{{ n.active }}">
+<button onClick="{{ n.pick }}" style="position:relative;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:rgba(242,196,90,.1);color:#F5EFE4;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:600" style-before="content:'';position:absolute;left:-18px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:#F2C45A">{{ n.label }}</button>
+</sc-if>
+<sc-if value="{{ n.idle }}">
+<button onClick="{{ n.pick }}" style="display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:#AEB5A9;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:500;transition:background .2s,color .2s" style-hover="background:rgba(245,239,228,.06);color:#F5EFE4">{{ n.label }}</button>
+</sc-if>
+</sc-for>
+</nav>
+<div style="margin-top:auto;display:flex;align-items:center;gap:12px;padding:16px 10px 4px;border-top:1px solid rgba(245,239,228,.12)">
+<div style="width:38px;height:38px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-weight:700;font-size:14px">P</div>
+<div style="display:flex;flex-direction:column;gap:1px;overflow:hidden">
+<span style="font-size:13px;font-weight:600">Equipo Homer</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7D877B;white-space:nowrap">admin@homer.com.ar</span>
+</div>
+</div>
+</aside>
+
+<main style="flex:1;min-width:0;padding:clamp(28px,3.2vw,48px) clamp(28px,3.6vw,56px) 64px;display:flex;flex-direction:column;gap:36px">
+
+<sc-if value="{{ tabIsDashboard }}">
+<div data-screen-label="Dashboard" style="display:flex;flex-direction:column;gap:30px;animation:fadeIn .3s ease">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span class="eyebrow">Dashboard</span>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Hola, equipo <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#E2583A">Homer</span>.</h1>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:440px">Así viene funcionando el negocio en los últimos 30 días.</p>
+</div>
+<span class="label">{{ todayFmt }}</span>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div class="card" style="padding:24px 24px 22px;display:flex;flex-direction:column;gap:12px">
+<span class="label">{{ k.label }}</span>
+<span style="font-size:33px;font-weight:700;letter-spacing:-.03em;line-height:1">{{ k.value }}</span>
+<sc-if value="{{ k.hint }}"><span style="display:inline-flex;align-self:flex-start;background:#E1EBE3;color:#24513C;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600">{{ k.hint }}</span></sc-if>
+</div>
+</sc-for>
+</div>
+
+<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start">
+<div class="card" style="padding:28px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
+<h2 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-.015em">Ventas por categoría</h2>
+<span class="label">últimos 30 días</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:22px">
+<sc-for list="{{ categoryBars }}" as="c" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;font-size:15px"><span style="font-weight:600">{{ c.label }}</span><span style="font-weight:600;color:{{ c.color }}">{{ c.amountFmt }}</span></div>
+<div style="height:12px;border-radius:99px;background:#EFE7D8;overflow:hidden"><div style="height:100%;border-radius:99px;background:{{ c.color }};width:{{ c.pctStr }};transition:width .6s cubic-bezier(.2,.7,.2,1)"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div class="cardDark" style="padding:28px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;justify-content:space-between;align-items:baseline">
+<h2 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-.015em">Stock bajo</h2>
+<span class="label" style="color:#8E968B">reponer pronto</span>
+</div>
+<sc-if value="{{ hasLowStock }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ lowStockItems }}" as="ls" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid rgba(245,239,228,.1)">
+<div style="display:flex;align-items:center;gap:12px">
+<span style="width:8px;height:8px;border-radius:50%;background:{{ ls.color }};box-shadow:0 0 0 4px {{ ls.glow }};animation:pulse 2.4s ease-in-out infinite"></span>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ ls.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8E968B">{{ ls.brand }}</span></div>
+</div>
+<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ ls.color }};font-weight:500">{{ ls.stock }} u.</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ noLowStock }}"><span style="font-size:14px;color:#C9CEC4">Todo el stock está en niveles saludables.</span></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabIsPedidos }}">
+<div data-screen-label="Pedidos" style="display:flex;flex-direction:column;gap:26px;animation:fadeIn .3s ease">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span class="eyebrow">Pedidos</span>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Pedidos</h1>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Cargá los pedidos que te llegan por WhatsApp y seguí su estado.</p>
+</div>
+<button onClick="{{ toggleAddOrderForm }}" class="btnPrimary" style-hover="background:#C9452A;transform:translateY(-2px)">{{ addOrderFormLabel }}</button>
+</div>
+
+<sc-if value="{{ showAddOrderForm }}">
+<div class="card" style="padding:26px;display:flex;flex-direction:column;gap:18px;animation:fadeIn .25s ease">
+<span style="font-size:16px;font-weight:600">Nuevo pedido</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+<input class="field" value="{{ noName }}" onChange="{{ setNoName }}" placeholder="Cliente" style-focus="border-color:#E2583A"></input>
+<input class="field" value="{{ noItems }}" onChange="{{ setNoItems }}" placeholder="Pedido (ej: Pro Plan 15 kg)" style-focus="border-color:#E2583A"></input>
+<input class="field" type="number" value="{{ noTotal }}" onChange="{{ setNoTotal }}" placeholder="Total" style-focus="border-color:#E2583A"></input>
+</div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<span style="font-size:13px;color:#5B6359;margin-right:4px">Zona</span>
+<sc-for list="{{ noZoneOpts }}" as="zo" hint-placeholder-count="5">
+<sc-if value="{{ zo.active }}"><button onClick="{{ zo.pick }}" class="pillOn" style="padding:8px 14px;font-size:13px">{{ zo.label }}</button></sc-if>
+<sc-if value="{{ zo.idle }}"><button onClick="{{ zo.pick }}" class="pillOff" style="padding:8px 14px;font-size:13px">{{ zo.label }}</button></sc-if>
+</sc-for>
+</div>
+<div><button onClick="{{ addOrder }}" class="btnDark" style-hover="transform:translateY(-1px)">Agregar pedido</button></div>
+</div>
+</sc-if>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ orderFilterTabs }}" as="ft" hint-placeholder-count="4">
+<sc-if value="{{ ft.active }}"><button onClick="{{ ft.pick }}" class="pillOn">{{ ft.label }}</button></sc-if>
+<sc-if value="{{ ft.idle }}"><button onClick="{{ ft.pick }}" class="pillOff" style-hover="border-color:#1C2620">{{ ft.label }}</button></sc-if>
+</sc-for>
+</div>
+
+<div class="card" style="overflow-x:auto;padding:6px">
+<div style="min-width:760px;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
+<span class="label">Cliente</span><span class="label">Pedido</span><span class="label">Zona</span><span class="label">Total</span><span class="label">Estado</span><span></span>
+</div>
+<sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid rgba(28,38,32,.06);transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
+<span style="font-weight:600;font-size:14px">{{ o.name }}</span>
+<span style="font-size:14px;color:#4A5249">{{ o.items }}</span>
+<span style="font-size:13px;color:#5B6359">{{ o.zone }}</span>
+<span style="font-size:14px;font-weight:700">{{ o.totalFmt }}</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ o.statusOpts }}" as="so" hint-placeholder-count="3">
+<sc-if value="{{ so.active }}"><button onClick="{{ so.pick }}" style="border:0;background:{{ so.bg }};color:{{ so.color }};border-radius:999px;padding:6px 11px;font-size:11.5px;font-weight:600;font-family:'JetBrains Mono',monospace">{{ so.label }}</button></sc-if>
+<sc-if value="{{ so.idle }}"><button onClick="{{ so.pick }}" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:6px 11px;font-size:11.5px;font-family:'JetBrains Mono',monospace">{{ so.label }}</button></sc-if>
+</sc-for>
+</div>
+<button onClick="{{ o.remove }}" aria-label="Eliminar" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;width:30px;height:30px;font-size:13px" style-hover="border-color:#E2583A;color:#E2583A">✕</button>
+</div>
+</sc-for>
+<sc-if value="{{ noOrders }}"><div style="padding:44px 22px;color:#5B6359;font-size:14px;text-align:center">No hay pedidos en este estado.</div></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabIsResenas }}">
+<div data-screen-label="Reseñas" style="display:flex;flex-direction:column;gap:26px;animation:fadeIn .3s ease">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span class="eyebrow">Reseñas</span>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Reseñas de clientes</h1>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Activá las que quieras mostrar en el carrusel de la landing.</p>
+</div>
+<span class="label">{{ pendingReviewsCount }} pendientes</span>
+</div>
+
+<div class="card" style="padding:26px;display:flex;flex-direction:column;gap:16px">
+<span style="font-size:16px;font-weight:600">Agregar reseña manualmente</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<input class="field" value="{{ newRevName }}" onChange="{{ setNewRevName }}" placeholder="Nombre" style-focus="border-color:#E2583A"></input>
+<input class="field" value="{{ newRevPet }}" onChange="{{ setNewRevPet }}" placeholder="Mascota" style-focus="border-color:#E2583A"></input>
+</div>
+<textarea class="field" value="{{ newRevText }}" onChange="{{ setNewRevText }}" placeholder="Texto de la reseña…" rows="2" style="resize:vertical;font-family:inherit"></textarea>
+<div><button onClick="{{ addReview }}" class="btnDark" style-hover="transform:translateY(-1px)">+ Agregar reseña</button></div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<sc-if value="{{ hasReviews }}">
+<sc-for list="{{ reviewRows }}" as="r" hint-placeholder-count="3">
+<div class="card" style="padding:22px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+<div style="display:flex;flex-direction:column;gap:1px"><span style="font-weight:600;font-size:15px">{{ r.name }}</span><span class="label">{{ r.pet }}</span></div>
+<span style="display:inline-flex;width:fit-content;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;background:{{ r.statusBg }};color:{{ r.statusColor }};border-radius:999px;padding:5px 11px;white-space:nowrap">{{ r.statusLabel }}</span>
+</div>
+<p style="margin:0;font-size:15px;color:#4A5249;line-height:1.55">{{ r.text }}</p>
+<div style="display:flex;gap:8px">
+<sc-if value="{{ r.approved }}"><button onClick="{{ r.toggle }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#5B6359;border-radius:999px;padding:7px 14px;font-size:13px">Desactivar</button></sc-if>
+<sc-if value="{{ r.pending }}"><button onClick="{{ r.toggle }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600">Activar y mostrar</button></sc-if>
+<button onClick="{{ r.remove }}" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:7px 14px;font-size:13px" style-hover="border-color:#E2583A;color:#E2583A">Eliminar</button>
+</div>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{ noReviews }}"><div class="card" style="padding:44px 22px;color:#5B6359;font-size:14px;text-align:center">Todavía no hay reseñas de clientes.</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabIsProductos }}">
+<div data-screen-label="Productos" style="display:flex;flex-direction:column;gap:26px;animation:fadeIn .3s ease">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span class="eyebrow">Catálogo</span>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Productos</h1>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Gestioná precio, stock y disponibilidad de todo lo que vendés.</p>
+</div>
+<button onClick="{{ toggleAddForm }}" class="btnPrimary" style-hover="background:#C9452A;transform:translateY(-2px)">{{ addFormLabel }}</button>
+</div>
+
+<sc-if value="{{ showAddForm }}">
+<div class="card" style="padding:26px;display:flex;flex-direction:column;gap:18px;animation:fadeIn .25s ease">
+<span style="font-size:16px;font-weight:600">Nuevo producto</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+<input class="field" value="{{ npBrand }}" onChange="{{ setNpBrand }}" placeholder="Marca" style-focus="border-color:#E2583A"></input>
+<input class="field" value="{{ npName }}" onChange="{{ setNpName }}" placeholder="Nombre" style-focus="border-color:#E2583A"></input>
+<input class="field" type="number" value="{{ npPrice }}" onChange="{{ setNpPrice }}" placeholder="Precio" style-focus="border-color:#E2583A"></input>
+<input class="field" type="number" value="{{ npStock }}" onChange="{{ setNpStock }}" placeholder="Stock" style-focus="border-color:#E2583A"></input>
+</div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<span style="font-size:13px;color:#5B6359;margin-right:4px">Categoría</span>
+<sc-for list="{{ npCatOpts }}" as="co" hint-placeholder-count="3">
+<sc-if value="{{ co.active }}"><button onClick="{{ co.pick }}" class="pillOn" style="padding:8px 14px;font-size:13px">{{ co.label }}</button></sc-if>
+<sc-if value="{{ co.idle }}"><button onClick="{{ co.pick }}" class="pillOff" style="padding:8px 14px;font-size:13px">{{ co.label }}</button></sc-if>
+</sc-for>
+</div>
+<div><button onClick="{{ addProduct }}" class="btnDark" style-hover="transform:translateY(-1px)">Agregar al catálogo</button></div>
+</div>
+</sc-if>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ catTabs }}" as="ct" hint-placeholder-count="4">
+<sc-if value="{{ ct.active }}"><button onClick="{{ ct.pick }}" class="pillOn">{{ ct.label }}</button></sc-if>
+<sc-if value="{{ ct.idle }}"><button onClick="{{ ct.pick }}" class="pillOff" style-hover="border-color:#1C2620">{{ ct.label }}</button></sc-if>
+</sc-for>
+</div>
+<input class="field" value="{{ search }}" onChange="{{ setSearch }}" placeholder="Buscar producto o marca…" style="border-radius:999px;min-width:230px" style-focus="border-color:#E2583A"></input>
+</div>
+
+<div class="card" style="overflow-x:auto;padding:6px">
+<div style="min-width:780px;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
+<span></span><span class="label">Producto</span><span class="label">Categoría</span><span class="label">Precio</span><span class="label">Stock</span><span class="label">Acciones</span>
+</div>
+<sc-for list="{{ productRows }}" as="p" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;border-bottom:1px solid rgba(28,38,32,.06)">
+<div style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:14px 20px;align-items:center;border-radius:14px;transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
+<div style="width:40px;height:40px;border-radius:10px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ p.imgSlotId }}" shape="rect" placeholder="Foto"></image-slot></div>
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font-weight:600;font-size:15px">{{ p.name }}</span>
+<span class="label" style="color:#8A8F86">{{ p.brand }}</span>
+</div>
+<span style="font-size:13px;color:#4A5249">{{ p.catLabel }}</span>
+<span style="font-size:14px;font-weight:600">{{ p.priceFmt }}</span>
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font-size:14px;font-weight:600">{{ p.stock }} u.</span>
+<sc-if value="{{ p.low }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#E2583A;text-transform:uppercase;letter-spacing:.04em">Stock bajo</span></sc-if>
+</div>
+<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+<sc-if value="{{ p.active }}"><button onClick="{{ p.toggle }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:600">Activo</button></sc-if>
+<sc-if value="{{ p.inactive }}"><button onClick="{{ p.toggle }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#8A8F86;border-radius:999px;padding:7px 11px;font-size:12px">Pausado</button></sc-if>
+<button onClick="{{ p.toggleEdit }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#1C2620;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:600;transition:border-color .2s" style-hover="border-color:#E2583A;color:#E2583A">{{ p.editLabel }}</button>
+<button onClick="{{ p.remove }}" aria-label="Eliminar" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;width:30px;height:30px;font-size:13px;transition:border-color .2s,color .2s" style-hover="border-color:#E2583A;color:#E2583A">✕</button>
+</div>
+</div>
+<sc-if value="{{ p.editing }}">
+<div style="display:grid;grid-template-columns:120px 1fr;gap:22px;padding:8px 20px 24px 60px;animation:fadeIn .25s ease">
+<div style="width:120px;height:120px;border-radius:16px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ p.imgSlotId }}" shape="rect" placeholder="Foto producto"></image-slot></div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Marca</span><input class="field" value="{{ p.brand }}" onChange="{{ p.setBrand }}" style-focus="border-color:#E2583A"></input></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Nombre</span><input class="field" value="{{ p.name }}" onChange="{{ p.setName }}" style-focus="border-color:#E2583A"></input></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span class="label">Categoría</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ p.catOpts }}" as="pc" hint-placeholder-count="3">
+<sc-if value="{{ pc.active }}"><button onClick="{{ pc.pick }}" class="pillOn" style="padding:8px 14px;font-size:13px">{{ pc.label }}</button></sc-if>
+<sc-if value="{{ pc.idle }}"><button onClick="{{ pc.pick }}" class="pillOff" style="padding:8px 14px;font-size:13px">{{ pc.label }}</button></sc-if>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:4px"><span style="color:#8A8F86">$</span><input class="field" type="number" value="{{ p.price }}" onChange="{{ p.setPrice }}" style-focus="border-color:#E2583A"></input></div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Stock</span><input class="field" type="number" value="{{ p.stock }}" onChange="{{ p.setStock }}" style-focus="border-color:#E2583A"></input></div>
+</div>
+<div><button onClick="{{ p.toggleEdit }}" class="btnDark" style-hover="transform:translateY(-1px)">Guardar y cerrar</button></div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ noProducts }}"><div style="padding:44px 22px;color:#5B6359;font-size:14px;text-align:center">No hay productos que coincidan con la búsqueda.</div></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabIsEnvios }}">
+<div data-screen-label="Envíos y zonas" style="display:flex;flex-direction:column;gap:26px;animation:fadeIn .3s ease">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span class="eyebrow">Logística</span>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Envíos y zonas</h1>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Definí precio, tiempo de entrega y envío gratis por zona.</p>
+</div>
+
+<div class="cardDark" style="background:#24513C;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">Envío gratis a partir de</span><span style="font-size:13px;color:#A9C4B2">Aplica a las zonas marcadas como "con envío gratis"</span></div>
+<div style="display:flex;align-items:center;gap:6px;background:rgba(245,239,228,.1);border-radius:14px;padding:10px 16px"><span style="color:#C6D6CB">$</span><input type="number" value="{{ freeThreshold }}" onChange="{{ setFreeThreshold }}" style="width:92px;border:0;background:transparent;color:#F5EFE4;font-size:21px;font-weight:700"></input></div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ zoneRows }}" as="z" hint-placeholder-count="5">
+<div class="card" style="padding:24px;display:grid;grid-template-columns:1.3fr .9fr .9fr auto 1.6fr;gap:22px;align-items:center">
+<span style="font-weight:600;font-size:16px">{{ z.name }}</span>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:3px"><span style="color:#8A8F86">$</span><input type="number" value="{{ z.price }}" onChange="{{ z.setPrice }}" class="field" style="width:84px;padding:7px 9px"></input></div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Entrega</span><input value="{{ z.eta }}" onChange="{{ z.setEta }}" class="field" style="width:104px;padding:7px 9px"></input></div>
+<sc-if value="{{ z.free }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:600;white-space:nowrap">Envío gratis ✓</button></sc-if>
+<sc-if value="{{ z.notFree }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#5B6359;border-radius:999px;padding:9px 15px;font-size:12px;white-space:nowrap">Sin envío gratis</button></sc-if>
+<input value="{{ z.note }}" onChange="{{ z.setNote }}" class="field" style="font-size:13px;color:#4A5249"></input>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATS = [['perro','Perros'],['gato','Gatos'],['extra','Snacks y accesorios']];
+const INITIAL_PRODUCTS = [
+  { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult 15 kg', cat: 'perro', price: 98500, stock: 42, active: true },
+  { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas 15 kg', cat: 'perro', price: 92300, stock: 15, active: true },
+  { id: 'op-eq', brand: 'Old Prince', name: 'Equilibrium Adulto 15 kg', cat: 'perro', price: 64900, stock: 8, active: true },
+  { id: 'eu-pup', brand: 'Eukanuba', name: 'Puppy Razas Medianas 15 kg', cat: 'perro', price: 95000, stock: 20, active: true },
+  { id: 'vc-bal', brand: 'Vital Can', name: 'Balanced Adulto 20 kg', cat: 'perro', price: 71200, stock: 30, active: true },
+  { id: 'rc-ind', brand: 'Royal Canin', name: 'Indoor 27 · 7,5 kg', cat: 'gato', price: 89900, stock: 25, active: true },
+  { id: 'pp-cat', brand: 'Pro Plan', name: 'Cat Adulto Pollo 7,5 kg', cat: 'gato', price: 79800, stock: 5, active: true },
+  { id: 'ex-cat', brand: 'Excellent', name: 'Cat Adulto 7,5 kg', cat: 'gato', price: 62400, stock: 18, active: true },
+  { id: 'vc-cat', brand: 'Vital Cat', name: 'Adulto Control 7,5 kg', cat: 'gato', price: 49900, stock: 22, active: false },
+  { id: 'sn-den', brand: 'Pedigree', name: 'Dentastix Medianos x28', cat: 'extra', price: 24500, stock: 60, active: true },
+  { id: 'po-cat', brand: 'Whiskas', name: 'Pouch Carne x24', cat: 'extra', price: 34900, stock: 3, active: true },
+  { id: 'ac-bow', brand: 'Homer', name: 'Comedero de acero L', cat: 'extra', price: 12400, stock: 14, active: true },
+];
+const INITIAL_ZONES = [
+  { name: 'Centro y Nueva Córdoba', price: 2500, eta: '24 h', free: true, note: 'Centro, Nueva Córdoba, Güemes, Alberdi, Cofico y General Paz.' },
+  { name: 'Resto de Córdoba capital', price: 3500, eta: '24 h', free: true, note: 'Cerro de las Rosas, Villa Belgrano, Argüello, barrios sur y este.' },
+  { name: 'Gran Córdoba', price: 4900, eta: '24–48 h', free: false, note: 'Villa Allende, Mendiolaza, Unquillo, Río Ceballos, La Calera.' },
+  { name: 'Interior de la provincia', price: 6900, eta: '2–4 días', free: false, note: 'Carlos Paz, Río Cuarto, Villa María, Alta Gracia y más.' },
+  { name: 'Resto del país', price: 8900, eta: '3–6 días', free: false, note: 'Despacho por correo a todo el país, con seguimiento.' },
+];
+const INITIAL_ORDERS = [
+  { id: 'o1', name: 'Lucía M.', items: 'Royal Canin Medium Adult 15 kg', zone: 'Nueva Córdoba', total: 98500, status: 'nuevo', cat: 'perro' },
+  { id: 'o2', name: 'Martín G.', items: 'Pro Plan Cat x2, Dentastix', zone: 'Centro', total: 185100, status: 'preparando', cat: 'gato' },
+  { id: 'o3', name: 'Carolina R.', items: 'Old Prince Equilibrium 15 kg', zone: 'Cerro de las Rosas', total: 64900, status: 'enviado', cat: 'perro' },
+  { id: 'o4', name: 'Diego F.', items: 'Vital Can Balanced 20 kg', zone: 'Villa Allende', total: 71200, status: 'enviado', cat: 'perro' },
+  { id: 'o5', name: 'Sofía A.', items: 'Whiskas Pouch x24, Comedero L', zone: 'Alberdi', total: 47300, status: 'nuevo', cat: 'gato' },
+  { id: 'o6', name: 'Pablo N.', items: 'Royal Canin Indoor 27 · 7,5 kg', zone: 'Alta Córdoba', total: 89900, status: 'preparando', cat: 'gato' },
+];
+const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const REVIEWS_KEY = 'homer_reviews';
+const loadReviews = () => { try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch { return []; } };
+const STATUS = {
+  nuevo: { label: 'Nuevo', bg: '#FCE7E1', color: '#C9452A' },
+  preparando: { label: 'Preparando', bg: '#FDF0DC', color: '#A9700F' },
+  enviado: { label: 'Enviado', bg: '#E1EBE3', color: '#24513C' },
+};
+
+class Component extends DCLogic {
+  state = {
+    tab: 'dashboard',
+    products: INITIAL_PRODUCTS,
+    zones: INITIAL_ZONES,
+    freeThreshold: 60000,
+    catFilter: 'todos',
+    search: '',
+    showAddForm: false,
+    npBrand: '', npName: '', npPrice: '', npStock: '', npCat: 'perro',
+    editingId: null,
+    reviews: loadReviews(), newRevName: '', newRevPet: '', newRevText: '',
+    orders: INITIAL_ORDERS, orderFilter: 'todos', showAddOrderForm: false,
+    noName: '', noItems: '', noTotal: '', noZone: 0,
+  };
+
+  componentDidMount() {
+    this.onStorage = e => { if (!e.key || e.key === REVIEWS_KEY) this.setState({ reviews: loadReviews() }); };
+    window.addEventListener('storage', this.onStorage);
+  }
+  componentWillUnmount() { window.removeEventListener('storage', this.onStorage); }
+
+  toggleEdit(id) { this.setState(s => ({ editingId: s.editingId === id ? null : id })); }
+  setProduct(id, patch) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, ...patch } : p) })); }
+  removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); }
+  setZone(i, patch) { this.setState(s => ({ zones: s.zones.map((z, idx) => idx === i ? { ...z, ...patch } : z) })); }
+
+  saveReviews(reviews) { localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews)); this.setState({ reviews }); }
+  addReview() {
+    const name = this.state.newRevName.trim(), text = this.state.newRevText.trim();
+    if (!name || !text) return;
+    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.newRevPet.trim() || 'Cliente Homer', text, approved: false, createdAt: Date.now() };
+    this.saveReviews([...this.state.reviews, review]);
+    this.setState({ newRevName: '', newRevPet: '', newRevText: '' });
+  }
+  toggleReviewApproved(id) { this.saveReviews(this.state.reviews.map(r => r.id === id ? { ...r, approved: !r.approved } : r)); }
+  removeReview(id) { this.saveReviews(this.state.reviews.filter(r => r.id !== id)); }
+
+  setOrderStatus(id, status) { this.setState(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, status } : o) })); }
+  removeOrder(id) { this.setState(s => ({ orders: s.orders.filter(o => o.id !== id) })); }
+  addOrder() {
+    const { noName, noItems, noTotal, noZone, zones } = this.state;
+    if (!noName.trim() || !noItems.trim()) return;
+    const zoneName = zones[noZone] ? zones[noZone].name : '';
+    const order = { id: 'o-' + Date.now().toString(36), name: noName.trim(), items: noItems.trim(), zone: zoneName, total: Number(noTotal) || 0, status: 'nuevo', cat: 'perro' };
+    this.setState(s => ({ orders: [order, ...s.orders], noName: '', noItems: '', noTotal: '', showAddOrderForm: false }));
+  }
+
+  addProduct() {
+    const { npBrand, npName, npPrice, npStock, npCat } = this.state;
+    if (!npBrand.trim() || !npName.trim()) return;
+    const id = (npBrand + '-' + npName).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) + '-' + Date.now().toString(36).slice(-4);
+    const product = { id, brand: npBrand.trim(), name: npName.trim(), cat: npCat, price: Number(npPrice) || 0, stock: Number(npStock) || 0, active: true };
+    this.setState(s => ({ products: [product, ...s.products], npBrand: '', npName: '', npPrice: '', npStock: '', showAddForm: false }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
+
+    const navItems = [['dashboard', 'Dashboard'], ['productos', 'Productos'], ['pedidos', 'Pedidos'], ['resenas', 'Reseñas'], ['envios', 'Envíos y zonas']]
+      .map(([v, label]) => ({ label, active: s.tab === v, idle: s.tab !== v, pick: () => this.setState({ tab: v }) }));
+
+    const catLabel = cat => (CATS.find(c => c[0] === cat) || [, cat])[1];
+
+    const filtered = s.products.filter(p =>
+      (s.catFilter === 'todos' || p.cat === s.catFilter) &&
+      (s.search.trim() === '' || (p.brand + ' ' + p.name).toLowerCase().includes(s.search.trim().toLowerCase()))
+    );
+
+    const productRows = filtered.map(p => ({
+      name: p.name, brand: p.brand, catLabel: catLabel(p.cat), price: p.price, priceFmt: fmt(p.price), stock: p.stock,
+      low: p.stock < 10, active: p.active, inactive: !p.active,
+      imgSlotId: 'prod-' + p.id,
+      editing: s.editingId === p.id, editLabel: s.editingId === p.id ? 'Cerrar' : 'Editar',
+      toggleEdit: () => this.toggleEdit(p.id),
+      setBrand: e => this.setProduct(p.id, { brand: e.target.value }),
+      setName: e => this.setProduct(p.id, { name: e.target.value }),
+      setPrice: e => this.setProduct(p.id, { price: Number(e.target.value) || 0 }),
+      setStock: e => this.setProduct(p.id, { stock: Number(e.target.value) || 0 }),
+      catOpts: pick(CATS, p.cat, cat => this.setProduct(p.id, { cat })),
+      toggle: () => this.setProduct(p.id, { active: !p.active }),
+      remove: () => this.removeProduct(p.id),
+    }));
+
+    const lowStockSrc = s.products.filter(p => p.stock < 10).sort((a, b) => a.stock - b.stock);
+    const totalSales = s.orders.reduce((a, o) => a + o.total, 0);
+    const bySales = cat => s.orders.filter(o => o.cat === cat).reduce((a, o) => a + o.total, 0);
+    const perroAmt = bySales('perro'), gatoAmt = bySales('gato'), extraAmt = Math.max(totalSales - perroAmt - gatoAmt, 0);
+    const catBase = perroAmt + gatoAmt + extraAmt || 1;
+
+    const orderFiltered = s.orders.filter(o => s.orderFilter === 'todos' || o.status === s.orderFilter);
+    const statusPick = (orderId, cur) => Object.keys(STATUS).map(v => ({
+      label: STATUS[v].label, bg: STATUS[v].bg, color: STATUS[v].color,
+      active: cur === v, idle: cur !== v, pick: () => this.setOrderStatus(orderId, v),
+    }));
+
+    return {
+      tabIsDashboard: s.tab === 'dashboard', tabIsProductos: s.tab === 'productos', tabIsEnvios: s.tab === 'envios',
+      tabIsPedidos: s.tab === 'pedidos', tabIsResenas: s.tab === 'resenas',
+      navItems,
+      todayFmt: new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' }),
+
+      kpis: [
+        { label: 'Ventas del mes', value: fmt(totalSales * 7.2), hint: '+12% vs. mes anterior' },
+        { label: 'Pedidos pendientes', value: String(s.orders.filter(o => o.status !== 'enviado').length), hint: null },
+        { label: 'Ticket promedio', value: fmt(totalSales / (s.orders.length || 1)), hint: null },
+        { label: 'Producto más vendido', value: 'Royal Canin', hint: 'Medium Adult 15 kg' },
+      ],
+      categoryBars: [
+        { label: 'Perros', amountFmt: fmt(perroAmt), pctStr: Math.round(perroAmt / catBase * 100) + '%', color: '#24513C' },
+        { label: 'Gatos', amountFmt: fmt(gatoAmt), pctStr: Math.round(gatoAmt / catBase * 100) + '%', color: '#E2583A' },
+        { label: 'Snacks y accesorios', amountFmt: fmt(extraAmt), pctStr: Math.round(extraAmt / catBase * 100) + '%', color: '#CB9A1E' },
+      ],
+      hasLowStock: lowStockSrc.length > 0, noLowStock: lowStockSrc.length === 0,
+      lowStockItems: lowStockSrc.slice(0, 4).map(p => ({
+        name: p.name, brand: p.brand, stock: p.stock,
+        color: p.stock < 5 ? '#E2583A' : '#F2C45A',
+        glow: p.stock < 5 ? 'rgba(226,88,58,.3)' : 'rgba(242,196,90,.3)',
+      })),
+
+      showAddOrderForm: s.showAddOrderForm, addOrderFormLabel: s.showAddOrderForm ? 'Cancelar' : '+ Nuevo pedido',
+      toggleAddOrderForm: () => this.setState(st => ({ showAddOrderForm: !st.showAddOrderForm })),
+      noName: s.noName, noItems: s.noItems, noTotal: s.noTotal,
+      setNoName: e => this.setState({ noName: e.target.value }),
+      setNoItems: e => this.setState({ noItems: e.target.value }),
+      setNoTotal: e => this.setState({ noTotal: e.target.value }),
+      noZoneOpts: s.zones.map((z, i) => ({ label: z.name, active: s.noZone === i, idle: s.noZone !== i, pick: () => this.setState({ noZone: i }) })),
+      addOrder: () => this.addOrder(),
+      orderFilterTabs: pick([['todos', 'Todos'], ...Object.keys(STATUS).map(v => [v, STATUS[v].label])], s.orderFilter, orderFilter => this.setState({ orderFilter })),
+      orderRows: orderFiltered.map(o => ({
+        name: o.name, items: o.items, zone: o.zone, totalFmt: fmt(o.total),
+        statusOpts: statusPick(o.id, o.status),
+        remove: () => this.removeOrder(o.id),
+      })),
+      noOrders: orderFiltered.length === 0,
+
+      pendingReviewsCount: s.reviews.filter(r => !r.approved).length,
+      hasReviews: s.reviews.length > 0, noReviews: s.reviews.length === 0,
+      reviewRows: [...s.reviews].sort((a, b) => b.createdAt - a.createdAt).map(r => ({
+        name: r.name, pet: r.pet, text: r.text, approved: r.approved, pending: !r.approved,
+        statusLabel: r.approved ? 'Visible en la landing' : 'Pendiente',
+        statusBg: r.approved ? '#E1EBE3' : '#FDF0DC', statusColor: r.approved ? '#24513C' : '#A9700F',
+        toggle: () => this.toggleReviewApproved(r.id), remove: () => this.removeReview(r.id),
+      })),
+      newRevName: s.newRevName, newRevPet: s.newRevPet, newRevText: s.newRevText,
+      setNewRevName: e => this.setState({ newRevName: e.target.value }),
+      setNewRevPet: e => this.setState({ newRevPet: e.target.value }),
+      setNewRevText: e => this.setState({ newRevText: e.target.value }),
+      addReview: () => this.addReview(),
+
+      showAddForm: s.showAddForm, addFormLabel: s.showAddForm ? 'Cancelar' : '+ Nuevo producto',
+      toggleAddForm: () => this.setState(st => ({ showAddForm: !st.showAddForm })),
+      npBrand: s.npBrand, npName: s.npName, npPrice: s.npPrice, npStock: s.npStock,
+      setNpBrand: e => this.setState({ npBrand: e.target.value }),
+      setNpName: e => this.setState({ npName: e.target.value }),
+      setNpPrice: e => this.setState({ npPrice: e.target.value }),
+      setNpStock: e => this.setState({ npStock: e.target.value }),
+      npCatOpts: pick(CATS, s.npCat, npCat => this.setState({ npCat })),
+      addProduct: () => this.addProduct(),
+
+      catTabs: pick([['todos', 'Todos'], ...CATS], s.catFilter, catFilter => this.setState({ catFilter })),
+      search: s.search, setSearch: e => this.setState({ search: e.target.value }),
+      productRows, noProducts: productRows.length === 0,
+
+      freeThreshold: s.freeThreshold, setFreeThreshold: e => this.setState({ freeThreshold: Number(e.target.value) || 0 }),
+      zoneRows: s.zones.map((z, i) => ({
+        name: z.name, price: z.price, eta: z.eta, note: z.note, free: z.free, notFree: !z.free,
+        setPrice: e => this.setZone(i, { price: Number(e.target.value) || 0 }),
+        setEta: e => this.setZone(i, { eta: e.target.value }),
+        setNote: e => this.setZone(i, { note: e.target.value }),
+        toggleFree: () => this.setZone(i, { free: !z.free }),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

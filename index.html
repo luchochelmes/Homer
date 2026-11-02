@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F5EFE4;color:#1C2620;font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#1C2620;text-decoration:none}
+a:hover{color:#E2583A}
+button{font-family:inherit;cursor:pointer}
+::selection{background:#F2C45A}
+input[type=range]{accent-color:#E2583A}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-10px) rotate(-3deg)}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div style="min-height:100vh;overflow-x:clip">
+
+<sc-if value="{{ showBar }}" hint-placeholder-val="{{ true }}">
+<div style="background:#1C2620;color:#F5EFE4;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase">
+<div style="display:flex;width:max-content;animation:marquee 38s linear infinite;padding:10px 0">
+<sc-for list="{{ barItems }}" as="b" hint-placeholder-count="8">
+<span style="display:flex;align-items:center;gap:28px;padding-right:28px;white-space:nowrap">{{ b }}<span style="width:6px;height:6px;border-radius:50%;background:#E2583A"></span></span>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<header style="position:sticky;top:0;z-index:40;background:rgba(245,239,228,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,38,32,.1)">
+<div style="max-width:1320px;margin:0 auto;padding:14px clamp(18px,4vw,48px);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+<a href="#inicio" style="display:flex;align-items:flex-end;gap:3px;font-weight:800;font-size:30px;letter-spacing:-.05em;line-height:1">Homer<span style="width:9px;height:9px;border-radius:50%;background:#E2583A;margin-bottom:5px"></span></a>
+<nav style="display:flex;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;font-size:15px;font-weight:500;margin-left:auto">
+<a href="#productos">Productos</a>
+<a href="#marcas">Marcas</a>
+<a href="#servicios">Servicios</a>
+<a href="#envios">Envíos</a>
+<a href="#calculadora">Calculadora</a>
+<a href="#preguntas">Ayuda</a>
+</nav>
+<button onClick="{{ openCart }}" style="display:flex;align-items:center;gap:10px;background:#1C2620;color:#F5EFE4;border:0;border-radius:999px;padding:10px 12px 10px 18px;font-size:14px;font-weight:600;transition:transform .2s" style-hover="transform:translateY(-1px)">Carrito<span style="min-width:24px;height:24px;border-radius:999px;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:12px;font-family:'JetBrains Mono',monospace;padding:0 6px">{{ cartCount }}</span></button>
+</div>
+</header>
+
+<section id="inicio" style="max-width:1320px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(18px,4vw,48px) clamp(56px,7vw,100px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,5vw,72px);align-items:center">
+<div style="display:flex;flex-direction:column;gap:28px">
+<div data-reveal="0" style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#24513C"><span style="width:8px;height:8px;border-radius:50%;background:#24513C;box-shadow:0 0 0 4px rgba(36,81,60,.15)"></span>Pedidos abiertos · Lun a Sáb 9 a 20 h</div>
+<h1 data-reveal="80" style="margin:0;font-size:clamp(48px,7.2vw,104px);line-height:.92;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Comida rica para los que <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-.02em;color:#E2583A">te esperan en la puerta.</span></h1>
+<p data-reveal="160" style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;max-width:520px;color:#4A5249;text-wrap:pretty">Alimento balanceado de las mejores marcas para perros y gatos, a precio de distribuidora. Somos 100% online en Córdoba capital: pedís hoy y te lo llevamos mañana, con la bolsa al hombro hasta tu casa.</p>
+<div data-reveal="240" style="display:flex;gap:12px;flex-wrap:wrap">
+<a href="#productos" style="display:inline-flex;align-items:center;gap:10px;background:#E2583A;color:#FBF8F2;padding:17px 26px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#C9452A;color:#FBF8F2;transform:translateY(-2px)">Ver productos y precios <span>→</span></a>
+<a href="{{ waLink }}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;border:1.5px solid #1C2620;padding:16px 24px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">Pedir por WhatsApp</a>
+</div>
+<div data-reveal="320" style="display:flex;gap:28px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249">
+<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Envío en 24 h</strong>Córdoba capital</div>
+<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Plan mensual</strong>10% off fijo</div>
+<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Pagás como quieras</strong>Mercado Pago, transferencia o efectivo</div>
+</div>
+</div>
+<div data-reveal="150" style="position:relative;min-height:560px">
+<div style="position:absolute;top:0;right:0;width:82%;height:88%;border-radius:220px 220px 28px 28px;overflow:hidden;background:#E8DFCE">
+<image-slot id="hero-perro" shape="rect" src="perrocomiendo.jpg" placeholder="Foto principal: perro feliz con su bowl"></image-slot>
+</div>
+<div style="position:absolute;left:0;bottom:0;width:44%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:8px solid #F5EFE4;background:#DCD2BF">
+<image-slot id="hero-gato" shape="rect" src="gato-comiendo.jpg" placeholder="Foto: gato"></image-slot>
+</div>
+<div style="position:absolute;top:6%;left:4%;width:150px;height:150px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;animation:floaty 6s ease-in-out infinite;pointer-events:none">
+<svg viewBox="0 0 200 200" style="position:absolute;inset:0;width:100%;height:100%;animation:spin 22s linear infinite"><defs><path id="circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs><text style="font-family:'JetBrains Mono',monospace;font-size:14.5px;letter-spacing:3px;fill:#1C2620"><textPath href="#circ">ENVÍO GRATIS DESDE $60.000 · CÓRDOBA CAPITAL · </textPath></text></svg>
+<div style="text-align:center;line-height:.9"><div style="font-size:38px;font-weight:800;letter-spacing:-.04em">24h</div><div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:17px">a tu casa</div></div>
+</div>
+<div style="position:absolute;right:-8px;bottom:16%;background:#FBF8F2;border-radius:18px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(28,38,32,.35);display:flex;flex-direction:column;gap:2px;transform:rotate(3deg)">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#24513C;text-transform:uppercase">Último pedido</span>
+<span style="font-weight:600;font-size:15px">Pro Plan 15 kg → Nueva Córdoba</span>
+</div>
+</div>
+</section>
+
+<section id="marcas" style="border-top:1px solid rgba(28,38,32,.14);border-bottom:1px solid rgba(28,38,32,.14);background:#FBF8F2;overflow:hidden">
+<div style="max-width:1320px;margin:0 auto;padding:22px clamp(18px,4vw,48px) 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">Distribuidores oficiales de</div>
+<div style="display:flex;width:max-content;animation:marquee 42s linear infinite;padding:14px 0 26px">
+<sc-for list="{{ brandsLoop }}" as="br" hint-placeholder-count="12">
+<span style="display:flex;align-items:center;gap:44px;padding-right:44px;white-space:nowrap;font-size:clamp(34px,4.4vw,60px);letter-spacing:-.03em;font-weight:600;color:#1C2620">{{ br }}<span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#E2583A;font-size:.8em">✳</span></span>
+</sc-for>
+</div>
+</section>
+
+<section style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px) 0">
+<div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:36px">
+<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:720px">¿Para quién <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">compramos</span> hoy?</h2>
+<p style="margin:0;max-width:360px;color:#4A5249;font-size:16px;line-height:1.5">Elegí tu compañero y te mostramos lo que mejor le va según edad y tamaño.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
+<sc-for list="{{ catCards }}" as="c" hint-placeholder-count="2">
+<button data-reveal="{{ c.delay }}" onClick="{{ c.go }}" style="position:relative;height:clamp(340px,40vw,480px);border:0;padding:0;border-radius:28px;overflow:hidden;background:#E8DFCE;text-align:left;color:#FBF8F2;transition:transform .5s cubic-bezier(.2,.7,.2,1)" style-hover="transform:scale(.985)">
+<image-slot id="{{ c.slot }}" shape="rect" src="{{ c.src }}" placeholder="{{ c.ph }}"></image-slot>
+<div style="position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(20,28,22,.82),rgba(20,28,22,0));pointer-events:none"></div>
+<div style="position:absolute;left:28px;right:28px;bottom:26px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;pointer-events:none">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ c.kicker }}</span><span style="font-size:clamp(44px,5vw,72px);font-weight:700;letter-spacing:-.045em;line-height:.9">{{ c.title }}</span></div>
+<span style="width:58px;height:58px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:22px">→</span>
+</div>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section id="productos" style="padding:clamp(64px,8vw,120px) 0 0">
+<div style="max-width:1320px;margin:0 auto;padding:0 clamp(18px,4vw,48px)">
+<div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Precios actualizados · Octubre 2026</span>
+<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Lo más pedido <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">de la semana</span></h2>
+</div>
+<div style="display:flex;gap:10px;align-items:center">
+<button onClick="{{ prev }}" aria-label="Anterior" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">←</button>
+<button onClick="{{ next }}" aria-label="Siguiente" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">→</button>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<sc-if value="{{ t.active }}">
+<button onClick="{{ t.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:999px;padding:10px 18px;white-space:nowrap;font-size:15px;font-weight:600">{{ t.label }}</button>
+</sc-if>
+<sc-if value="{{ t.idle }}">
+<button onClick="{{ t.pick }}" style="border:1.5px solid rgba(28,38,32,.22);background:transparent;color:#1C2620;border-radius:999px;padding:10px 18px;white-space:nowrap;font-size:15px;font-weight:500;transition:border-color .2s" style-hover="border-color:#1C2620">{{ t.label }}</button>
+</sc-if>
+</sc-for>
+</div>
+</div>
+<div ref="{{ trackRef }}" style="display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:clamp(18px,4vw,48px);padding:4px clamp(18px,4vw,48px) 24px;scrollbar-width:none">
+<sc-for list="{{ visibleProducts }}" as="p" hint-placeholder-count="4">
+<article style="flex:0 0 clamp(270px,24vw,310px);width:clamp(270px,24vw,310px);min-width:0;max-width:clamp(270px,24vw,310px);scroll-snap-align:start;background:#FBF8F2;border:1px solid rgba(28,38,32,.1);border-radius:24px;padding:12px 12px 18px;display:flex;flex-direction:column;gap:16px;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s" style-hover="transform:translateY(-6px);box-shadow:0 26px 50px -30px rgba(28,38,32,.45)">
+<div style="position:relative;height:270px;border-radius:16px;overflow:hidden;background:#EFE7D8">
+<image-slot id="{{ p.slot }}" shape="rect" fit="contain" placeholder="{{ p.ph }}"></image-slot>
+<sc-if value="{{ p.tag }}">
+<span style="position:absolute;top:12px;left:12px;background:#F2C45A;color:#1C2620;border-radius:999px;padding:6px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;pointer-events:none">{{ p.tag }}</span>
+</sc-if>
+<sc-if value="{{ p.off }}">
+<span style="position:absolute;top:12px;right:12px;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:6px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;pointer-events:none">{{ p.off }}</span>
+</sc-if>
+</div>
+<div style="padding:0 6px;display:flex;flex-direction:column;gap:6px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">{{ p.brand }}</span>
+<h3 style="margin:0;font-size:20px;line-height:1.15;letter-spacing:-.02em;font-weight:600">{{ p.name }}</h3>
+<span style="font-size:14px;color:#5B6359;line-height:1.4">{{ p.desc }}</span>
+</div>
+<div style="padding:0 6px;display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ p.sizes }}" as="s" hint-placeholder-count="2">
+<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;font-size:13px;font-family:'JetBrains Mono',monospace">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;font-size:13px;font-family:'JetBrains Mono',monospace">{{ s.label }}</button></sc-if>
+</sc-for>
+</div>
+<div style="padding:0 6px;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-if value="{{ p.oldFmt }}"><span style="font-size:13px;color:#8A8F86;text-decoration:line-through">{{ p.oldFmt }}</span></sc-if>
+<span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
+</div>
+<button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
+</div>
+</article>
+</sc-for>
+</div>
+</section>
+
+<section id="servicios" style="max-width:1320px;margin:0 auto;padding:clamp(72px,9vw,140px) clamp(18px,4vw,48px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(36px,6vw,96px)">
+<div data-reveal="0" style="display:flex;flex-direction:column;gap:22px;align-self:start;position:sticky;top:110px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Servicios</span>
+<h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">Más que una bolsa <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">de alimento.</span></h2>
+<p style="margin:0;font-size:17px;line-height:1.55;color:#4A5249;max-width:440px">Somos un emprendimiento cordobés 100% online que creció a fuerza de recomendaciones. Sin local a la calle: todo llega a tu puerta. Te conocemos por nombre, y a tu perro también.</p>
+<div style="height:220px;border-radius:24px;overflow:hidden;background:#E8DFCE;margin-top:8px">
+<image-slot id="servicios-equipo" shape="rect" src="armando-pedido.jpg" placeholder="Foto: el equipo / armando pedidos"></image-slot>
+</div>
+</div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ services }}" as="sv" hint-placeholder-count="4">
+<div data-reveal="{{ sv.delay }}" style="display:grid;grid-template-columns:72px 1fr;gap:20px;padding:34px 0;border-top:1px solid rgba(28,38,32,.16)">
+<span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:44px;line-height:1;color:#E2583A">{{ sv.n }}</span>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap"><h3 style="margin:0;font-size:clamp(24px,2.4vw,32px);letter-spacing:-.03em;font-weight:600">{{ sv.title }}</h3><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:#E9E1D1;border-radius:999px;padding:6px 12px">{{ sv.badge }}</span></div>
+<p style="margin:0;font-size:16px;line-height:1.55;color:#4A5249;max-width:520px">{{ sv.text }}</p>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section style="background:#1C2620;color:#F5EFE4;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px)">
+<div style="max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:36px">
+<div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+<h2 style="margin:0;font-size:clamp(36px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:800px">Así arma <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#F2C45A">Homer</span> cada pedido.</h2>
+<p style="margin:0;max-width:340px;font-size:16px;line-height:1.55;color:#C9CEC4">Controlamos vencimiento y estado de cada bolsa antes de salir. Si algo no está perfecto, no sale.</p>
+</div>
+<div data-reveal="100" style="position:relative;aspect-ratio:16/8;min-height:300px;border-radius:28px;overflow:hidden;background:#2A362E">
+<sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
+<video src="{{ videoUrl }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+</sc-if>
+<sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
+<image-slot id="video-poster" shape="rect" placeholder="Video del local (cargalo en Tweaks → URL del video) o una foto de portada"></image-slot>
+<div style="position:absolute;left:28px;bottom:26px;display:flex;align-items:center;gap:16px;pointer-events:none">
+<span style="width:72px;height:72px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;color:#1C2620;font-size:22px;padding-left:4px">▶</span>
+<span style="display:flex;flex-direction:column;gap:2px"><strong style="font-size:18px">Así preparamos tu pedido</strong><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#C9CEC4">01:24</span></span>
+</div>
+</sc-if>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1px;background:rgba(245,239,228,.14);border-radius:20px;overflow:hidden">
+<sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+<div data-reveal="{{ st.delay }}" style="background:#1C2620;padding:28px 24px;display:flex;flex-direction:column;gap:12px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#F2C45A;letter-spacing:.08em">{{ st.n }}</span>
+<h3 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-.02em">{{ st.title }}</h3>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#C9CEC4">{{ st.text }}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section id="envios" style="max-width:1320px;margin:0 auto;padding:clamp(72px,9vw,130px) clamp(18px,4vw,48px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:start">
+<div data-reveal="0" style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Envíos</span>
+<h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">¿Hasta dónde <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">llegamos?</span></h2>
+<p style="margin:0;font-size:17px;line-height:1.55;color:#4A5249;max-width:460px">Elegí tu zona y mirá cuánto sale y cuándo llega. Superando <strong style="color:#1C2620">$60.000</strong> el envío es gratis en Córdoba capital.</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+<sc-for list="{{ zones }}" as="z" hint-placeholder-count="5">
+<sc-if value="{{ z.active }}">
+<button onClick="{{ z.pick }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-radius:16px;border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;font-size:17px;font-weight:600;text-align:left">{{ z.name }}<span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:400;color:#F2C45A">{{ z.priceFmt }}</span></button>
+</sc-if>
+<sc-if value="{{ z.idle }}">
+<button onClick="{{ z.pick }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-radius:16px;border:1.5px solid rgba(28,38,32,.16);background:#FBF8F2;color:#1C2620;font-size:17px;font-weight:500;text-align:left;transition:border-color .2s" style-hover="border-color:#1C2620">{{ z.name }}<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5B6359">{{ z.priceFmt }}</span></button>
+</sc-if>
+</sc-for>
+</div>
+</div>
+<div data-reveal="120" style="position:sticky;top:110px;background:#24513C;color:#F5EFE4;border-radius:28px;padding:clamp(28px,3.4vw,44px);display:flex;flex-direction:column;gap:28px;overflow:hidden">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A">Tu envío a {{ zone.name }}</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;color:#C6D6CB">Costo</span><span style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-.04em;line-height:1">{{ zone.priceFmt }}</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;color:#C6D6CB">Llega en</span><span style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-.04em;line-height:1">{{ zone.eta }}</span></div>
+</div>
+<p style="margin:0;font-size:16px;line-height:1.55;color:#DCE6DF;padding-top:22px;border-top:1px solid rgba(245,239,228,.2)">{{ zone.note }}</p>
+<div style="height:200px;border-radius:18px;overflow:hidden;background:#2F6149">
+<image-slot id="envios-moto" shape="rect" placeholder="Foto: repartidor / camioneta Homer"></image-slot>
+</div>
+</div>
+</div>
+</section>
+
+<section id="calculadora" style="background:#F2C45A;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px)">
+<div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:center">
+<div data-reveal="0" style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Calculadora de ración</span>
+<h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">¿Cuánto come <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">por mes?</span></h2>
+<p style="margin:0;font-size:17px;line-height:1.55;max-width:440px">Una estimación rápida para que no te quedes sin alimento. Para una dieta exacta, consultá con tu veterinario.</p>
+</div>
+<div data-reveal="120" style="background:#FBF8F2;border-radius:28px;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;gap:26px;box-shadow:0 30px 60px -40px rgba(28,38,32,.5)">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#EFE7D8;border-radius:999px;padding:5px">
+<sc-for list="{{ petOpts }}" as="po" hint-placeholder-count="2">
+<sc-if value="{{ po.active }}"><button onClick="{{ po.pick }}" style="border:0;border-radius:999px;padding:12px;background:#1C2620;color:#F5EFE4;font-size:16px;font-weight:600">{{ po.label }}</button></sc-if>
+<sc-if value="{{ po.idle }}"><button onClick="{{ po.pick }}" style="border:0;border-radius:999px;padding:12px;background:transparent;color:#1C2620;font-size:16px;font-weight:500">{{ po.label }}</button></sc-if>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px;color:#4A5249">Peso</span><span style="font-size:28px;font-weight:700;letter-spacing:-.03em">{{ kg }} kg</span></div>
+<input type="range" min="1" max="{{ kgMax }}" value="{{ kg }}" onChange="{{ setKg }}" style="width:100%;height:28px"></input>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-size:15px;color:#4A5249">Actividad</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ actOpts }}" as="ao" hint-placeholder-count="3">
+<sc-if value="{{ ao.active }}"><button onClick="{{ ao.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:999px;padding:9px 16px;font-size:14px">{{ ao.label }}</button></sc-if>
+<sc-if value="{{ ao.idle }}"><button onClick="{{ ao.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:999px;padding:9px 16px;font-size:14px">{{ ao.label }}</button></sc-if>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(28,38,32,.12);border-radius:18px;overflow:hidden">
+<div style="background:#F5EFE4;padding:18px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;color:#5B6359">Por día</span><span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ calc.daily }}</span></div>
+<div style="background:#F5EFE4;padding:18px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;color:#5B6359">Por mes</span><span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ calc.monthly }}</span></div>
+<div style="background:#F5EFE4;padding:18px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;color:#5B6359">Te conviene</span><span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ calc.bag }}</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+<span style="font-size:15px;color:#4A5249">Con plan mensual, desde <strong style="color:#1C2620;font-size:18px">{{ calc.price }}</strong> /mes</span>
+<a href="{{ waPlan }}" target="_blank" style="background:#E2583A;color:#FBF8F2;padding:13px 20px;border-radius:999px;font-weight:600;font-size:15px" style-hover="background:#C9452A;color:#FBF8F2">Quiero el plan →</a>
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width:1320px;margin:0 auto;padding:clamp(72px,9vw,130px) clamp(18px,4vw,48px)">
+<div data-reveal="0" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Lo que dicen los clientes</span>
+<div style="display:flex;gap:8px">
+<sc-for list="{{ dots }}" as="d" hint-placeholder-count="4">
+<sc-if value="{{ d.active }}"><button onClick="{{ d.pick }}" aria-label="Testimonio" style="width:34px;height:8px;border-radius:99px;border:0;background:#1C2620;padding:0;transition:width .3s"></button></sc-if>
+<sc-if value="{{ d.idle }}"><button onClick="{{ d.pick }}" aria-label="Testimonio" style="width:8px;height:8px;border-radius:99px;border:0;background:rgba(28,38,32,.25);padding:0"></button></sc-if>
+</sc-for>
+</div>
+</div>
+<div data-reveal="80" style="overflow:hidden">
+<div style="display:flex;transition:transform .9s cubic-bezier(.7,0,.2,1);transform:translateX({{ tOffset }})">
+<sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="1">
+<figure style="flex:0 0 100%;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+<blockquote style="margin:0;font-family:'Instrument Serif',serif;font-size:clamp(32px,4.2vw,60px);line-height:1.05;letter-spacing:-.015em;grid-column:span 2;text-wrap:pretty">“{{ q.text }}”</blockquote>
+<figcaption style="display:flex;align-items:center;gap:16px">
+<sc-if value="{{ q.hasPhoto }}"><div style="width:84px;height:84px;flex:none;border-radius:50%;overflow:hidden;background:#E8DFCE"><image-slot id="{{ q.slot }}" shape="circle" placeholder="foto"></image-slot></div></sc-if>
+<sc-if value="{{ q.noPhoto }}"><div style="width:84px;height:84px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:30px;font-weight:700;font-family:'Instrument Serif',serif">{{ q.initial }}</div></sc-if>
+<div style="display:flex;flex-direction:column;gap:3px"><strong style="font-size:18px">{{ q.name }}</strong><span style="font-size:14px;color:#5B6359">{{ q.pet }}</span></div>
+</figcaption>
+</figure>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section id="resenas" style="max-width:900px;margin:0 auto;padding:0 clamp(18px,4vw,48px) clamp(72px,9vw,120px)">
+<div data-reveal="0" style="background:#FBF8F2;border:1px solid rgba(28,38,32,.12);border-radius:28px;padding:clamp(28px,4vw,44px);display:flex;flex-direction:column;gap:20px;box-shadow:0 30px 60px -40px rgba(28,38,32,.35)">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Tu opinión nos importa</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,40px);letter-spacing:-.03em;font-weight:700">Dejá tu <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">reseña.</span></h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+<input value="{{ revName }}" onChange="{{ setRevName }}" placeholder="Tu nombre" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4"></input>
+<input value="{{ revPet }}" onChange="{{ setRevPet }}" placeholder="Tu mascota (ej: Toto, golden)" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4"></input>
+</div>
+<textarea value="{{ revText }}" onChange="{{ setRevText }}" placeholder="Contanos cómo te fue con tu pedido…" rows="3" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4;resize:vertical;font-family:inherit"></textarea>
+<div><button onClick="{{ submitReview }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:15px 24px;font-weight:600;font-size:15px" style-hover="background:#C9452A;color:#FBF8F2">Enviar reseña</button></div>
+</div>
+</section>
+
+<section id="preguntas" style="border-top:1px solid rgba(28,38,32,.14)">
+<div style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,5vw,72px)">
+<h2 data-reveal="0" style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;align-self:start">Preguntas <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">frecuentes</span></h2>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+<div style="border-bottom:1px solid rgba(28,38,32,.16)">
+<button onClick="{{ f.toggle }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;background:transparent;border:0;text-align:left;font-size:clamp(18px,1.6vw,22px);font-weight:600;letter-spacing:-.02em;color:#1C2620">{{ f.q }}<span style="width:36px;height:36px;flex:none;border-radius:50%;border:1.5px solid #1C2620;display:grid;place-items:center;font-size:18px;font-weight:400">{{ f.icon }}</span></button>
+<sc-if value="{{ f.open }}">
+<p style="margin:0 0 24px;max-width:600px;font-size:16px;line-height:1.6;color:#4A5249;animation:fadeIn .4s ease">{{ f.a }}</p>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<footer style="background:#1C2620;color:#F5EFE4;padding:clamp(56px,7vw,100px) clamp(18px,4vw,48px) 28px;overflow:hidden">
+<div style="max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap">
+<h2 data-reveal="0" style="margin:0;font-size:clamp(36px,5vw,68px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:760px">¿Se está terminando la bolsa? <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#F2C45A">Escribinos.</span></h2>
+<a href="{{ waLink }}" target="_blank" style="background:#F2C45A;color:#1C2620;padding:20px 30px;border-radius:999px;font-weight:700;font-size:18px;transition:transform .2s" style-hover="transform:translateY(-2px);color:#1C2620">Pedir por WhatsApp →</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px;padding-top:40px;border-top:1px solid rgba(245,239,228,.16);font-size:15px;line-height:1.7;color:#C9CEC4">
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Dónde estamos</span>Córdoba capital<br>Venta online con envío a domicilio</div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: Lun a Vie 9 a 20 h<br>Sábados 9 a 14 h</div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Medios de pago</span>Mercado Pago · Tarjetas<br>Transferencia · Efectivo</div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span><a href="#" style="color:#F5EFE4">Instagram</a><a href="#" style="color:#F5EFE4">TikTok</a><a href="#" style="color:#F5EFE4">Facebook</a></div>
+</div>
+<div style="font-weight:800;font-size:clamp(110px,27vw,400px);line-height:.75;letter-spacing:-.075em;color:#F5EFE4;display:flex;align-items:flex-end;gap:.02em;margin-bottom:-.06em">Homer<span style="width:.12em;height:.12em;border-radius:50%;background:#E2583A;margin-bottom:.08em"></span></div>
+<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#8E968B;text-transform:uppercase"><span>© 2026 Homer · Alimento para mascotas</span><span>Precios sujetos a cambio sin previo aviso</span></div>
+</div>
+</footer>
+
+<a href="{{ waLink }}" target="_blank" style="position:fixed;right:20px;bottom:20px;z-index:45;display:flex;align-items:center;gap:10px;background:#24513C;color:#F5EFE4;padding:14px 20px 14px 16px;border-radius:999px;font-weight:600;font-size:15px;box-shadow:0 16px 36px -14px rgba(28,38,32,.6);transition:transform .2s" style-hover="transform:translateY(-3px);color:#F5EFE4"><span style="width:10px;height:10px;border-radius:50%;background:#7BE39B;box-shadow:0 0 0 4px rgba(123,227,155,.25)"></span>Escribinos</a>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:50%;bottom:24px;z-index:60;transform:translateX(-50%);background:#1C2620;color:#F5EFE4;padding:14px 18px;border-radius:16px;display:flex;align-items:center;gap:14px;font-size:15px;box-shadow:0 20px 40px -16px rgba(0,0,0,.45);animation:toastIn .35s cubic-bezier(.2,.7,.2,1)"><span style="width:26px;height:26px;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:13px">✓</span><span>{{ toast }}</span><button onClick="{{ openCart }}" style="border:0;background:transparent;color:#F2C45A;font-weight:600;font-size:15px;padding:0">Ver carrito</button></div>
+</sc-if>
+
+<sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeCart }}" style="position:fixed;inset:0;z-index:70;background:rgba(20,28,22,.45);animation:fadeIn .3s ease"></div>
+<aside style="position:fixed;top:0;right:0;bottom:0;z-index:71;width:min(440px,100vw);background:#F5EFE4;display:flex;flex-direction:column;animation:drawerIn .45s cubic-bezier(.2,.7,.2,1)">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid rgba(28,38,32,.14)"><span style="font-size:26px;font-weight:700;letter-spacing:-.03em">Tu pedido</span><button onClick="{{ closeCart }}" style="width:40px;height:40px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:18px;color:#1C2620">✕</button></div>
+<div style="flex:1;overflow-y:auto;padding:8px 26px">
+<sc-if value="{{ cartEmpty }}"><div style="padding:48px 0;display:flex;flex-direction:column;gap:10px;color:#4A5249"><span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:34px;color:#1C2620">Todavía vacío.</span>Agregá productos desde el catálogo.</div></sc-if>
+<sc-for list="{{ cartItems }}" as="ci" hint-placeholder-count="0">
+<div style="display:flex;justify-content:space-between;gap:14px;padding:18px 0;border-bottom:1px solid rgba(28,38,32,.12)">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5B6359">{{ ci.brand }} · {{ ci.size }}</span><span style="font-weight:600;font-size:16px">{{ ci.name }}</span>
+<div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button onClick="{{ ci.dec }}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">−</button><span style="font-family:'JetBrains Mono',monospace;font-size:14px">{{ ci.qty }}</span><button onClick="{{ ci.inc }}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">+</button></div>
+</div>
+<span style="font-weight:700;font-size:17px;white-space:nowrap">{{ ci.totalFmt }}</span>
+</div>
+</sc-for>
+</div>
+<div style="padding:22px 26px 26px;border-top:1px solid rgba(28,38,32,.14);display:flex;flex-direction:column;gap:12px;background:#FBF8F2">
+<div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Subtotal</span><span>{{ subtotalFmt }}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Envío · {{ zone.name }}</span><span>{{ shipFmt }}</span></div>
+<sc-if value="{{ freeHint }}"><div style="font-size:13px;color:#24513C;background:#E1EBE3;border-radius:10px;padding:10px 12px">{{ freeHint }}</div></sc-if>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px"><span style="font-size:17px;font-weight:600">Total</span><span style="font-size:30px;font-weight:700;letter-spacing:-.03em">{{ totalFmt }}</span></div>
+<a href="{{ waCheckout }}" target="_blank" style="text-align:center;background:#E2583A;color:#FBF8F2;padding:17px;border-radius:999px;font-weight:600;font-size:16px" style-hover="background:#C9452A;color:#FBF8F2">Finalizar pedido por WhatsApp</a>
+</div>
+</aside>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5491100000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;videoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Media&quot;},&quot;showAnnouncement&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+const PRODUCTS = [
+  { id: 'rc-med', cat: 'perro', brand: 'Royal Canin', name: 'Medium Adult', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900], ['15 kg', 98500, 109000]] },
+  { id: 'pp-med', cat: 'perro', brand: 'Pro Plan', name: 'Adulto Razas Medianas', desc: 'Con OptiHealth, pollo y arroz.', sizes: [['3 kg', 26400], ['15 kg', 92300]] },
+  { id: 'op-eq', cat: 'perro', brand: 'Old Prince', name: 'Equilibrium Adulto', desc: 'Cordero y arroz, todas las razas.', tag: 'Precio Homer', sizes: [['3 kg', 17800], ['15 kg', 64900, 71500]] },
+  { id: 'eu-pup', cat: 'perro', brand: 'Eukanuba', name: 'Puppy Razas Medianas', desc: 'Cachorros de 2 a 12 meses.', sizes: [['3 kg', 27500], ['15 kg', 95000]] },
+  { id: 'vc-bal', cat: 'perro', brand: 'Vital Can', name: 'Balanced Adulto', desc: 'Alta digestibilidad, sin colorantes.', sizes: [['3 kg', 15900], ['20 kg', 71200]] },
+  { id: 'rc-ind', cat: 'gato', brand: 'Royal Canin', name: 'Indoor 27', desc: 'Gatos de interior, control de bolas de pelo.', tag: 'Más vendido', sizes: [['1,5 kg', 24300], ['7,5 kg', 89900]] },
+  { id: 'pp-cat', cat: 'gato', brand: 'Pro Plan', name: 'Cat Adulto Pollo', desc: 'Protección urinaria y piel sana.', sizes: [['1 kg', 15200], ['7,5 kg', 79800, 88600]] },
+  { id: 'ex-cat', cat: 'gato', brand: 'Excellent', name: 'Cat Adulto', desc: 'Pollo y arroz, fórmula completa.', sizes: [['1 kg', 11900], ['7,5 kg', 62400]] },
+  { id: 'vc-cat', cat: 'gato', brand: 'Vital Cat', name: 'Adulto Control', desc: 'Control de peso para gatos castrados.', sizes: [['1,5 kg', 12800], ['7,5 kg', 49900]] },
+  { id: 'sn-den', cat: 'extra', brand: 'Pedigree', name: 'Dentastix Medianos', desc: 'Snack dental, pack x7.', sizes: [['x7', 6900], ['x28', 24500]] },
+  { id: 'po-cat', cat: 'extra', brand: 'Whiskas', name: 'Pouch Carne', desc: 'Alimento húmedo para gatos.', tag: 'Combo', sizes: [['x12', 18600], ['x24', 34900, 37200]] },
+  { id: 'ac-bow', cat: 'extra', brand: 'Homer', name: 'Comedero de acero', desc: 'Antideslizante, apto lavavajillas.', sizes: [['M', 9800], ['L', 12400]] },
+];
+const ZONES = [
+  { name: 'Centro y Nueva Córdoba', price: 2500, eta: '24 h', free: true, note: 'Centro, Nueva Córdoba, Güemes, Alberdi, Cofico y General Paz. Coordinamos franja horaria por WhatsApp.' },
+  { name: 'Resto de Córdoba capital', price: 3500, eta: '24 h', free: true, note: 'Cerro de las Rosas, Villa Belgrano, Argüello, Jardín, Alta Córdoba, barrios del sur y del este. Lunes a sábado.' },
+  { name: 'Gran Córdoba', price: 4900, eta: '24–48 h', note: 'Villa Allende, Mendiolaza, Unquillo, Río Ceballos, La Calera, Malagueño y alrededores.' },
+  { name: 'Interior de la provincia', price: 6900, eta: '2–4 días', from: true, note: 'Carlos Paz, Río Cuarto, Villa María, Alta Gracia y más, por correo o transporte. Te pasamos el seguimiento.' },
+  { name: 'Resto del país', price: 8900, eta: '3–6 días', from: true, note: 'Despachamos por correo a todo el país. Te pasamos el número de seguimiento.' },
+];
+const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const REVIEWS_KEY = 'homer_reviews';
+const loadReviews = () => { try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch { return []; } };
+
+class Component extends DCLogic {
+  state = { cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: 0, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0, reviews: loadReviews(), revName: '', revPet: '', revText: '' };
+  trackRef = React.createRef();
+
+  componentDidMount() {
+    this.io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity = 1; e.target.style.transform = 'none'; this.io.unobserve(e.target); }
+    }), { threshold: 0.1 });
+    this.scan();
+    this.mo = new MutationObserver(() => this.scan());
+    this.mo.observe(document.body, { childList: true, subtree: true });
+    this.timer = setInterval(() => this.setState(s => ({ tIdx: (s.tIdx + 1) % (this.totalTestimonials || 4) })), 6500);
+    this.onStorage = e => { if (!e.key || e.key === REVIEWS_KEY) this.setState({ reviews: loadReviews() }); };
+    window.addEventListener('storage', this.onStorage);
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); clearInterval(this.timer); clearTimeout(this.tt); window.removeEventListener('storage', this.onStorage); }
+  submitReview() {
+    const name = this.state.revName.trim(), text = this.state.revText.trim();
+    if (!name || !text) return;
+    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.revPet.trim() || 'Cliente Homer', text, approved: false, createdAt: Date.now() };
+    const reviews = [...this.state.reviews, review];
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    this.setState({ reviews, revName: '', revPet: '', revText: '', toast: '¡Gracias! Tu reseña se publicará pronto.' });
+    clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
+  }
+  scan() {
+    document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
+      el.dataset.rv = '1';
+      el.style.opacity = 0; el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1)';
+      el.style.transitionDelay = (+el.dataset.reveal || 0) + 'ms';
+      this.io.observe(el);
+    });
+  }
+  wa(msg) { return 'https://wa.me/' + (this.props.whatsapp ?? '5491100000000') + '?text=' + encodeURIComponent(msg); }
+  goProducts(cat) {
+    this.setState({ cat });
+    const el = document.getElementById('productos');
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
+    if (this.trackRef.current) this.trackRef.current.scrollTo({ left: 0 });
+  }
+  add(p, si) {
+    const key = p.id + '-' + si;
+    this.setState(s => {
+      const cart = s.cart.slice(); const i = cart.findIndex(c => c.key === key);
+      if (i >= 0) cart[i] = { ...cart[i], qty: cart[i].qty + 1 }; else cart.push({ key, p, si, qty: 1 });
+      return { cart, toast: p.brand + ' ' + p.name + ' · ' + p.sizes[si][0] };
+    });
+    clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
+  }
+  qty(key, d) { this.setState(s => ({ cart: s.cart.map(c => c.key === key ? { ...c, qty: c.qty + d } : c).filter(c => c.qty > 0) })); }
+
+  renderVals() {
+    const s = this.state;
+    const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
+    const tabs = pick([['todos', 'Todo'], ['perro', 'Perros'], ['gato', 'Gatos'], ['extra', 'Snacks y accesorios']], s.cat, cat => { this.setState({ cat }); this.trackRef.current && this.trackRef.current.scrollTo({ left: 0, behavior: 'smooth' }); });
+    const visibleProducts = PRODUCTS.filter(p => s.cat === 'todos' || p.cat === s.cat).map(p => {
+      const si = s.sel[p.id] ?? 0; const [, price, old] = p.sizes[si];
+      return {
+        slot: 'prod-' + p.id, ph: 'Packshot ' + p.brand, brand: p.brand, name: p.name, desc: p.desc, tag: p.tag || null,
+        priceFmt: fmt(price), oldFmt: old ? fmt(old) : null, off: old ? '-' + Math.round((1 - price / old) * 100) + '%' : null,
+        sizes: p.sizes.map((z, i) => ({ label: z[0], active: i === si, idle: i !== si, pick: () => this.setState(st => ({ sel: { ...st.sel, [p.id]: i } })) })),
+        add: () => this.add(p, si),
+      };
+    });
+    const z = ZONES[s.zone];
+    const subtotal = s.cart.reduce((a, c) => a + c.p.sizes[c.si][1] * c.qty, 0);
+    const freeEligible = z.free && subtotal >= 60000;
+    const ship = s.cart.length === 0 ? 0 : freeEligible ? 0 : z.price;
+    const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
+    const lines = s.cart.map(c => '• ' + c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
+
+    const kgMax = s.pet === 'perro' ? 60 : 12;
+    const kg = Math.min(s.kg, kgMax);
+    const mult = s.pet === 'perro' ? [1.3, 1.6, 2.0][s.act] : [1.0, 1.2, 1.4][s.act];
+    const grams = 70 * Math.pow(kg, 0.75) * mult / 3.7;
+    const monthly = grams * 30 / 1000;
+    const bags = s.pet === 'perro' ? [3, 7.5, 15, 20] : [1, 1.5, 3, 7.5];
+    const bag = bags.find(b => b >= monthly) || bags[bags.length - 1];
+    const nb = Math.ceil(monthly / bag);
+    const ppk = s.pet === 'perro' ? 5600 : 9800;
+
+    const faqs = [
+      ['¿Cuál es el monto mínimo de compra?', 'No hay mínimo. Superando $60.000 el envío es gratis en Córdoba capital; por debajo se cobra según la zona.'],
+      ['¿Cómo funciona el plan mensual?', 'Elegís el alimento y cada cuánto lo necesitás. Te lo llevamos antes de que se termine con un 10% de descuento fijo. Lo pausás o cancelás cuando quieras, sin costo.'],
+      ['¿Qué medios de pago aceptan?', 'Mercado Pago, tarjetas de débito y crédito, transferencia bancaria y efectivo al recibir.'],
+      ['¿Puedo cambiar el alimento si no le gustó?', 'Sí. Si la bolsa está cerrada, la cambiamos sin cargo dentro de los 10 días. Si está abierta, consultanos y lo vemos juntos.'],
+      ['¿Trabajan con alimentos medicados?', 'Sí, trabajamos líneas veterinarias. Para algunas pedimos la indicación del veterinario.'],
+    ].map(([q, a], i) => ({ q, a, open: s.faq === i, icon: s.faq === i ? '−' : '+', toggle: () => this.setState(st => ({ faq: st.faq === i ? -1 : i })) }));
+
+    const curatedTestimonials = [
+      { text: 'Pido la bolsa de 15 kg todos los meses y nunca falló. Me avisan antes de que se termine, una cosa menos en la cabeza.', name: 'Lucía M.', pet: 'Mamá de Toto, golden de 4 años', slot: 'testi-1' },
+      { text: 'Los precios son mejores que en el súper y me la suben hasta el cuarto piso en Nueva Córdoba. Atención de verdad.', name: 'Martín G.', pet: 'Papá de Mora y Simón, gatos', slot: 'testi-2' },
+      { text: 'Me ayudaron a elegir un alimento para mi perra con sobrepeso. En dos meses se notó el cambio.', name: 'Carolina R.', pet: 'Mamá de Frida, beagle', slot: 'testi-3' },
+      { text: 'Rápidos, amables y siempre con fechas de vencimiento largas. Ya los recomendé a todo el edificio.', name: 'Diego F.', pet: 'Papá de Ramón, mestizo', slot: 'testi-4' },
+    ].map(t => ({ ...t, hasPhoto: true, noPhoto: false, initial: '' }));
+    const approvedReviews = s.reviews.filter(r => r.approved).map(r => ({
+      text: r.text, name: r.name, pet: r.pet, slot: null, hasPhoto: false, noPhoto: true, initial: (r.name[0] || '?').toUpperCase(),
+    }));
+    const testimonials = [...curatedTestimonials, ...approvedReviews];
+    this.totalTestimonials = testimonials.length;
+    const tIdx = s.tIdx % testimonials.length;
+
+    return {
+      showBar: this.props.showAnnouncement ?? true,
+      barItems: [0, 1].flatMap(() => ['Envío gratis desde $60.000 en Córdoba capital', 'Plan mensual con 10% off', 'Pedidos hasta las 18 h llegan mañana', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
+      brandsLoop: [0, 1].flatMap(() => ['Royal Canin', 'Pro Plan', 'Eukanuba', 'Old Prince', 'Vital Can', 'Excellent', "Hill's", 'Sieger']),
+      cartCount, openCart: () => this.setState({ cartOpen: true }), closeCart: () => this.setState({ cartOpen: false }),
+      waLink: this.wa('¡Hola Homer! Quiero hacer un pedido.'),
+      waPlan: this.wa('¡Hola Homer! Quiero info del plan mensual para mi ' + s.pet + ' de ' + kg + ' kg.'),
+      waCheckout: this.wa('¡Hola Homer! Quiero hacer este pedido:\n' + lines.join('\n') + '\nZona: ' + z.name + '\nTotal: ' + fmt(subtotal + ship)),
+      catCards: [
+        { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: 'perro.jpg', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
+        { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: 'gato.jpg', kicker: 'Seco, húmedo y medicados', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
+      ],
+      tabs, visibleProducts, trackRef: this.trackRef,
+      prev: () => this.trackRef.current && this.trackRef.current.scrollBy({ left: -330, behavior: 'smooth' }),
+      next: () => this.trackRef.current && this.trackRef.current.scrollBy({ left: 330, behavior: 'smooth' }),
+      services: [
+        { n: '01', title: 'Envíos a domicilio', badge: 'Desde $2.500', text: 'Córdoba capital en 24 h y Gran Córdoba en 24 a 48 h. Subimos la bolsa hasta tu puerta, aunque sea un cuarto piso por escalera.' },
+        { n: '02', title: 'Plan mensual', badge: '10% off fijo', text: 'Te llevamos el alimento antes de que se termine. Sin contratos: pausás o cancelás con un mensaje.' },
+        { n: '03', title: 'Asesoramiento', badge: 'Sin cargo', text: 'Te ayudamos a elegir según edad, tamaño, actividad y necesidades especiales de tu mascota.' },
+        { n: '04', title: 'Atención por WhatsApp', badge: 'Lun a Sáb', text: 'Sin local a la calle, pero siempre a un mensaje: te asesoramos, armamos el pedido y te avisamos cuando sale.' },
+      ].map((x, i) => ({ ...x, delay: i * 80 })),
+      hasVideo: !!this.props.videoUrl, noVideo: !this.props.videoUrl, videoUrl: this.props.videoUrl || '',
+      steps: [
+        { n: '01 — Pedís', title: 'Por web o WhatsApp', text: 'Armás el carrito o nos mandás un mensaje. Te confirmamos al toque.' },
+        { n: '02 — Preparamos', title: 'Revisamos cada bolsa', text: 'Fecha de vencimiento, estado del envase y el regalito para la mascota.' },
+        { n: '03 — Sale', title: 'Coordinamos horario', text: 'Te avisamos cuando sale el reparto con una franja de 2 horas.' },
+        { n: '04 — Llega', title: 'A tu puerta', text: 'Pagás al recibir o antes, como prefieras.' },
+      ].map((x, i) => ({ ...x, delay: i * 90 })),
+      zones: ZONES.map((x, i) => ({ name: x.name, priceFmt: (x.from ? 'desde ' : '') + fmt(x.price), active: s.zone === i, idle: s.zone !== i, pick: () => this.setState({ zone: i }) })),
+      zone: { name: z.name, priceFmt: fmt(z.price), eta: z.eta, note: z.note },
+      petOpts: pick([['perro', 'Perro'], ['gato', 'Gato']], s.pet, pet => this.setState(st => ({ pet, kg: pet === 'gato' ? Math.min(st.kg, 5) : Math.max(st.kg, 14) }))),
+      actOpts: pick([[0, 'Tranquilo'], [1, 'Normal'], [2, 'Muy activo']], s.act, act => this.setState({ act })),
+      kg, kgMax, setKg: e => this.setState({ kg: +e.target.value }),
+      calc: {
+        daily: Math.round(grams) + ' g',
+        monthly: monthly.toFixed(1).replace('.', ',') + ' kg',
+        bag: (nb > 1 ? nb + '×' : '') + String(bag).replace('.', ',') + ' kg',
+        price: fmt(monthly * ppk * 0.9),
+      },
+      dots: testimonials.map((_, i) => ({ active: tIdx === i, idle: tIdx !== i, pick: () => this.setState({ tIdx: i }) })),
+      testimonials, tOffset: (-100 * tIdx) + '%',
+      revName: s.revName, revPet: s.revPet, revText: s.revText,
+      setRevName: e => this.setState({ revName: e.target.value }),
+      setRevPet: e => this.setState({ revPet: e.target.value }),
+      setRevText: e => this.setState({ revText: e.target.value }),
+      submitReview: () => this.submitReview(),
+      faqs,
+      toast: s.toast, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
+      cartItems: s.cart.map(c => ({ brand: c.p.brand, name: c.p.name, size: c.p.sizes[c.si][0], qty: c.qty, totalFmt: fmt(c.p.sizes[c.si][1] * c.qty), inc: () => this.qty(c.key, 1), dec: () => this.qty(c.key, -1) })),
+      subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : ship === 0 ? 'Gratis' : fmt(ship), totalFmt: fmt(subtotal + ship),
+      freeHint: s.cart.length && z.free && subtotal < 60000 ? 'Te faltan ' + fmt(60000 - subtotal) + ' para el envío gratis.' : null,
+    };
+  }
+}
+</script>
+</body>
+</html>
