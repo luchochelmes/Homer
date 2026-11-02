@@ -42,6 +42,7 @@ input,textarea{font-family:inherit;outline:none}
   .zoneRow{grid-template-columns:1fr !important;gap:12px !important}
   .editPanel{grid-template-columns:1fr !important;gap:16px !important;padding-left:16px !important}
   .editPanel>div:first-child{width:96px !important;height:96px !important}
+  .revFormGrid{grid-template-columns:1fr !important}
 }
 @media (max-width:540px){
   .searchField{min-width:0 !important;width:100% !important}
@@ -213,9 +214,9 @@ input,textarea{font-family:inherit;outline:none}
 
 <div class="card" style="padding:26px;display:flex;flex-direction:column;gap:16px">
 <span style="font-size:16px;font-weight:600">Agregar reseña manualmente</span>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<input class="field" value="{{ newRevName }}" onChange="{{ setNewRevName }}" placeholder="Nombre" style-focus="border-color:#E2583A"></input>
-<input class="field" value="{{ newRevPet }}" onChange="{{ setNewRevPet }}" placeholder="Mascota" style-focus="border-color:#E2583A"></input>
+<div class="revFormGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<input class="field" value="{{ newRevName }}" onChange="{{ setNewRevName }}" placeholder="Nombre" style="min-width:0;width:100%" style-focus="border-color:#E2583A"></input>
+<input class="field" value="{{ newRevPet }}" onChange="{{ setNewRevPet }}" placeholder="Mascota" style="min-width:0;width:100%" style-focus="border-color:#E2583A"></input>
 </div>
 <textarea class="field" value="{{ newRevText }}" onChange="{{ setNewRevText }}" placeholder="Texto de la reseña…" rows="2" style="resize:vertical;font-family:inherit"></textarea>
 <div><button onClick="{{ addReview }}" class="btnDark" style-hover="transform:translateY(-1px)">+ Agregar reseña</button></div>
