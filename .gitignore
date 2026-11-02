@@ -1,5 +1,5 @@
 server.log
-backoffice/server.log
+administracion/server.log
 .vercel
 .image-slots.state.json
-backoffice/.image-slots.state.json
+administracion/.image-slots.state.json

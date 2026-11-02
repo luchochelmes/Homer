@@ -27,6 +27,17 @@ input[type=range]{accent-color:#E2583A}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
 @keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (max-width:760px){
+  .headerNav{order:3 !important;width:100% !important;margin-left:0 !important;flex-wrap:nowrap !important;overflow-x:auto !important;gap:18px !important;padding-top:2px}
+  .headerNav a{white-space:nowrap}
+  .heroVisual{min-height:420px !important}
+  .heroBadge{width:110px !important;height:110px !important;top:2% !important}
+  .heroBadge .heroBadgeNum{font-size:26px !important}
+  .lastOrderCard{right:0 !important;bottom:6% !important;padding:10px 14px !important;max-width:72%}
+}
+@media (max-width:480px){
+  .cartLabel{display:none}
+}
 </style>
 </helmet>
 <div style="min-height:100vh;overflow-x:clip">
@@ -44,7 +55,7 @@ input[type=range]{accent-color:#E2583A}
 <header style="position:sticky;top:0;z-index:40;background:rgba(245,239,228,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,38,32,.1)">
 <div style="max-width:1320px;margin:0 auto;padding:14px clamp(18px,4vw,48px);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
 <a href="#inicio" style="display:flex;align-items:flex-end;gap:3px;font-weight:800;font-size:30px;letter-spacing:-.05em;line-height:1">Homer<span style="width:9px;height:9px;border-radius:50%;background:#E2583A;margin-bottom:5px"></span></a>
-<nav style="display:flex;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;font-size:15px;font-weight:500;margin-left:auto">
+<nav class="headerNav" style="display:flex;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;font-size:15px;font-weight:500;margin-left:auto">
 <a href="#productos">Productos</a>
 <a href="#marcas">Marcas</a>
 <a href="#servicios">Servicios</a>
@@ -52,7 +63,7 @@ input[type=range]{accent-color:#E2583A}
 <a href="#calculadora">Calculadora</a>
 <a href="#preguntas">Ayuda</a>
 </nav>
-<button onClick="{{ openCart }}" style="display:flex;align-items:center;gap:10px;background:#1C2620;color:#F5EFE4;border:0;border-radius:999px;padding:10px 12px 10px 18px;font-size:14px;font-weight:600;transition:transform .2s" style-hover="transform:translateY(-1px)">Carrito<span style="min-width:24px;height:24px;border-radius:999px;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:12px;font-family:'JetBrains Mono',monospace;padding:0 6px">{{ cartCount }}</span></button>
+<button onClick="{{ openCart }}" style="display:flex;align-items:center;gap:10px;background:#1C2620;color:#F5EFE4;border:0;border-radius:999px;padding:10px 12px 10px 18px;font-size:14px;font-weight:600;transition:transform .2s" style-hover="transform:translateY(-1px)"><span class="cartLabel">Carrito</span><span style="min-width:24px;height:24px;border-radius:999px;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:12px;font-family:'JetBrains Mono',monospace;padding:0 6px">{{ cartCount }}</span></button>
 </div>
 </header>
 
@@ -71,18 +82,18 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Pagás como quieras</strong>Mercado Pago, transferencia o efectivo</div>
 </div>
 </div>
-<div data-reveal="150" style="position:relative;min-height:560px">
+<div data-reveal="150" class="heroVisual" style="position:relative;min-height:560px">
 <div style="position:absolute;top:0;right:0;width:82%;height:88%;border-radius:220px 220px 28px 28px;overflow:hidden;background:#E8DFCE">
 <image-slot id="hero-perro" shape="rect" src="perrocomiendo.jpg" placeholder="Foto principal: perro feliz con su bowl"></image-slot>
 </div>
 <div style="position:absolute;left:0;bottom:0;width:44%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:8px solid #F5EFE4;background:#DCD2BF">
 <image-slot id="hero-gato" shape="rect" src="gato-comiendo.jpg" placeholder="Foto: gato"></image-slot>
 </div>
-<div style="position:absolute;top:6%;left:4%;width:150px;height:150px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;animation:floaty 6s ease-in-out infinite;pointer-events:none">
+<div class="heroBadge" style="position:absolute;top:6%;left:4%;width:150px;height:150px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;animation:floaty 6s ease-in-out infinite;pointer-events:none">
 <svg viewBox="0 0 200 200" style="position:absolute;inset:0;width:100%;height:100%;animation:spin 22s linear infinite"><defs><path id="circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs><text style="font-family:'JetBrains Mono',monospace;font-size:14.5px;letter-spacing:3px;fill:#1C2620"><textPath href="#circ">ENVÍO GRATIS DESDE $60.000 · CÓRDOBA CAPITAL · </textPath></text></svg>
-<div style="text-align:center;line-height:.9"><div style="font-size:38px;font-weight:800;letter-spacing:-.04em">24h</div><div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:17px">a tu casa</div></div>
+<div style="text-align:center;line-height:.9"><div class="heroBadgeNum" style="font-size:38px;font-weight:800;letter-spacing:-.04em">24h</div><div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:17px">a tu casa</div></div>
 </div>
-<div style="position:absolute;right:-8px;bottom:16%;background:#FBF8F2;border-radius:18px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(28,38,32,.35);display:flex;flex-direction:column;gap:2px;transform:rotate(3deg)">
+<div class="lastOrderCard" style="position:absolute;right:-8px;bottom:16%;background:#FBF8F2;border-radius:18px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(28,38,32,.35);display:flex;flex-direction:column;gap:2px;transform:rotate(3deg)">
 <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#24513C;text-transform:uppercase">Último pedido</span>
 <span style="font-weight:600;font-size:15px">Pro Plan 15 kg → Nueva Córdoba</span>
 </div>
