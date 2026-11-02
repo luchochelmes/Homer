@@ -3,3 +3,4 @@ administracion/server.log
 .vercel
 .image-slots.state.json
 administracion/.image-slots.state.json
+.claude/
