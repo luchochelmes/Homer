@@ -30,10 +30,13 @@ input[type=range]{accent-color:#E2583A}
 @media (max-width:760px){
   .headerNav{order:3 !important;width:100% !important;margin-left:0 !important;flex-wrap:nowrap !important;overflow-x:auto !important;gap:18px !important;padding-top:2px}
   .headerNav a{white-space:nowrap}
-  .heroVisual{min-height:420px !important}
+  .heroVisual{min-height:360px !important}
   .heroBadge{width:110px !important;height:110px !important;top:2% !important}
   .heroBadge .heroBadgeNum{font-size:26px !important}
   .lastOrderCard{right:0 !important;bottom:6% !important;padding:10px 14px !important;max-width:72%}
+  .heroFeatures{display:grid !important;grid-template-columns:repeat(2,1fr) !important;gap:14px 16px !important;padding-top:14px !important}
+  .svcSticky{position:static !important;top:auto !important}
+  .videoBox{aspect-ratio:auto !important;min-height:0 !important;height:220px !important}
 }
 @media (max-width:480px){
   .cartLabel{display:none}
@@ -76,7 +79,7 @@ input[type=range]{accent-color:#E2583A}
 <a href="#productos" style="display:inline-flex;align-items:center;gap:10px;background:#E2583A;color:#FBF8F2;padding:17px 26px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#C9452A;color:#FBF8F2;transform:translateY(-2px)">Ver productos y precios <span>→</span></a>
 <a href="{{ waLink }}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;border:1.5px solid #1C2620;padding:16px 24px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">Pedir por WhatsApp</a>
 </div>
-<div data-reveal="320" style="display:flex;gap:28px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249">
+<div data-reveal="320" class="heroFeatures" style="display:flex;gap:28px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249">
 <div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Envío en 24 h</strong>Córdoba capital</div>
 <div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Plan mensual</strong>10% off fijo</div>
 <div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Pagás como quieras</strong>Mercado Pago, transferencia o efectivo</div>
@@ -188,7 +191,7 @@ input[type=range]{accent-color:#E2583A}
 
 <section id="servicios" style="max-width:1320px;margin:0 auto;padding:clamp(72px,9vw,140px) clamp(18px,4vw,48px)">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(36px,6vw,96px)">
-<div data-reveal="0" style="display:flex;flex-direction:column;gap:22px;align-self:start;position:sticky;top:110px">
+<div data-reveal="0" class="svcSticky" style="display:flex;flex-direction:column;gap:22px;align-self:start;position:sticky;top:110px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#E2583A">Servicios</span>
 <h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">Más que una bolsa <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">de alimento.</span></h2>
 <p style="margin:0;font-size:17px;line-height:1.55;color:#4A5249;max-width:440px">Somos un emprendimiento cordobés 100% online que creció a fuerza de recomendaciones. Sin local a la calle: todo llega a tu puerta. Te conocemos por nombre, y a tu perro también.</p>
@@ -216,7 +219,7 @@ input[type=range]{accent-color:#E2583A}
 <h2 style="margin:0;font-size:clamp(36px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:800px">Así arma <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#F2C45A">Homer</span> cada pedido.</h2>
 <p style="margin:0;max-width:340px;font-size:16px;line-height:1.55;color:#C9CEC4">Controlamos vencimiento y estado de cada bolsa antes de salir. Si algo no está perfecto, no sale.</p>
 </div>
-<div data-reveal="100" style="position:relative;aspect-ratio:16/8;min-height:300px;border-radius:28px;overflow:hidden;background:#2A362E">
+<div data-reveal="100" class="videoBox" style="position:relative;aspect-ratio:16/8;min-height:300px;border-radius:28px;overflow:hidden;background:#2A362E">
 <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
 <video src="{{ videoUrl }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
 </sc-if>
