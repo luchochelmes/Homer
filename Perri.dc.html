@@ -34,6 +34,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
@@ -447,36 +448,15 @@ input[type=range]{accent-color:#E2583A}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5491100000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;videoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Media&quot;},&quot;showAnnouncement&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
-const PRODUCTS = [
-  { id: 'rc-med', cat: 'perro', brand: 'Royal Canin', name: 'Medium Adult', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900], ['15 kg', 98500, 109000]] },
-  { id: 'pp-med', cat: 'perro', brand: 'Pro Plan', name: 'Adulto Razas Medianas', desc: 'Con OptiHealth, pollo y arroz.', sizes: [['3 kg', 26400], ['15 kg', 92300]] },
-  { id: 'op-eq', cat: 'perro', brand: 'Old Prince', name: 'Equilibrium Adulto', desc: 'Cordero y arroz, todas las razas.', tag: 'Precio Homer', sizes: [['3 kg', 17800], ['15 kg', 64900, 71500]] },
-  { id: 'eu-pup', cat: 'perro', brand: 'Eukanuba', name: 'Puppy Razas Medianas', desc: 'Cachorros de 2 a 12 meses.', sizes: [['3 kg', 27500], ['15 kg', 95000]] },
-  { id: 'vc-bal', cat: 'perro', brand: 'Vital Can', name: 'Balanced Adulto', desc: 'Alta digestibilidad, sin colorantes.', sizes: [['3 kg', 15900], ['20 kg', 71200]] },
-  { id: 'rc-ind', cat: 'gato', brand: 'Royal Canin', name: 'Indoor 27', desc: 'Gatos de interior, control de bolas de pelo.', tag: 'Más vendido', sizes: [['1,5 kg', 24300], ['7,5 kg', 89900]] },
-  { id: 'pp-cat', cat: 'gato', brand: 'Pro Plan', name: 'Cat Adulto Pollo', desc: 'Protección urinaria y piel sana.', sizes: [['1 kg', 15200], ['7,5 kg', 79800, 88600]] },
-  { id: 'ex-cat', cat: 'gato', brand: 'Excellent', name: 'Cat Adulto', desc: 'Pollo y arroz, fórmula completa.', sizes: [['1 kg', 11900], ['7,5 kg', 62400]] },
-  { id: 'vc-cat', cat: 'gato', brand: 'Vital Cat', name: 'Adulto Control', desc: 'Control de peso para gatos castrados.', sizes: [['1,5 kg', 12800], ['7,5 kg', 49900]] },
-  { id: 'sn-den', cat: 'extra', brand: 'Pedigree', name: 'Dentastix Medianos', desc: 'Snack dental, pack x7.', sizes: [['x7', 6900], ['x28', 24500]] },
-  { id: 'po-cat', cat: 'extra', brand: 'Whiskas', name: 'Pouch Carne', desc: 'Alimento húmedo para gatos.', tag: 'Combo', sizes: [['x12', 18600], ['x24', 34900, 37200]] },
-  { id: 'ac-bow', cat: 'extra', brand: 'Homer', name: 'Comedero de acero', desc: 'Antideslizante, apto lavavajillas.', sizes: [['M', 9800], ['L', 12400]] },
-];
-const ZONES = [
-  { name: 'Centro y Nueva Córdoba', price: 2500, eta: '24 h', free: true, note: 'Centro, Nueva Córdoba, Güemes, Alberdi, Cofico y General Paz. Coordinamos franja horaria por WhatsApp.' },
-  { name: 'Resto de Córdoba capital', price: 3500, eta: '24 h', free: true, note: 'Cerro de las Rosas, Villa Belgrano, Argüello, Jardín, Alta Córdoba, barrios del sur y del este. Lunes a sábado.' },
-  { name: 'Gran Córdoba', price: 4900, eta: '24–48 h', note: 'Villa Allende, Mendiolaza, Unquillo, Río Ceballos, La Calera, Malagueño y alrededores.' },
-  { name: 'Interior de la provincia', price: 6900, eta: '2–4 días', from: true, note: 'Carlos Paz, Río Cuarto, Villa María, Alta Gracia y más, por correo o transporte. Te pasamos el seguimiento.' },
-  { name: 'Resto del país', price: 8900, eta: '3–6 días', from: true, note: 'Despachamos por correo a todo el país. Te pasamos el número de seguimiento.' },
-];
+const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
+const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
-const REVIEWS_KEY = 'homer_reviews';
-const loadReviews = () => { try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch { return []; } };
 
 class Component extends DCLogic {
-  state = { cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: 0, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0, reviews: loadReviews(), revName: '', revPet: '', revText: '' };
+  state = { cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: 0, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0, products: [], zones: [], freeThreshold: 60000, reviews: [], revName: '', revPet: '', revText: '' };
   trackRef = React.createRef();
 
-  componentDidMount() {
+  async componentDidMount() {
     this.io = new IntersectionObserver(es => es.forEach(e => {
       if (e.isIntersecting) { e.target.style.opacity = 1; e.target.style.transform = 'none'; this.io.unobserve(e.target); }
     }), { threshold: 0.1 });
@@ -484,18 +464,36 @@ class Component extends DCLogic {
     this.mo = new MutationObserver(() => this.scan());
     this.mo.observe(document.body, { childList: true, subtree: true });
     this.timer = setInterval(() => this.setState(s => ({ tIdx: (s.tIdx + 1) % (this.totalTestimonials || 4) })), 6500);
-    this.onStorage = e => { if (!e.key || e.key === REVIEWS_KEY) this.setState({ reviews: loadReviews() }); };
-    window.addEventListener('storage', this.onStorage);
+
+    this.sb = window.supabase.createClient(SB_URL, SB_KEY);
+    await Promise.all([this.loadProducts(), this.loadZones(), this.loadReviews(), this.loadSettings()]);
+    this.channel = this.sb.channel('homer-sync-landing')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => this.loadReviews())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => this.loadProducts())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'zones' }, () => this.loadZones())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => this.loadSettings())
+      .subscribe();
   }
-  componentWillUnmount() { this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); clearInterval(this.timer); clearTimeout(this.tt); window.removeEventListener('storage', this.onStorage); }
-  submitReview() {
+  componentWillUnmount() { this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); clearInterval(this.timer); clearTimeout(this.tt); this.channel && this.sb.removeChannel(this.channel); }
+
+  async loadProducts() { const { data } = await this.sb.from('products').select('*').eq('active', true).order('created_at'); this.setState({ products: data || [] }); }
+  async loadZones() { const { data } = await this.sb.from('zones').select('*').order('sort_order'); this.setState({ zones: data || [] }); }
+  async loadReviews() {
+    const { data } = await this.sb.from('reviews').select('*').order('created_at', { ascending: false });
+    this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
+  }
+  async loadSettings() {
+    const { data } = await this.sb.from('settings').select('*').eq('key', 'freeThreshold').maybeSingle();
+    if (data) this.setState({ freeThreshold: Number(data.value) || 60000 });
+  }
+
+  async submitReview() {
     const name = this.state.revName.trim(), text = this.state.revText.trim();
     if (!name || !text) return;
-    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.revPet.trim() || 'Cliente Homer', text, approved: false, createdAt: Date.now() };
-    const reviews = [...this.state.reviews, review];
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-    this.setState({ reviews, revName: '', revPet: '', revText: '', toast: '¡Gracias! Tu reseña se publicará pronto.' });
+    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.revPet.trim() || 'Cliente Homer', text, approved: false };
+    this.setState(s => ({ reviews: [{ ...review, createdAt: Date.now() }, ...s.reviews], revName: '', revPet: '', revText: '', toast: '¡Gracias! Tu reseña se publicará pronto.' }));
     clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
+    await this.sb.from('reviews').insert(review);
   }
   scan() {
     document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
@@ -528,7 +526,7 @@ class Component extends DCLogic {
     const s = this.state;
     const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
     const tabs = pick([['todos', 'Todo'], ['perro', 'Perros'], ['gato', 'Gatos'], ['extra', 'Snacks y accesorios']], s.cat, cat => { this.setState({ cat }); this.trackRef.current && this.trackRef.current.scrollTo({ left: 0, behavior: 'smooth' }); });
-    const visibleProducts = PRODUCTS.filter(p => s.cat === 'todos' || p.cat === s.cat).map(p => {
+    const visibleProducts = s.products.filter(p => s.cat === 'todos' || p.cat === s.cat).map(p => {
       const si = s.sel[p.id] ?? 0; const [, price, old] = p.sizes[si];
       return {
         slot: 'prod-' + p.id, ph: 'Packshot ' + p.brand, brand: p.brand, name: p.name, desc: p.desc, tag: p.tag || null,
@@ -537,9 +535,9 @@ class Component extends DCLogic {
         add: () => this.add(p, si),
       };
     });
-    const z = ZONES[s.zone];
+    const z = s.zones[s.zone] || { free: false, price: 0, name: '', eta: '', note: '' };
     const subtotal = s.cart.reduce((a, c) => a + c.p.sizes[c.si][1] * c.qty, 0);
-    const freeEligible = z.free && subtotal >= 60000;
+    const freeEligible = z.free && subtotal >= s.freeThreshold;
     const ship = s.cart.length === 0 ? 0 : freeEligible ? 0 : z.price;
     const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
     const lines = s.cart.map(c => '• ' + c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
@@ -603,7 +601,7 @@ class Component extends DCLogic {
         { n: '03 — Sale', title: 'Coordinamos horario', text: 'Te avisamos cuando sale el reparto con una franja de 2 horas.' },
         { n: '04 — Llega', title: 'A tu puerta', text: 'Pagás al recibir o antes, como prefieras.' },
       ].map((x, i) => ({ ...x, delay: i * 90 })),
-      zones: ZONES.map((x, i) => ({ name: x.name, priceFmt: (x.from ? 'desde ' : '') + fmt(x.price), active: s.zone === i, idle: s.zone !== i, pick: () => this.setState({ zone: i }) })),
+      zones: s.zones.map((x, i) => ({ name: x.name, priceFmt: (x.from_price ? 'desde ' : '') + fmt(x.price), active: s.zone === i, idle: s.zone !== i, pick: () => this.setState({ zone: i }) })),
       zone: { name: z.name, priceFmt: fmt(z.price), eta: z.eta, note: z.note },
       petOpts: pick([['perro', 'Perro'], ['gato', 'Gato']], s.pet, pet => this.setState(st => ({ pet, kg: pet === 'gato' ? Math.min(st.kg, 5) : Math.max(st.kg, 14) }))),
       actOpts: pick([[0, 'Tranquilo'], [1, 'Normal'], [2, 'Muy activo']], s.act, act => this.setState({ act })),
@@ -625,7 +623,7 @@ class Component extends DCLogic {
       toast: s.toast, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
       cartItems: s.cart.map(c => ({ brand: c.p.brand, name: c.p.name, size: c.p.sizes[c.si][0], qty: c.qty, totalFmt: fmt(c.p.sizes[c.si][1] * c.qty), inc: () => this.qty(c.key, 1), dec: () => this.qty(c.key, -1) })),
       subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : ship === 0 ? 'Gratis' : fmt(ship), totalFmt: fmt(subtotal + ship),
-      freeHint: s.cart.length && z.free && subtotal < 60000 ? 'Te faltan ' + fmt(60000 - subtotal) + ' para el envío gratis.' : null,
+      freeHint: s.cart.length && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
     };
   }
 }

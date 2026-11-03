@@ -13,6 +13,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
@@ -379,38 +380,38 @@ input,textarea{font-family:inherit;outline:none}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const CATS = [['perro','Perros'],['gato','Gatos'],['extra','Snacks y accesorios']];
-const INITIAL_PRODUCTS = [
-  { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult 15 kg', cat: 'perro', price: 98500, stock: 42, active: true },
-  { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas 15 kg', cat: 'perro', price: 92300, stock: 15, active: true },
-  { id: 'op-eq', brand: 'Old Prince', name: 'Equilibrium Adulto 15 kg', cat: 'perro', price: 64900, stock: 8, active: true },
-  { id: 'eu-pup', brand: 'Eukanuba', name: 'Puppy Razas Medianas 15 kg', cat: 'perro', price: 95000, stock: 20, active: true },
-  { id: 'vc-bal', brand: 'Vital Can', name: 'Balanced Adulto 20 kg', cat: 'perro', price: 71200, stock: 30, active: true },
-  { id: 'rc-ind', brand: 'Royal Canin', name: 'Indoor 27 · 7,5 kg', cat: 'gato', price: 89900, stock: 25, active: true },
-  { id: 'pp-cat', brand: 'Pro Plan', name: 'Cat Adulto Pollo 7,5 kg', cat: 'gato', price: 79800, stock: 5, active: true },
-  { id: 'ex-cat', brand: 'Excellent', name: 'Cat Adulto 7,5 kg', cat: 'gato', price: 62400, stock: 18, active: true },
-  { id: 'vc-cat', brand: 'Vital Cat', name: 'Adulto Control 7,5 kg', cat: 'gato', price: 49900, stock: 22, active: false },
-  { id: 'sn-den', brand: 'Pedigree', name: 'Dentastix Medianos x28', cat: 'extra', price: 24500, stock: 60, active: true },
-  { id: 'po-cat', brand: 'Whiskas', name: 'Pouch Carne x24', cat: 'extra', price: 34900, stock: 3, active: true },
-  { id: 'ac-bow', brand: 'Homer', name: 'Comedero de acero L', cat: 'extra', price: 12400, stock: 14, active: true },
+const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
+const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
+const SEED_PRODUCTS = [
+  { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult', cat: 'perro', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900, null], ['15 kg', 98500, 109000]], price: 98500, stock: 42, active: true },
+  { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas', cat: 'perro', desc: 'Con OptiHealth, pollo y arroz.', tag: null, sizes: [['3 kg', 26400, null], ['15 kg', 92300, null]], price: 92300, stock: 15, active: true },
+  { id: 'op-eq', brand: 'Old Prince', name: 'Equilibrium Adulto', cat: 'perro', desc: 'Cordero y arroz, todas las razas.', tag: 'Precio Homer', sizes: [['3 kg', 17800, null], ['15 kg', 64900, 71500]], price: 64900, stock: 8, active: true },
+  { id: 'eu-pup', brand: 'Eukanuba', name: 'Puppy Razas Medianas', cat: 'perro', desc: 'Cachorros de 2 a 12 meses.', tag: null, sizes: [['3 kg', 27500, null], ['15 kg', 95000, null]], price: 95000, stock: 20, active: true },
+  { id: 'vc-bal', brand: 'Vital Can', name: 'Balanced Adulto', cat: 'perro', desc: 'Alta digestibilidad, sin colorantes.', tag: null, sizes: [['3 kg', 15900, null], ['20 kg', 71200, null]], price: 71200, stock: 30, active: true },
+  { id: 'rc-ind', brand: 'Royal Canin', name: 'Indoor 27', cat: 'gato', desc: 'Gatos de interior, control de bolas de pelo.', tag: 'Más vendido', sizes: [['1,5 kg', 24300, null], ['7,5 kg', 89900, null]], price: 89900, stock: 25, active: true },
+  { id: 'pp-cat', brand: 'Pro Plan', name: 'Cat Adulto Pollo', cat: 'gato', desc: 'Protección urinaria y piel sana.', tag: null, sizes: [['1 kg', 15200, null], ['7,5 kg', 79800, 88600]], price: 79800, stock: 5, active: true },
+  { id: 'ex-cat', brand: 'Excellent', name: 'Cat Adulto', cat: 'gato', desc: 'Pollo y arroz, fórmula completa.', tag: null, sizes: [['1 kg', 11900, null], ['7,5 kg', 62400, null]], price: 62400, stock: 18, active: true },
+  { id: 'vc-cat', brand: 'Vital Cat', name: 'Adulto Control', cat: 'gato', desc: 'Control de peso para gatos castrados.', tag: null, sizes: [['1,5 kg', 12800, null], ['7,5 kg', 49900, null]], price: 49900, stock: 22, active: false },
+  { id: 'sn-den', brand: 'Pedigree', name: 'Dentastix Medianos', cat: 'extra', desc: 'Snack dental, pack x7.', tag: null, sizes: [['x7', 6900, null], ['x28', 24500, null]], price: 24500, stock: 60, active: true },
+  { id: 'po-cat', brand: 'Whiskas', name: 'Pouch Carne', cat: 'extra', desc: 'Alimento húmedo para gatos.', tag: 'Combo', sizes: [['x12', 18600, null], ['x24', 34900, 37200]], price: 34900, stock: 3, active: true },
+  { id: 'ac-bow', brand: 'Homer', name: 'Comedero de acero', cat: 'extra', desc: 'Antideslizante, apto lavavajillas.', tag: null, sizes: [['M', 9800, null], ['L', 12400, null]], price: 12400, stock: 14, active: true },
 ];
-const INITIAL_ZONES = [
-  { name: 'Centro y Nueva Córdoba', price: 2500, eta: '24 h', free: true, note: 'Centro, Nueva Córdoba, Güemes, Alberdi, Cofico y General Paz.' },
-  { name: 'Resto de Córdoba capital', price: 3500, eta: '24 h', free: true, note: 'Cerro de las Rosas, Villa Belgrano, Argüello, barrios sur y este.' },
-  { name: 'Gran Córdoba', price: 4900, eta: '24–48 h', free: false, note: 'Villa Allende, Mendiolaza, Unquillo, Río Ceballos, La Calera.' },
-  { name: 'Interior de la provincia', price: 6900, eta: '2–4 días', free: false, note: 'Carlos Paz, Río Cuarto, Villa María, Alta Gracia y más.' },
-  { name: 'Resto del país', price: 8900, eta: '3–6 días', free: false, note: 'Despacho por correo a todo el país, con seguimiento.' },
+const SEED_ZONES = [
+  { id: 'z1', name: 'Centro y Nueva Córdoba', price: 2500, eta: '24 h', free: true, from_price: false, note: 'Centro, Nueva Córdoba, Güemes, Alberdi, Cofico y General Paz. Coordinamos franja horaria por WhatsApp.', sort_order: 0 },
+  { id: 'z2', name: 'Resto de Córdoba capital', price: 3500, eta: '24 h', free: true, from_price: false, note: 'Cerro de las Rosas, Villa Belgrano, Argüello, Jardín, Alta Córdoba, barrios del sur y del este. Lunes a sábado.', sort_order: 1 },
+  { id: 'z3', name: 'Gran Córdoba', price: 4900, eta: '24–48 h', free: false, from_price: false, note: 'Villa Allende, Mendiolaza, Unquillo, Río Ceballos, La Calera, Malagueño y alrededores.', sort_order: 2 },
+  { id: 'z4', name: 'Interior de la provincia', price: 6900, eta: '2–4 días', free: false, from_price: true, note: 'Carlos Paz, Río Cuarto, Villa María, Alta Gracia y más, por correo o transporte. Te pasamos el seguimiento.', sort_order: 3 },
+  { id: 'z5', name: 'Resto del país', price: 8900, eta: '3–6 días', free: false, from_price: true, note: 'Despachamos por correo a todo el país. Te pasamos el número de seguimiento.', sort_order: 4 },
 ];
-const INITIAL_ORDERS = [
-  { id: 'o1', name: 'Lucía M.', items: 'Royal Canin Medium Adult 15 kg', zone: 'Nueva Córdoba', total: 98500, status: 'nuevo', cat: 'perro' },
-  { id: 'o2', name: 'Martín G.', items: 'Pro Plan Cat x2, Dentastix', zone: 'Centro', total: 185100, status: 'preparando', cat: 'gato' },
-  { id: 'o3', name: 'Carolina R.', items: 'Old Prince Equilibrium 15 kg', zone: 'Cerro de las Rosas', total: 64900, status: 'enviado', cat: 'perro' },
-  { id: 'o4', name: 'Diego F.', items: 'Vital Can Balanced 20 kg', zone: 'Villa Allende', total: 71200, status: 'enviado', cat: 'perro' },
-  { id: 'o5', name: 'Sofía A.', items: 'Whiskas Pouch x24, Comedero L', zone: 'Alberdi', total: 47300, status: 'nuevo', cat: 'gato' },
-  { id: 'o6', name: 'Pablo N.', items: 'Royal Canin Indoor 27 · 7,5 kg', zone: 'Alta Córdoba', total: 89900, status: 'preparando', cat: 'gato' },
+const SEED_ORDERS = [
+  { id: 'o1', customer_name: 'Lucía M.', items: 'Royal Canin Medium Adult 15 kg', zone_name: 'Nueva Córdoba', total: 98500, status: 'nuevo', cat: 'perro' },
+  { id: 'o2', customer_name: 'Martín G.', items: 'Pro Plan Cat x2, Dentastix', zone_name: 'Centro', total: 185100, status: 'preparando', cat: 'gato' },
+  { id: 'o3', customer_name: 'Carolina R.', items: 'Old Prince Equilibrium 15 kg', zone_name: 'Cerro de las Rosas', total: 64900, status: 'enviado', cat: 'perro' },
+  { id: 'o4', customer_name: 'Diego F.', items: 'Vital Can Balanced 20 kg', zone_name: 'Villa Allende', total: 71200, status: 'enviado', cat: 'perro' },
+  { id: 'o5', customer_name: 'Sofía A.', items: 'Whiskas Pouch x24, Comedero L', zone_name: 'Alberdi', total: 47300, status: 'nuevo', cat: 'gato' },
+  { id: 'o6', customer_name: 'Pablo N.', items: 'Royal Canin Indoor 27 · 7,5 kg', zone_name: 'Alta Córdoba', total: 89900, status: 'preparando', cat: 'gato' },
 ];
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
-const REVIEWS_KEY = 'homer_reviews';
-const loadReviews = () => { try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch { return []; } };
 const STATUS = {
   nuevo: { label: 'Nuevo', bg: '#FCE7E1', color: '#C9452A' },
   preparando: { label: 'Preparando', bg: '#FDF0DC', color: '#A9700F' },
@@ -420,57 +421,106 @@ const STATUS = {
 class Component extends DCLogic {
   state = {
     tab: 'dashboard',
-    products: INITIAL_PRODUCTS,
-    zones: INITIAL_ZONES,
-    freeThreshold: 60000,
+    products: [], zones: [], orders: [], reviews: [], freeThreshold: 60000,
     catFilter: 'todos',
     search: '',
     showAddForm: false,
     npBrand: '', npName: '', npPrice: '', npStock: '', npCat: 'perro',
     editingId: null,
-    reviews: loadReviews(), newRevName: '', newRevPet: '', newRevText: '',
-    orders: INITIAL_ORDERS, orderFilter: 'todos', showAddOrderForm: false,
+    newRevName: '', newRevPet: '', newRevText: '',
+    orderFilter: 'todos', showAddOrderForm: false,
     noName: '', noItems: '', noTotal: '', noZone: 0,
   };
 
-  componentDidMount() {
-    this.onStorage = e => { if (!e.key || e.key === REVIEWS_KEY) this.setState({ reviews: loadReviews() }); };
-    window.addEventListener('storage', this.onStorage);
+  async componentDidMount() {
+    this.sb = window.supabase.createClient(SB_URL, SB_KEY);
+    await this.seedIfEmpty();
+    await Promise.all([this.loadProducts(), this.loadZones(), this.loadOrders(), this.loadReviews(), this.loadSettings()]);
+    this.channel = this.sb.channel('homer-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => this.loadReviews())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => this.loadProducts())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'zones' }, () => this.loadZones())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => this.loadOrders())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => this.loadSettings())
+      .subscribe();
   }
-  componentWillUnmount() { window.removeEventListener('storage', this.onStorage); }
+  componentWillUnmount() { this.channel && this.sb.removeChannel(this.channel); }
+
+  async seedIfEmpty() {
+    const { count } = await this.sb.from('products').select('*', { count: 'exact', head: true });
+    if (!count) {
+      await this.sb.from('products').insert(SEED_PRODUCTS);
+      await this.sb.from('zones').insert(SEED_ZONES);
+      await this.sb.from('orders').insert(SEED_ORDERS);
+      await this.sb.from('settings').upsert({ key: 'freeThreshold', value: 60000 });
+    }
+  }
+  async loadProducts() { const { data } = await this.sb.from('products').select('*').order('created_at'); this.setState({ products: data || [] }); }
+  async loadZones() { const { data } = await this.sb.from('zones').select('*').order('sort_order'); this.setState({ zones: data || [] }); }
+  async loadOrders() {
+    const { data } = await this.sb.from('orders').select('*').order('created_at', { ascending: false });
+    this.setState({ orders: (data || []).map(o => ({ id: o.id, name: o.customer_name, items: o.items, zone: o.zone_name, total: Number(o.total), status: o.status, cat: o.cat || 'perro' })) });
+  }
+  async loadReviews() {
+    const { data } = await this.sb.from('reviews').select('*').order('created_at', { ascending: false });
+    this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
+  }
+  async loadSettings() {
+    const { data } = await this.sb.from('settings').select('*').eq('key', 'freeThreshold').maybeSingle();
+    if (data) this.setState({ freeThreshold: Number(data.value) || 60000 });
+  }
 
   toggleEdit(id) { this.setState(s => ({ editingId: s.editingId === id ? null : id })); }
-  setProduct(id, patch) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, ...patch } : p) })); }
-  removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); }
-  setZone(i, patch) { this.setState(s => ({ zones: s.zones.map((z, idx) => idx === i ? { ...z, ...patch } : z) })); }
+  setProductField(id, field, value) {
+    this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, [field]: value } : p) }));
+    this.sb.from('products').update({ [field]: value }).eq('id', id);
+  }
+  setProductPrice(id, price) {
+    const p = this.state.products.find(x => x.id === id);
+    if (!p) return;
+    const sizes = (p.sizes || [[p.name, p.price, null]]).map((sz, i) => i === 0 ? [sz[0], price, sz[2]] : sz);
+    this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, price, sizes } : x) }));
+    this.sb.from('products').update({ price, sizes }).eq('id', id);
+  }
+  removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); this.sb.from('products').delete().eq('id', id); }
+  setZone(id, patch) { this.setState(s => ({ zones: s.zones.map(z => z.id === id ? { ...z, ...patch } : z) })); this.sb.from('zones').update(patch).eq('id', id); }
+  setFreeThreshold(value) { this.setState({ freeThreshold: value }); this.sb.from('settings').upsert({ key: 'freeThreshold', value }); }
 
-  saveReviews(reviews) { localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews)); this.setState({ reviews }); }
   addReview() {
     const name = this.state.newRevName.trim(), text = this.state.newRevText.trim();
     if (!name || !text) return;
-    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.newRevPet.trim() || 'Cliente Homer', text, approved: false, createdAt: Date.now() };
-    this.saveReviews([...this.state.reviews, review]);
-    this.setState({ newRevName: '', newRevPet: '', newRevText: '' });
+    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.newRevPet.trim() || 'Cliente Homer', text, approved: false };
+    this.setState(s => ({ reviews: [{ ...review, createdAt: Date.now() }, ...s.reviews], newRevName: '', newRevPet: '', newRevText: '' }));
+    this.sb.from('reviews').insert(review);
   }
-  toggleReviewApproved(id) { this.saveReviews(this.state.reviews.map(r => r.id === id ? { ...r, approved: !r.approved } : r)); }
-  removeReview(id) { this.saveReviews(this.state.reviews.filter(r => r.id !== id)); }
+  toggleReviewApproved(id) {
+    const r = this.state.reviews.find(x => x.id === id);
+    if (!r) return;
+    const approved = !r.approved;
+    this.setState(s => ({ reviews: s.reviews.map(x => x.id === id ? { ...x, approved } : x) }));
+    this.sb.from('reviews').update({ approved }).eq('id', id);
+  }
+  removeReview(id) { this.setState(s => ({ reviews: s.reviews.filter(r => r.id !== id) })); this.sb.from('reviews').delete().eq('id', id); }
 
-  setOrderStatus(id, status) { this.setState(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, status } : o) })); }
-  removeOrder(id) { this.setState(s => ({ orders: s.orders.filter(o => o.id !== id) })); }
+  setOrderStatus(id, status) { this.setState(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, status } : o) })); this.sb.from('orders').update({ status }).eq('id', id); }
+  removeOrder(id) { this.setState(s => ({ orders: s.orders.filter(o => o.id !== id) })); this.sb.from('orders').delete().eq('id', id); }
   addOrder() {
     const { noName, noItems, noTotal, noZone, zones } = this.state;
     if (!noName.trim() || !noItems.trim()) return;
     const zoneName = zones[noZone] ? zones[noZone].name : '';
-    const order = { id: 'o-' + Date.now().toString(36), name: noName.trim(), items: noItems.trim(), zone: zoneName, total: Number(noTotal) || 0, status: 'nuevo', cat: 'perro' };
-    this.setState(s => ({ orders: [order, ...s.orders], noName: '', noItems: '', noTotal: '', showAddOrderForm: false }));
+    const row = { id: 'o-' + Date.now().toString(36), customer_name: noName.trim(), items: noItems.trim(), zone_name: zoneName, total: Number(noTotal) || 0, status: 'nuevo', cat: 'perro' };
+    this.setState(s => ({ orders: [{ id: row.id, name: row.customer_name, items: row.items, zone: row.zone_name, total: row.total, status: row.status, cat: row.cat }, ...s.orders], noName: '', noItems: '', noTotal: '', showAddOrderForm: false }));
+    this.sb.from('orders').insert(row);
   }
 
   addProduct() {
     const { npBrand, npName, npPrice, npStock, npCat } = this.state;
     if (!npBrand.trim() || !npName.trim()) return;
     const id = (npBrand + '-' + npName).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) + '-' + Date.now().toString(36).slice(-4);
-    const product = { id, brand: npBrand.trim(), name: npName.trim(), cat: npCat, price: Number(npPrice) || 0, stock: Number(npStock) || 0, active: true };
+    const price = Number(npPrice) || 0;
+    const product = { id, brand: npBrand.trim(), name: npName.trim(), cat: npCat, desc: '', tag: null, sizes: [['Único', price, null]], price, stock: Number(npStock) || 0, active: true };
     this.setState(s => ({ products: [product, ...s.products], npBrand: '', npName: '', npPrice: '', npStock: '', showAddForm: false }));
+    this.sb.from('products').insert(product);
   }
 
   renderVals() {
@@ -493,12 +543,12 @@ class Component extends DCLogic {
       imgSlotId: 'prod-' + p.id,
       editing: s.editingId === p.id, editLabel: s.editingId === p.id ? 'Cerrar' : 'Editar',
       toggleEdit: () => this.toggleEdit(p.id),
-      setBrand: e => this.setProduct(p.id, { brand: e.target.value }),
-      setName: e => this.setProduct(p.id, { name: e.target.value }),
-      setPrice: e => this.setProduct(p.id, { price: Number(e.target.value) || 0 }),
-      setStock: e => this.setProduct(p.id, { stock: Number(e.target.value) || 0 }),
-      catOpts: pick(CATS, p.cat, cat => this.setProduct(p.id, { cat })),
-      toggle: () => this.setProduct(p.id, { active: !p.active }),
+      setBrand: e => this.setProductField(p.id, 'brand', e.target.value),
+      setName: e => this.setProductField(p.id, 'name', e.target.value),
+      setPrice: e => this.setProductPrice(p.id, Number(e.target.value) || 0),
+      setStock: e => this.setProductField(p.id, 'stock', Number(e.target.value) || 0),
+      catOpts: pick(CATS, p.cat, cat => this.setProductField(p.id, 'cat', cat)),
+      toggle: () => this.setProductField(p.id, 'active', !p.active),
       remove: () => this.removeProduct(p.id),
     }));
 
@@ -582,13 +632,13 @@ class Component extends DCLogic {
       search: s.search, setSearch: e => this.setState({ search: e.target.value }),
       productRows, noProducts: productRows.length === 0,
 
-      freeThreshold: s.freeThreshold, setFreeThreshold: e => this.setState({ freeThreshold: Number(e.target.value) || 0 }),
-      zoneRows: s.zones.map((z, i) => ({
+      freeThreshold: s.freeThreshold, setFreeThreshold: e => this.setFreeThreshold(Number(e.target.value) || 0),
+      zoneRows: s.zones.map(z => ({
         name: z.name, price: z.price, eta: z.eta, note: z.note, free: z.free, notFree: !z.free,
-        setPrice: e => this.setZone(i, { price: Number(e.target.value) || 0 }),
-        setEta: e => this.setZone(i, { eta: e.target.value }),
-        setNote: e => this.setZone(i, { note: e.target.value }),
-        toggleFree: () => this.setZone(i, { free: !z.free }),
+        setPrice: e => this.setZone(z.id, { price: Number(e.target.value) || 0 }),
+        setEta: e => this.setZone(z.id, { eta: e.target.value }),
+        setNote: e => this.setZone(z.id, { note: e.target.value }),
+        toggleFree: () => this.setZone(z.id, { free: !z.free }),
       })),
     };
   }
