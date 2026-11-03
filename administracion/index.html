@@ -46,6 +46,10 @@ input,textarea{font-family:inherit;outline:none}
   .editPanel{grid-template-columns:1fr !important;gap:16px !important;padding-left:16px !important}
   .editPanel>div:first-child{width:96px !important;height:96px !important}
   .revFormGrid{grid-template-columns:1fr !important}
+  .tableWrap{min-width:0 !important}
+  .prodHeader,.orderHeader{display:none !important}
+  .prodRowGrid{grid-template-columns:40px 1fr !important;row-gap:8px !important}
+  .orderRowGrid{grid-template-columns:1fr !important;gap:8px !important;cursor:default !important}
 }
 @media (max-width:540px){
   .searchField{min-width:0 !important;width:100% !important}
@@ -62,20 +66,14 @@ input,textarea{font-family:inherit;outline:none}
 <nav class="sidebarNav" style="display:flex;flex-direction:column;gap:3px">
 <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
 <sc-if value="{{ n.active }}">
-<button onClick="{{ n.pick }}" style="position:relative;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:rgba(242,196,90,.1);color:#F5EFE4;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:600" style-before="content:'';position:absolute;left:-18px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:#F2C45A">{{ n.label }}</button>
+<button onClick="{{ n.pick }}" style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:0;background:rgba(242,196,90,.1);color:#F5EFE4;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:600" style-before="content:'';position:absolute;left:-18px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:#F2C45A">{{ n.label }}<sc-if value="{{ n.badge }}"><span style="background:#E2583A;color:#FBF8F2;border-radius:999px;font-size:11px;font-family:'JetBrains Mono',monospace;padding:2px 7px">{{ n.badge }}</span></sc-if></button>
 </sc-if>
 <sc-if value="{{ n.idle }}">
-<button onClick="{{ n.pick }}" style="display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:#AEB5A9;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:500;transition:background .2s,color .2s" style-hover="background:rgba(245,239,228,.06);color:#F5EFE4">{{ n.label }}</button>
+<button onClick="{{ n.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:0;background:transparent;color:#AEB5A9;border-radius:12px;padding:14px 16px;font-size:15px;font-weight:500;transition:background .2s,color .2s" style-hover="background:rgba(245,239,228,.06);color:#F5EFE4">{{ n.label }}<sc-if value="{{ n.badge }}"><span style="background:#E2583A;color:#FBF8F2;border-radius:999px;font-size:11px;font-family:'JetBrains Mono',monospace;padding:2px 7px">{{ n.badge }}</span></sc-if></button>
 </sc-if>
 </sc-for>
 </nav>
-<div class="sidebarFooter" style="margin-top:auto;display:flex;align-items:center;gap:12px;padding:16px 10px 4px;border-top:1px solid rgba(245,239,228,.12)">
-<div style="width:38px;height:38px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-weight:700;font-size:14px">P</div>
-<div style="display:flex;flex-direction:column;gap:1px;overflow:hidden">
-<span style="font-size:13px;font-weight:600">Equipo Homer</span>
-<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7D877B;white-space:nowrap">admin@homer.com.ar</span>
-</div>
-</div>
+<a href="/" target="_blank" class="sidebarEyebrow" style="display:flex;align-items:center;gap:10px;margin-top:auto;border:1.5px solid rgba(245,239,228,.18);border-radius:12px;padding:12px 14px;color:#F5EFE4;font-size:13px;font-weight:600" style-hover="border-color:#F2C45A">Ver tienda ↗</a>
 </aside>
 
 <main style="flex:1;min-width:0;padding:clamp(28px,3.2vw,48px) clamp(28px,3.6vw,56px) 64px;display:flex;flex-direction:column;gap:36px">
@@ -176,6 +174,7 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 </sc-if>
 
+<input class="field searchField" value="{{ orderSearch }}" onChange="{{ setOrderSearch }}" placeholder="Buscar por cliente, producto o teléfono…" style="border-radius:999px;min-width:260px" style-focus="border-color:#E2583A"></input>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-for list="{{ orderFilterTabs }}" as="ft" hint-placeholder-count="4">
 <sc-if value="{{ ft.active }}"><button onClick="{{ ft.pick }}" class="pillOn">{{ ft.label }}</button></sc-if>
@@ -184,26 +183,30 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 
 <div class="card" style="overflow-x:auto;padding:6px">
-<div style="min-width:760px;display:flex;flex-direction:column">
-<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
-<span class="label">Cliente</span><span class="label">Pedido</span><span class="label">Zona</span><span class="label">Total</span><span class="label">Estado</span><span></span>
+<div class="tableWrap" style="min-width:760px;display:flex;flex-direction:column">
+<div class="orderHeader" style="display:grid;grid-template-columns:1fr 1.3fr .8fr .7fr 1.1fr 150px;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
+<span class="label">Cliente</span><span class="label">Pedido</span><span class="label">Zona</span><span class="label">Total</span><span class="label">Estado</span><span class="label">Acciones</span>
 </div>
 <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
-<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid rgba(28,38,32,.06);transition:background .15s;cursor:pointer" style-hover="background:rgba(28,38,32,.03)" onClick="{{ o.toggleDetail }}">
+<div class="orderRowGrid" style="display:grid;grid-template-columns:1fr 1.3fr .8fr .7fr 1.1fr 150px;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid rgba(28,38,32,.06);transition:background .15s;cursor:pointer" style-hover="background:rgba(28,38,32,.03)" onClick="{{ o.toggleDetail }}">
 <span style="font-weight:600;font-size:14px">{{ o.name }}</span>
 <span style="font-size:14px;color:#4A5249">{{ o.items }}</span>
 <span style="font-size:13px;color:#5B6359">{{ o.zone }}</span>
 <span style="font-size:14px;font-weight:700">{{ o.totalFmt }}</span>
-<div style="display:flex;gap:6px;flex-wrap:wrap">
-<sc-for list="{{ o.statusOpts }}" as="so" hint-placeholder-count="3">
-<sc-if value="{{ so.active }}"><button onClick="{{ so.pick }}" style="border:0;background:{{ so.bg }};color:{{ so.color }};border-radius:999px;padding:6px 11px;font-size:11.5px;font-weight:600;font-family:'JetBrains Mono',monospace">{{ so.label }}</button></sc-if>
-<sc-if value="{{ so.idle }}"><button onClick="{{ so.pick }}" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:6px 11px;font-size:11.5px;font-family:'JetBrains Mono',monospace">{{ so.label }}</button></sc-if>
-</sc-for>
+<select value="{{ o.status }}" onChange="{{ o.setStatus }}" style="border:0;border-radius:999px;padding:6px 10px;font-size:11.5px;font-weight:600;font-family:'JetBrains Mono',monospace;background:{{ o.statusBg }};color:{{ o.statusColor }}">
+<option value="nuevo">Nuevo</option>
+<option value="preparando">Preparando</option>
+<option value="enviado">Enviado</option>
+<option value="cancelado">Cancelado</option>
+</select>
+<div style="display:flex;gap:6px">
+<sc-if value="{{ o.canCancel }}"><button onClick="{{ o.cancel }}" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:6px 11px;font-size:12px" style-hover="border-color:#E2583A;color:#E2583A">Cancelar</button></sc-if>
+<sc-if value="{{ o.canDeleteForever }}"><button onClick="{{ o.deleteForever }}" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:6px 11px;font-size:12px" style-hover="border-color:#E2583A;color:#E2583A">Eliminar</button></sc-if>
 </div>
-<button onClick="{{ o.remove }}" aria-label="Eliminar" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;width:30px;height:30px;font-size:13px" style-hover="border-color:#E2583A;color:#E2583A">✕</button>
 </div>
 <sc-if value="{{ o.detailOpen }}">
 <div style="padding:16px 20px 20px;background:#FBF8F2;border-bottom:1px solid rgba(28,38,32,.06);display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#4A5249">
+<sc-if value="{{ o.dateFmt }}"><span><strong style="color:#1C2620">Fecha:</strong> {{ o.dateFmt }}</span></sc-if>
 <sc-if value="{{ o.phone }}"><span><strong style="color:#1C2620">Teléfono:</strong> {{ o.phone }} — <a href="{{ o.waPhoneLink }}" target="_blank" style="color:#24513C;font-weight:600">Escribir por WhatsApp</a></span></sc-if>
 <sc-if value="{{ o.address }}"><span><strong style="color:#1C2620">Dirección:</strong> {{ o.address }}</span></sc-if>
 <sc-if value="{{ o.paymentMethod }}"><span><strong style="color:#1C2620">Pago:</strong> {{ o.paymentMethod }}</span></sc-if>
@@ -302,13 +305,13 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 
 <div class="card" style="overflow-x:auto;padding:6px">
-<div style="min-width:780px;display:flex;flex-direction:column">
-<div style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
+<div class="tableWrap" style="min-width:780px;display:flex;flex-direction:column">
+<div class="prodHeader" style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:18px 20px;border-bottom:1px solid rgba(28,38,32,.1)">
 <span></span><span class="label">Producto</span><span class="label">Categoría</span><span class="label">Precio</span><span class="label">Stock</span><span class="label">Acciones</span>
 </div>
 <sc-for list="{{ productRows }}" as="p" hint-placeholder-count="6">
 <div style="display:flex;flex-direction:column;border-bottom:1px solid rgba(28,38,32,.06)">
-<div style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:14px 20px;align-items:center;border-radius:14px;transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
+<div class="prodRowGrid" style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:14px 20px;align-items:center;border-radius:14px;transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
 <div style="width:40px;height:40px;border-radius:10px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ p.imgSlotId }}" shape="rect" placeholder="Foto"></image-slot></div>
 <div style="display:flex;flex-direction:column;gap:3px">
 <span style="font-weight:600;font-size:15px">{{ p.name }}</span>
@@ -324,7 +327,7 @@ input,textarea{font-family:inherit;outline:none}
 <sc-if value="{{ p.active }}"><button onClick="{{ p.toggle }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:600">Activo</button></sc-if>
 <sc-if value="{{ p.inactive }}"><button onClick="{{ p.toggle }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#8A8F86;border-radius:999px;padding:7px 11px;font-size:12px">Pausado</button></sc-if>
 <button onClick="{{ p.toggleEdit }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#1C2620;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:600;transition:border-color .2s" style-hover="border-color:#E2583A;color:#E2583A">{{ p.editLabel }}</button>
-<button onClick="{{ p.remove }}" aria-label="Eliminar" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;width:30px;height:30px;font-size:13px;transition:border-color .2s,color .2s" style-hover="border-color:#E2583A;color:#E2583A">✕</button>
+<sc-if value="{{ p.inactive }}"><button onClick="{{ p.remove }}" aria-label="Eliminar definitivamente" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;padding:7px 11px;font-size:12px;transition:border-color .2s,color .2s" style-hover="border-color:#E2583A;color:#E2583A">Eliminar</button></sc-if>
 </div>
 </div>
 <sc-if value="{{ p.editing }}">
@@ -370,14 +373,14 @@ input,textarea{font-family:inherit;outline:none}
 
 <div class="cardDark" style="background:#24513C;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
 <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">Envío gratis a partir de</span><span style="font-size:13px;color:#A9C4B2">Aplica a las zonas marcadas como "con envío gratis"</span></div>
-<div style="display:flex;align-items:center;gap:6px;background:rgba(245,239,228,.1);border-radius:14px;padding:10px 16px"><span style="color:#C6D6CB">$</span><input type="number" value="{{ freeThreshold }}" onChange="{{ setFreeThreshold }}" style="width:92px;border:0;background:transparent;color:#F5EFE4;font-size:21px;font-weight:700"></input></div>
+<div style="display:flex;align-items:center;gap:6px;background:rgba(245,239,228,.1);border-radius:14px;padding:10px 16px"><span style="color:#C6D6CB">$</span><input type="text" inputmode="numeric" value="{{ freeThresholdFmt }}" onChange="{{ setFreeThreshold }}" style="width:92px;border:0;background:transparent;color:#F5EFE4;font-size:21px;font-weight:700"></input></div>
 </div>
 
 <div style="display:flex;flex-direction:column;gap:14px">
 <sc-for list="{{ zoneRows }}" as="z" hint-placeholder-count="5">
 <div class="card zoneRow" style="padding:24px;display:grid;grid-template-columns:1.3fr .9fr .9fr auto 1.6fr;gap:22px;align-items:center">
 <span style="font-weight:600;font-size:16px">{{ z.name }}</span>
-<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:3px"><span style="color:#8A8F86">$</span><input type="number" value="{{ z.price }}" onChange="{{ z.setPrice }}" class="field" style="width:84px;padding:7px 9px"></input></div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:3px"><span style="color:#8A8F86">$</span><input type="text" inputmode="numeric" value="{{ z.priceFmt }}" onChange="{{ z.setPrice }}" class="field" style="width:84px;padding:7px 9px"></input></div></div>
 <div style="display:flex;flex-direction:column;gap:5px"><span class="label">Entrega</span><input value="{{ z.eta }}" onChange="{{ z.setEta }}" class="field" style="width:104px;padding:7px 9px"></input></div>
 <sc-if value="{{ z.free }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:600;white-space:nowrap">Envío gratis ✓</button></sc-if>
 <sc-if value="{{ z.notFree }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#5B6359;border-radius:999px;padding:9px 15px;font-size:12px;white-space:nowrap">Sin envío gratis</button></sc-if>
@@ -389,6 +392,9 @@ input,textarea{font-family:inherit;outline:none}
 </sc-if>
 
 </main>
+<sc-if value="{{ saveToast }}">
+<div style="position:fixed;left:50%;bottom:24px;z-index:80;transform:translateX(-50%);background:#1C2620;color:#F5EFE4;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:0 20px 40px -16px rgba(0,0,0,.45);animation:fadeIn .25s ease">{{ saveToast }}</div>
+</sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -425,23 +431,26 @@ const SEED_ORDERS = [
   { id: 'o6', customer_name: 'Pablo N.', items: 'Royal Canin Indoor 27 · 7,5 kg', zone_name: 'Alta Córdoba', total: 89900, status: 'preparando', cat: 'gato' },
 ];
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const fmtNum = n => Math.round(Number(n) || 0).toLocaleString('es-AR');
+const parseNum = str => Number(String(str).replace(/\./g, '').replace(/[^\d]/g, '')) || 0;
 const STATUS = {
   nuevo: { label: 'Nuevo', bg: '#FCE7E1', color: '#C9452A' },
   preparando: { label: 'Preparando', bg: '#FDF0DC', color: '#A9700F' },
   enviado: { label: 'Enviado', bg: '#E1EBE3', color: '#24513C' },
+  cancelado: { label: 'Cancelado', bg: '#EDEAE4', color: '#8A8F86' },
 };
 
 class Component extends DCLogic {
   state = {
     tab: 'dashboard',
-    products: [], zones: [], orders: [], reviews: [], freeThreshold: 60000, pricesUpdatedAt: null, openOrderId: null,
+    products: [], zones: [], orders: [], reviews: [], freeThreshold: 60000, pricesUpdatedAt: null, openOrderId: null, saveToast: null,
     catFilter: 'todos',
     search: '',
     showAddForm: false,
     npBrand: '', npName: '', npPrice: '', npStock: '', npCat: 'perro',
     editingId: null,
     newRevName: '', newRevPet: '', newRevText: '',
-    orderFilter: 'todos', showAddOrderForm: false,
+    orderFilter: 'todos', orderSearch: '', showAddOrderForm: false,
     noName: '', noItems: '', noTotal: '', noZone: 0,
   };
 
@@ -504,9 +513,15 @@ class Component extends DCLogic {
     this.sb.from('settings').upsert({ key: 'pricesUpdatedAt', value: now });
   }
   removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); this.sb.from('products').delete().eq('id', id); }
+  removeProductConfirm(id) { if (window.confirm('Esto borra el producto para siempre y no se puede deshacer. ¿Continuar?')) this.removeProduct(id); }
   toggleOrderDetail(id) { this.setState(s => ({ openOrderId: s.openOrderId === id ? null : id })); }
-  setZone(id, patch) { this.setState(s => ({ zones: s.zones.map(z => z.id === id ? { ...z, ...patch } : z) })); this.sb.from('zones').update(patch).eq('id', id); }
-  setFreeThreshold(value) { this.setState({ freeThreshold: value }); this.sb.from('settings').upsert({ key: 'freeThreshold', value }); }
+  setZone(id, patch) { this.setState(s => ({ zones: s.zones.map(z => z.id === id ? { ...z, ...patch } : z) })); this.sb.from('zones').update(patch).eq('id', id).then(({ error }) => this.flashSaved(error)); }
+  setFreeThreshold(value) { this.setState({ freeThreshold: value }); this.sb.from('settings').upsert({ key: 'freeThreshold', value }).then(({ error }) => this.flashSaved(error)); }
+  flashSaved(error) {
+    clearTimeout(this.saveTt);
+    this.setState({ saveToast: error ? 'No se pudo guardar. Probá de nuevo.' : 'Cambios guardados ✓' });
+    this.saveTt = setTimeout(() => this.setState({ saveToast: null }), 1800);
+  }
 
   addReview() {
     const name = this.state.newRevName.trim(), text = this.state.newRevText.trim();
@@ -523,9 +538,12 @@ class Component extends DCLogic {
     this.sb.from('reviews').update({ approved }).eq('id', id);
   }
   removeReview(id) { this.setState(s => ({ reviews: s.reviews.filter(r => r.id !== id) })); this.sb.from('reviews').delete().eq('id', id); }
+  removeReviewConfirm(id) { if (window.confirm('¿Eliminar esta reseña para siempre?')) this.removeReview(id); }
 
   setOrderStatus(id, status) { this.setState(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, status } : o) })); this.sb.from('orders').update({ status }).eq('id', id); }
+  cancelOrder(id) { if (window.confirm('¿Cancelar este pedido?')) this.setOrderStatus(id, 'cancelado'); }
   removeOrder(id) { this.setState(s => ({ orders: s.orders.filter(o => o.id !== id) })); this.sb.from('orders').delete().eq('id', id); }
+  deleteOrderForever(id) { if (window.confirm('Esto borra el pedido para siempre y no se puede deshacer. ¿Continuar?')) this.removeOrder(id); }
   addOrder() {
     const { noName, noItems, noTotal, noZone, zones } = this.state;
     if (!noName.trim() || !noItems.trim()) return;
@@ -549,8 +567,9 @@ class Component extends DCLogic {
     const s = this.state;
     const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
 
+    const newOrdersCount = s.orders.filter(o => o.status === 'nuevo').length;
     const navItems = [['dashboard', 'Dashboard'], ['productos', 'Productos'], ['pedidos', 'Pedidos'], ['resenas', 'Reseñas'], ['envios', 'Envíos y zonas']]
-      .map(([v, label]) => ({ label, active: s.tab === v, idle: s.tab !== v, pick: () => this.setState({ tab: v }) }));
+      .map(([v, label]) => ({ label, active: s.tab === v, idle: s.tab !== v, pick: () => this.setState({ tab: v }), badge: v === 'pedidos' && newOrdersCount > 0 ? String(newOrdersCount) : null }));
 
     const catLabel = cat => (CATS.find(c => c[0] === cat) || [, cat])[1];
 
@@ -571,20 +590,22 @@ class Component extends DCLogic {
       setStock: e => this.setProductField(p.id, 'stock', Number(e.target.value) || 0),
       catOpts: pick(CATS, p.cat, cat => this.setProductField(p.id, 'cat', cat)),
       toggle: () => this.setProductField(p.id, 'active', !p.active),
-      remove: () => this.removeProduct(p.id),
+      remove: () => this.removeProductConfirm(p.id),
     }));
 
     const lowStockSrc = s.products.filter(p => p.stock < 10).sort((a, b) => a.stock - b.stock);
-    const totalSales = s.orders.reduce((a, o) => a + o.total, 0);
-    const bySales = cat => s.orders.filter(o => o.cat === cat).reduce((a, o) => a + o.total, 0);
+    const activeOrders = s.orders.filter(o => o.status !== 'cancelado');
+    const totalSales = activeOrders.reduce((a, o) => a + o.total, 0);
+    const bySales = cat => activeOrders.filter(o => o.cat === cat).reduce((a, o) => a + o.total, 0);
     const perroAmt = bySales('perro'), gatoAmt = bySales('gato'), extraAmt = Math.max(totalSales - perroAmt - gatoAmt, 0);
     const catBase = perroAmt + gatoAmt + extraAmt || 1;
 
-    const orderFiltered = s.orders.filter(o => s.orderFilter === 'todos' || o.status === s.orderFilter);
-    const statusPick = (orderId, cur) => Object.keys(STATUS).map(v => ({
-      label: STATUS[v].label, bg: STATUS[v].bg, color: STATUS[v].color,
-      active: cur === v, idle: cur !== v, pick: () => this.setOrderStatus(orderId, v),
-    }));
+    const orderSearchQ = s.orderSearch.trim().toLowerCase();
+    const orderFiltered = s.orders.filter(o =>
+      (s.orderFilter === 'todos' || o.status === s.orderFilter) &&
+      (orderSearchQ === '' || (o.name + ' ' + o.items + ' ' + (o.phone || '')).toLowerCase().includes(orderSearchQ))
+    );
+    const statusCount = v => s.orders.filter(o => o.status === v).length;
 
     return {
       tabIsDashboard: s.tab === 'dashboard', tabIsProductos: s.tab === 'productos', tabIsEnvios: s.tab === 'envios',
@@ -595,8 +616,8 @@ class Component extends DCLogic {
       hasOrders: s.orders.length > 0, noOrdersAtAll: s.orders.length === 0,
       kpis: [
         { label: 'Ventas totales', value: fmt(totalSales), hint: null },
-        { label: 'Pedidos pendientes', value: String(s.orders.filter(o => o.status !== 'enviado').length), hint: null },
-        { label: 'Ticket promedio', value: fmt(totalSales / (s.orders.length || 1)), hint: null },
+        { label: 'Pedidos pendientes', value: String(s.orders.filter(o => o.status === 'nuevo' || o.status === 'preparando').length), hint: null },
+        { label: 'Ticket promedio', value: fmt(totalSales / (activeOrders.length || 1)), hint: null },
         { label: 'Pedidos totales', value: String(s.orders.length), hint: null },
       ],
       categoryBars: [
@@ -619,13 +640,19 @@ class Component extends DCLogic {
       setNoTotal: e => this.setState({ noTotal: e.target.value }),
       noZoneOpts: s.zones.map((z, i) => ({ label: z.name, active: s.noZone === i, idle: s.noZone !== i, pick: () => this.setState({ noZone: i }) })),
       addOrder: () => this.addOrder(),
-      orderFilterTabs: pick([['todos', 'Todos'], ...Object.keys(STATUS).map(v => [v, STATUS[v].label])], s.orderFilter, orderFilter => this.setState({ orderFilter })),
+      orderFilterTabs: pick([['todos', 'Todos (' + s.orders.length + ')'], ...Object.keys(STATUS).map(v => [v, STATUS[v].label + ' (' + statusCount(v) + ')'])], s.orderFilter, orderFilter => this.setState({ orderFilter })),
+      orderSearch: s.orderSearch, setOrderSearch: e => this.setState({ orderSearch: e.target.value }),
       orderRows: orderFiltered.map(o => ({
-        name: o.name, items: o.items, zone: o.zone, totalFmt: fmt(o.total),
-        statusOpts: statusPick(o.id, o.status),
-        remove: () => this.removeOrder(o.id),
-        hasDetail: !!(o.phone || o.address || o.paymentMethod || o.notes),
+        id: o.id, name: o.name, items: o.items, zone: o.zone, totalFmt: fmt(o.total),
+        status: o.status, statusBg: (STATUS[o.status] || {}).bg || '#EDEAE4', statusColor: (STATUS[o.status] || {}).color || '#5B6359',
+        setStatus: e => this.setOrderStatus(o.id, e.target.value),
+        canCancel: o.status !== 'cancelado',
+        cancel: () => this.cancelOrder(o.id),
+        canDeleteForever: o.status === 'cancelado',
+        deleteForever: () => this.deleteOrderForever(o.id),
+        hasDetail: !!(o.phone || o.address || o.paymentMethod || o.notes || o.createdAt),
         phone: o.phone, address: o.address, paymentMethod: o.paymentMethod, notes: o.notes,
+        dateFmt: o.createdAt ? new Date(o.createdAt).toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : null,
         waPhoneLink: o.phone ? 'https://wa.me/' + o.phone.replace(/\D/g, '') : null,
         detailOpen: s.openOrderId === o.id,
         toggleDetail: () => this.toggleOrderDetail(o.id),
@@ -638,7 +665,7 @@ class Component extends DCLogic {
         name: r.name, pet: r.pet, text: r.text, approved: r.approved, pending: !r.approved,
         statusLabel: r.approved ? 'Visible en la landing' : 'Pendiente',
         statusBg: r.approved ? '#E1EBE3' : '#FDF0DC', statusColor: r.approved ? '#24513C' : '#A9700F',
-        toggle: () => this.toggleReviewApproved(r.id), remove: () => this.removeReview(r.id),
+        toggle: () => this.toggleReviewApproved(r.id), remove: () => this.removeReviewConfirm(r.id),
       })),
       newRevName: s.newRevName, newRevPet: s.newRevPet, newRevText: s.newRevText,
       setNewRevName: e => this.setState({ newRevName: e.target.value }),
@@ -660,10 +687,11 @@ class Component extends DCLogic {
       search: s.search, setSearch: e => this.setState({ search: e.target.value }),
       productRows, noProducts: productRows.length === 0,
 
-      freeThreshold: s.freeThreshold, setFreeThreshold: e => this.setFreeThreshold(Number(e.target.value) || 0),
+      freeThreshold: s.freeThreshold, freeThresholdFmt: fmtNum(s.freeThreshold), setFreeThreshold: e => this.setFreeThreshold(parseNum(e.target.value)),
+      saveToast: s.saveToast,
       zoneRows: s.zones.map(z => ({
-        name: z.name, price: z.price, eta: z.eta, note: z.note, free: z.free, notFree: !z.free,
-        setPrice: e => this.setZone(z.id, { price: Number(e.target.value) || 0 }),
+        name: z.name, price: z.price, priceFmt: fmtNum(z.price), eta: z.eta, note: z.note, free: z.free, notFree: !z.free,
+        setPrice: e => this.setZone(z.id, { price: parseNum(e.target.value) }),
         setEta: e => this.setZone(z.id, { eta: e.target.value }),
         setNote: e => this.setZone(z.id, { note: e.target.value }),
         toggleFree: () => this.setZone(z.id, { free: !z.free }),
