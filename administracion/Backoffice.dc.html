@@ -86,11 +86,15 @@ input,textarea{font-family:inherit;outline:none}
 <div style="display:flex;flex-direction:column;gap:8px">
 <span class="eyebrow">Dashboard</span>
 <h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Hola, equipo <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#E2583A">Homer</span>.</h1>
-<p style="margin:0;font-size:15px;color:#4A5249;max-width:440px">Así viene funcionando el negocio en los últimos 30 días.</p>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:440px">Así viene funcionando el negocio con los pedidos registrados.</p>
 </div>
 <span class="label">{{ todayFmt }}</span>
 </div>
 
+<sc-if value="{{ noOrdersAtAll }}">
+<div class="card" style="padding:40px;text-align:center;color:#5B6359;font-size:14px">Todavía no hay pedidos registrados. En cuanto entre el primero, el dashboard se arma solo.</div>
+</sc-if>
+<sc-if value="{{ hasOrders }}">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px">
 <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
 <div class="card" style="padding:24px 24px 22px;display:flex;flex-direction:column;gap:12px">
@@ -105,7 +109,7 @@ input,textarea{font-family:inherit;outline:none}
 <div class="card" style="padding:28px">
 <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
 <h2 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-.015em">Ventas por categoría</h2>
-<span class="label">últimos 30 días</span>
+<span class="label">todos los pedidos</span>
 </div>
 <div style="display:flex;flex-direction:column;gap:22px">
 <sc-for list="{{ categoryBars }}" as="c" hint-placeholder-count="3">
@@ -138,6 +142,7 @@ input,textarea{font-family:inherit;outline:none}
 <sc-if value="{{ noLowStock }}"><span style="font-size:14px;color:#C9CEC4">Todo el stock está en niveles saludables.</span></sc-if>
 </div>
 </div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -184,7 +189,7 @@ input,textarea{font-family:inherit;outline:none}
 <span class="label">Cliente</span><span class="label">Pedido</span><span class="label">Zona</span><span class="label">Total</span><span class="label">Estado</span><span></span>
 </div>
 <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
-<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid rgba(28,38,32,.06);transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
+<div style="display:grid;grid-template-columns:1.1fr 1.5fr .9fr .8fr 1.5fr 40px;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid rgba(28,38,32,.06);transition:background .15s;cursor:pointer" style-hover="background:rgba(28,38,32,.03)" onClick="{{ o.toggleDetail }}">
 <span style="font-weight:600;font-size:14px">{{ o.name }}</span>
 <span style="font-size:14px;color:#4A5249">{{ o.items }}</span>
 <span style="font-size:13px;color:#5B6359">{{ o.zone }}</span>
@@ -197,6 +202,14 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 <button onClick="{{ o.remove }}" aria-label="Eliminar" style="border:1.5px solid rgba(28,38,32,.14);background:transparent;color:#8A8F86;border-radius:999px;width:30px;height:30px;font-size:13px" style-hover="border-color:#E2583A;color:#E2583A">✕</button>
 </div>
+<sc-if value="{{ o.detailOpen }}">
+<div style="padding:16px 20px 20px;background:#FBF8F2;border-bottom:1px solid rgba(28,38,32,.06);display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#4A5249">
+<sc-if value="{{ o.phone }}"><span><strong style="color:#1C2620">Teléfono:</strong> {{ o.phone }} — <a href="{{ o.waPhoneLink }}" target="_blank" style="color:#24513C;font-weight:600">Escribir por WhatsApp</a></span></sc-if>
+<sc-if value="{{ o.address }}"><span><strong style="color:#1C2620">Dirección:</strong> {{ o.address }}</span></sc-if>
+<sc-if value="{{ o.paymentMethod }}"><span><strong style="color:#1C2620">Pago:</strong> {{ o.paymentMethod }}</span></sc-if>
+<sc-if value="{{ o.notes }}"><span><strong style="color:#1C2620">Notas:</strong> {{ o.notes }}</span></sc-if>
+</div>
+</sc-if>
 </sc-for>
 <sc-if value="{{ noOrders }}"><div style="padding:44px 22px;color:#5B6359;font-size:14px;text-align:center">No hay pedidos en este estado.</div></sc-if>
 </div>
@@ -421,7 +434,7 @@ const STATUS = {
 class Component extends DCLogic {
   state = {
     tab: 'dashboard',
-    products: [], zones: [], orders: [], reviews: [], freeThreshold: 60000,
+    products: [], zones: [], orders: [], reviews: [], freeThreshold: 60000, pricesUpdatedAt: null, openOrderId: null,
     catFilter: 'todos',
     search: '',
     showAddForm: false,
@@ -459,15 +472,21 @@ class Component extends DCLogic {
   async loadZones() { const { data } = await this.sb.from('zones').select('*').order('sort_order'); this.setState({ zones: data || [] }); }
   async loadOrders() {
     const { data } = await this.sb.from('orders').select('*').order('created_at', { ascending: false });
-    this.setState({ orders: (data || []).map(o => ({ id: o.id, name: o.customer_name, items: o.items, zone: o.zone_name, total: Number(o.total), status: o.status, cat: o.cat || 'perro' })) });
+    this.setState({
+      orders: (data || []).map(o => ({
+        id: o.id, name: o.customer_name, items: o.items, zone: o.zone_name, total: Number(o.total), status: o.status, cat: o.cat || 'perro',
+        phone: o.phone || '', address: o.address || '', paymentMethod: o.payment_method || '', notes: o.notes || '', createdAt: o.created_at,
+      })),
+    });
   }
   async loadReviews() {
     const { data } = await this.sb.from('reviews').select('*').order('created_at', { ascending: false });
     this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
   }
   async loadSettings() {
-    const { data } = await this.sb.from('settings').select('*').eq('key', 'freeThreshold').maybeSingle();
-    if (data) this.setState({ freeThreshold: Number(data.value) || 60000 });
+    const { data } = await this.sb.from('settings').select('*');
+    const map = {}; (data || []).forEach(r => { map[r.key] = r.value; });
+    this.setState({ freeThreshold: Number(map.freeThreshold) || 60000, pricesUpdatedAt: map.pricesUpdatedAt || null });
   }
 
   toggleEdit(id) { this.setState(s => ({ editingId: s.editingId === id ? null : id })); }
@@ -479,10 +498,13 @@ class Component extends DCLogic {
     const p = this.state.products.find(x => x.id === id);
     if (!p) return;
     const sizes = (p.sizes || [[p.name, p.price, null]]).map((sz, i) => i === 0 ? [sz[0], price, sz[2]] : sz);
-    this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, price, sizes } : x) }));
+    const now = Date.now();
+    this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, price, sizes } : x), pricesUpdatedAt: now }));
     this.sb.from('products').update({ price, sizes }).eq('id', id);
+    this.sb.from('settings').upsert({ key: 'pricesUpdatedAt', value: now });
   }
   removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); this.sb.from('products').delete().eq('id', id); }
+  toggleOrderDetail(id) { this.setState(s => ({ openOrderId: s.openOrderId === id ? null : id })); }
   setZone(id, patch) { this.setState(s => ({ zones: s.zones.map(z => z.id === id ? { ...z, ...patch } : z) })); this.sb.from('zones').update(patch).eq('id', id); }
   setFreeThreshold(value) { this.setState({ freeThreshold: value }); this.sb.from('settings').upsert({ key: 'freeThreshold', value }); }
 
@@ -570,11 +592,12 @@ class Component extends DCLogic {
       navItems,
       todayFmt: new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' }),
 
+      hasOrders: s.orders.length > 0, noOrdersAtAll: s.orders.length === 0,
       kpis: [
-        { label: 'Ventas del mes', value: fmt(totalSales * 7.2), hint: '+12% vs. mes anterior' },
+        { label: 'Ventas totales', value: fmt(totalSales), hint: null },
         { label: 'Pedidos pendientes', value: String(s.orders.filter(o => o.status !== 'enviado').length), hint: null },
         { label: 'Ticket promedio', value: fmt(totalSales / (s.orders.length || 1)), hint: null },
-        { label: 'Producto más vendido', value: 'Royal Canin', hint: 'Medium Adult 15 kg' },
+        { label: 'Pedidos totales', value: String(s.orders.length), hint: null },
       ],
       categoryBars: [
         { label: 'Perros', amountFmt: fmt(perroAmt), pctStr: Math.round(perroAmt / catBase * 100) + '%', color: '#24513C' },
@@ -601,6 +624,11 @@ class Component extends DCLogic {
         name: o.name, items: o.items, zone: o.zone, totalFmt: fmt(o.total),
         statusOpts: statusPick(o.id, o.status),
         remove: () => this.removeOrder(o.id),
+        hasDetail: !!(o.phone || o.address || o.paymentMethod || o.notes),
+        phone: o.phone, address: o.address, paymentMethod: o.paymentMethod, notes: o.notes,
+        waPhoneLink: o.phone ? 'https://wa.me/' + o.phone.replace(/\D/g, '') : null,
+        detailOpen: s.openOrderId === o.id,
+        toggleDetail: () => this.toggleOrderDetail(o.id),
       })),
       noOrders: orderFiltered.length === 0,
 

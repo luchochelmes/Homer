@@ -58,7 +58,6 @@ input[type=range]{accent-color:#E2583A}
   .heroVisual{min-height:360px !important}
   .heroBadge{width:110px !important;height:110px !important;top:2% !important}
   .heroBadge .heroBadgeNum{font-size:26px !important}
-  .lastOrderCard{right:0 !important;bottom:6% !important;padding:10px 14px !important;max-width:72%}
   .heroFeatures{display:grid !important;grid-template-columns:repeat(2,1fr) !important;gap:14px 16px !important;padding-top:14px !important}
   .svcSticky{position:static !important;top:auto !important}
   .videoBox{aspect-ratio:auto !important;min-height:0 !important;height:220px !important}
@@ -98,7 +97,7 @@ input[type=range]{accent-color:#E2583A}
 
 <section id="inicio" style="max-width:1320px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(18px,4vw,48px) clamp(56px,7vw,100px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,5vw,72px);align-items:center">
 <div style="display:flex;flex-direction:column;gap:28px">
-<div data-reveal="0" style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#24513C"><span style="width:8px;height:8px;border-radius:50%;background:#24513C;box-shadow:0 0 0 4px rgba(36,81,60,.15)"></span>Pedidos abiertos · Lun a Sáb 9 a 20 h</div>
+<div data-reveal="0" style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#24513C"><span style="width:8px;height:8px;border-radius:50%;background:#24513C;box-shadow:0 0 0 4px rgba(36,81,60,.15)"></span>{{ scheduleStatus }}</div>
 <h1 data-reveal="80" style="margin:0;font-size:clamp(48px,7.2vw,104px);line-height:.92;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Comida rica para los que <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-.02em;color:#E2583A">te esperan en la puerta.</span></h1>
 <p data-reveal="160" style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;max-width:520px;color:#4A5249;text-wrap:pretty">Alimento balanceado de las mejores marcas para perros y gatos, a precio de distribuidora. Somos 100% online en Córdoba capital: pedís hoy y te lo llevamos mañana, con la bolsa al hombro hasta tu casa.</p>
 <div data-reveal="240" style="display:flex;gap:12px;flex-wrap:wrap">
@@ -119,12 +118,8 @@ input[type=range]{accent-color:#E2583A}
 <image-slot id="hero-gato" shape="rect" src="gato-comiendo.jpg" placeholder="Foto: gato"></image-slot>
 </div>
 <div class="heroBadge" style="position:absolute;top:6%;left:4%;width:150px;height:150px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;animation:floaty 6s ease-in-out infinite;pointer-events:none">
-<svg viewBox="0 0 200 200" style="position:absolute;inset:0;width:100%;height:100%;animation:spin 22s linear infinite"><defs><path id="circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs><text style="font-family:'JetBrains Mono',monospace;font-size:14.5px;letter-spacing:3px;fill:#1C2620"><textPath href="#circ">ENVÍO GRATIS DESDE $60.000 · CÓRDOBA CAPITAL · </textPath></text></svg>
+<svg viewBox="0 0 200 200" style="position:absolute;inset:0;width:100%;height:100%;animation:spin 22s linear infinite"><defs><path id="circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs><text style="font-family:'JetBrains Mono',monospace;font-size:14.5px;letter-spacing:3px;fill:#1C2620"><textPath href="#circ">ENVÍO GRATIS DESDE {{ freeThresholdFmt }} · CÓRDOBA CAPITAL · </textPath></text></svg>
 <div style="text-align:center;line-height:.9"><div class="heroBadgeNum" style="font-size:38px;font-weight:800;letter-spacing:-.04em">24h</div><div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:17px">a tu casa</div></div>
-</div>
-<div class="lastOrderCard" style="position:absolute;right:-8px;bottom:16%;background:#FBF8F2;border-radius:18px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(28,38,32,.35);display:flex;flex-direction:column;gap:2px;transform:rotate(3deg)">
-<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#24513C;text-transform:uppercase">Último pedido</span>
-<span style="font-weight:600;font-size:15px">Pro Plan 15 kg → Nueva Córdoba</span>
 </div>
 </div>
 </section>
@@ -161,7 +156,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="max-width:1320px;margin:0 auto;padding:0 clamp(18px,4vw,48px)">
 <div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px">
 <div style="display:flex;flex-direction:column;gap:14px">
-<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Precios actualizados · Octubre 2026</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">{{ pricesUpdatedAtText }}</span>
 <h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Lo más pedido <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">de la semana</span></h2>
 </div>
 <div style="display:flex;gap:10px;align-items:center">
@@ -341,6 +336,7 @@ input[type=range]{accent-color:#E2583A}
 </section>
 
 <section style="max-width:1320px;margin:0 auto;padding:clamp(72px,9vw,130px) clamp(18px,4vw,48px)">
+<sc-if value="{{ hasTestimonials }}">
 <div data-reveal="0" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:28px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Lo que dicen los clientes</span>
 <div style="display:flex;gap:8px">
@@ -364,6 +360,12 @@ input[type=range]{accent-color:#E2583A}
 </sc-for>
 </div>
 </div>
+</sc-if>
+<sc-if value="{{ noTestimonials }}">
+<div style="text-align:center;padding:40px 0;color:#4A5249">
+<span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:28px;color:#1C2620">Todavía no hay reseñas publicadas.</span><br>Sé el primero en contarnos cómo te fue.
+</div>
+</sc-if>
 </section>
 
 <section id="resenas" style="max-width:900px;margin:0 auto;padding:0 clamp(18px,4vw,48px) clamp(72px,9vw,120px)">
@@ -405,9 +407,15 @@ input[type=range]{accent-color:#E2583A}
 </div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px;padding-top:40px;border-top:1px solid rgba(245,239,228,.16);font-size:15px;line-height:1.7;color:#C9CEC4">
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Dónde estamos</span>Córdoba capital<br>Venta online con envío a domicilio</div>
-<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: Lun a Vie 9 a 20 h<br>Sábados 9 a 14 h</div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: {{ scheduleFull }}</div>
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Medios de pago</span>Mercado Pago · Tarjetas<br>Transferencia · Efectivo</div>
-<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span><a href="#" style="color:#F5EFE4">Instagram</a><a href="#" style="color:#F5EFE4">TikTok</a><a href="#" style="color:#F5EFE4">Facebook</a></div>
+<sc-if value="{{ hasAnySocial }}">
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span>
+<sc-if value="{{ hasInstagram }}"><a href="{{ instagramUrl }}" target="_blank" style="color:#F5EFE4">Instagram</a></sc-if>
+<sc-if value="{{ hasTiktok }}"><a href="{{ tiktokUrl }}" target="_blank" style="color:#F5EFE4">TikTok</a></sc-if>
+<sc-if value="{{ hasFacebook }}"><a href="{{ facebookUrl }}" target="_blank" style="color:#F5EFE4">Facebook</a></sc-if>
+</div>
+</sc-if>
 </div>
 <div style="font-weight:800;font-size:clamp(110px,27vw,400px);line-height:.75;letter-spacing:-.075em;color:#F5EFE4;display:flex;align-items:flex-end;gap:.02em;margin-bottom:-.06em">Homer<span style="width:.12em;height:.12em;border-radius:50%;background:#E2583A;margin-bottom:.08em"></span></div>
 <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#8E968B;text-transform:uppercase"><span>© 2026 Homer · Alimento para mascotas</span><span>Precios sujetos a cambio sin previo aviso</span></div>
@@ -429,31 +437,63 @@ input[type=range]{accent-color:#E2583A}
 <sc-for list="{{ cartItems }}" as="ci" hint-placeholder-count="0">
 <div style="display:flex;justify-content:space-between;gap:14px;padding:18px 0;border-bottom:1px solid rgba(28,38,32,.12)">
 <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5B6359">{{ ci.brand }} · {{ ci.size }}</span><span style="font-weight:600;font-size:16px">{{ ci.name }}</span>
-<div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button onClick="{{ ci.dec }}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">−</button><span style="font-family:'JetBrains Mono',monospace;font-size:14px">{{ ci.qty }}</span><button onClick="{{ ci.inc }}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">+</button></div>
+<div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button onClick="{{ ci.dec }}" aria-label="Restar" style="width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">−</button><span style="font-family:'JetBrains Mono',monospace;font-size:14px">{{ ci.qty }}</span><button onClick="{{ ci.inc }}" aria-label="Sumar" style="width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(28,38,32,.3);background:transparent;color:#1C2620">+</button></div>
 </div>
 <span style="font-weight:700;font-size:17px;white-space:nowrap">{{ ci.totalFmt }}</span>
 </div>
 </sc-for>
 </div>
 <div style="padding:22px 26px 26px;border-top:1px solid rgba(28,38,32,.14);display:flex;flex-direction:column;gap:12px;background:#FBF8F2">
+<sc-if value="{{ cartHasItems }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5B6359">Zona de envío</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ zones }}" as="z2" hint-placeholder-count="5">
+<sc-if value="{{ z2.active }}"><button onClick="{{ z2.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;font-size:13px;font-weight:600">{{ z2.name }}</button></sc-if>
+<sc-if value="{{ z2.idle }}"><button onClick="{{ z2.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;font-size:13px">{{ z2.name }}</button></sc-if>
+</sc-for>
+</div>
+<input value="{{ ckName }}" onChange="{{ setCkName }}" placeholder="Nombre y apellido" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<input value="{{ ckPhone }}" onChange="{{ setCkPhone }}" placeholder="Teléfono (WhatsApp)" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<input value="{{ ckAddress }}" onChange="{{ setCkAddress }}" placeholder="Dirección y barrio" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ paymentOpts }}" as="po" hint-placeholder-count="3">
+<sc-if value="{{ po.active }}"><button onClick="{{ po.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;font-size:13px;font-weight:600">{{ po.label }}</button></sc-if>
+<sc-if value="{{ po.idle }}"><button onClick="{{ po.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;font-size:13px">{{ po.label }}</button></sc-if>
+</sc-for>
+</div>
+<textarea value="{{ ckNotes }}" onChange="{{ setCkNotes }}" placeholder="Notas (opcional)" rows="2" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;resize:vertical;background:#FFFFFF"></textarea>
+<sc-if value="{{ ckError }}"><div style="font-size:13px;color:#C9452A;background:#FCE7E1;border-radius:10px;padding:10px 12px">{{ ckError }}</div></sc-if>
+</div>
+</sc-if>
 <div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Subtotal</span><span>{{ subtotalFmt }}</span></div>
 <div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Envío · {{ zone.name }}</span><span>{{ shipFmt }}</span></div>
 <sc-if value="{{ freeHint }}"><div style="font-size:13px;color:#24513C;background:#E1EBE3;border-radius:10px;padding:10px 12px">{{ freeHint }}</div></sc-if>
 <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px"><span style="font-size:17px;font-weight:600">Total</span><span style="font-size:30px;font-weight:700;letter-spacing:-.03em">{{ totalFmt }}</span></div>
-<a href="{{ waCheckout }}" target="_blank" style="text-align:center;background:#E2583A;color:#FBF8F2;padding:17px;border-radius:999px;font-weight:600;font-size:16px" style-hover="background:#C9452A;color:#FBF8F2">Finalizar pedido por WhatsApp</a>
+<button onClick="{{ finalizeOrder }}" style="text-align:center;background:#E2583A;color:#FBF8F2;padding:17px;border-radius:999px;font-weight:600;font-size:16px;border:0;font-family:inherit;cursor:pointer" style-hover="background:#C9452A;color:#FBF8F2">{{ finalizeLabel }}</button>
 </div>
 </aside>
 </sc-if>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5491100000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;videoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Media&quot;},&quot;showAnnouncement&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5493516159285&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;videoUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Media&quot;},&quot;showAnnouncement&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
 const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
+const CONFIG = {
+  whatsapp: '5493516159285',
+  scheduleShort: 'Lun a Vie 9 a 20 h',
+  scheduleFull: 'Lunes a viernes, 9 a 20 h. Sábados, 9 a 14 h.',
+  social: { instagram: null, tiktok: null, facebook: null },
+};
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
 
 class Component extends DCLogic {
-  state = { cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: 0, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0, products: [], zones: [], freeThreshold: 60000, reviews: [], revName: '', revPet: '', revText: '' };
+  state = {
+    cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: -1, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0,
+    products: [], zones: [], freeThreshold: 60000, pricesUpdatedAt: null, reviews: [], revName: '', revPet: '', revText: '',
+    ckName: '', ckPhone: '', ckAddress: '', ckPayment: '', ckNotes: '', ckError: null, ckSaving: false,
+  };
   trackRef = React.createRef();
 
   async componentDidMount() {
@@ -483,8 +523,9 @@ class Component extends DCLogic {
     this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
   }
   async loadSettings() {
-    const { data } = await this.sb.from('settings').select('*').eq('key', 'freeThreshold').maybeSingle();
-    if (data) this.setState({ freeThreshold: Number(data.value) || 60000 });
+    const { data } = await this.sb.from('settings').select('*');
+    const map = {}; (data || []).forEach(r => { map[r.key] = r.value; });
+    this.setState({ freeThreshold: Number(map.freeThreshold) || 60000, pricesUpdatedAt: map.pricesUpdatedAt || null });
   }
 
   async submitReview() {
@@ -504,7 +545,7 @@ class Component extends DCLogic {
       this.io.observe(el);
     });
   }
-  wa(msg) { return 'https://wa.me/' + (this.props.whatsapp ?? '5493516159285') + '?text=' + encodeURIComponent(msg); }
+  wa(msg) { return 'https://wa.me/' + (this.props.whatsapp ?? CONFIG.whatsapp) + '?text=' + encodeURIComponent(msg); }
   goProducts(cat) {
     this.setState({ cat });
     const el = document.getElementById('productos');
@@ -522,6 +563,65 @@ class Component extends DCLogic {
   }
   qty(key, d) { this.setState(s => ({ cart: s.cart.map(c => c.key === key ? { ...c, qty: c.qty + d } : c).filter(c => c.qty > 0) })); }
 
+  statusText() {
+    const now = new Date(), day = now.getDay(), hour = now.getHours() + now.getMinutes() / 60;
+    const isWeekday = day >= 1 && day <= 5, isSat = day === 6;
+    const open = (isWeekday && hour >= 9 && hour < 20) || (isSat && hour >= 9 && hour < 14);
+    if (open) return 'Pedidos abiertos · ' + CONFIG.scheduleShort;
+    let next = 'Abrimos lunes a las 9 h';
+    if (isWeekday && hour < 9) next = 'Abrimos hoy a las 9 h';
+    else if (isWeekday && hour >= 20) next = day === 5 ? 'Abrimos el sábado a las 9 h' : 'Abrimos mañana a las 9 h';
+    else if (isSat && hour < 9) next = 'Abrimos hoy a las 9 h';
+    return 'Cerrado · ' + next;
+  }
+
+  computeTotals(cart) {
+    const s = this.state;
+    const zoneObj = s.zone === -1 ? null : (s.zones[s.zone] || null);
+    const subtotal = cart.reduce((a, c) => a + c.p.sizes[c.si][1] * c.qty, 0);
+    const freeEligible = !!(zoneObj && zoneObj.free && subtotal >= s.freeThreshold);
+    const ship = cart.length === 0 ? 0 : !zoneObj ? null : (freeEligible ? 0 : zoneObj.price);
+    return { zoneObj, subtotal, freeEligible, ship, total: ship == null ? subtotal : subtotal + ship };
+  }
+
+  async finalizeOrder() {
+    const s = this.state;
+    const name = s.ckName.trim(), phone = s.ckPhone.trim(), address = s.ckAddress.trim();
+    if (!s.cart.length) return;
+    if (!name || !phone || !address || !s.ckPayment || s.zone === -1) {
+      this.setState({ ckError: 'Completá nombre, teléfono, zona, dirección y forma de pago para finalizar.' });
+      return;
+    }
+    const { zoneObj, subtotal, ship, total } = this.computeTotals(s.cart);
+    const lines = s.cart.map(c => c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
+    const row = {
+      id: 'o-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      customer_name: name, phone, items: lines.join(', '), zone_name: zoneObj.name, address,
+      payment_method: s.ckPayment, notes: s.ckNotes.trim() || null,
+      total, status: 'nuevo', cat: (s.cart[0] && s.cart[0].p.cat) || 'perro',
+    };
+    const win = window.open('', '_blank');
+    this.setState({ ckSaving: true, ckError: null });
+    try {
+      const { error } = await this.sb.from('orders').insert(row);
+      if (error) throw error;
+      const waMsg = '¡Hola Homer! Quiero hacer este pedido:\n' + lines.join('\n')
+        + '\nZona: ' + zoneObj.name + '\nDirección: ' + address + '\nPago: ' + s.ckPayment
+        + (row.notes ? '\nNotas: ' + row.notes : '') + '\nTotal: ' + fmt(total)
+        + '\nNombre: ' + name + '\nTeléfono: ' + phone;
+      const waUrl = this.wa(waMsg);
+      if (win) win.location.href = waUrl; else window.open(waUrl, '_blank');
+      this.setState({
+        cart: [], cartOpen: false, ckSaving: false, ckName: '', ckPhone: '', ckAddress: '', ckPayment: '', ckNotes: '',
+        toast: '¡Pedido enviado! Te escribimos para confirmar.',
+      });
+      clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 3200);
+    } catch (e) {
+      if (win) win.close();
+      this.setState({ ckSaving: false, ckError: 'No pudimos guardar tu pedido. Probá de nuevo o escribinos directo por WhatsApp.' });
+    }
+  }
+
   renderVals() {
     const s = this.state;
     const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
@@ -535,10 +635,9 @@ class Component extends DCLogic {
         add: () => this.add(p, si),
       };
     });
-    const z = s.zones[s.zone] || { free: false, price: 0, name: '', eta: '', note: '' };
-    const subtotal = s.cart.reduce((a, c) => a + c.p.sizes[c.si][1] * c.qty, 0);
-    const freeEligible = z.free && subtotal >= s.freeThreshold;
-    const ship = s.cart.length === 0 ? 0 : freeEligible ? 0 : z.price;
+    const zoneChosen = s.zone !== -1 && !!s.zones[s.zone];
+    const z = zoneChosen ? s.zones[s.zone] : { free: false, price: 0, name: 'Elegí tu zona', eta: '—', note: 'Elegí una zona para ver el costo y tiempo de envío.' };
+    const { subtotal, ship, total: cartTotal } = this.computeTotals(s.cart);
     const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
     const lines = s.cart.map(c => '• ' + c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
 
@@ -553,34 +652,34 @@ class Component extends DCLogic {
     const ppk = s.pet === 'perro' ? 5600 : 9800;
 
     const faqs = [
-      ['¿Cuál es el monto mínimo de compra?', 'No hay mínimo. Superando $60.000 el envío es gratis en Córdoba capital; por debajo se cobra según la zona.'],
+      ['¿Cuál es el monto mínimo de compra?', 'No hay mínimo. Superando ' + fmt(s.freeThreshold) + ' el envío es gratis en Córdoba capital; por debajo se cobra según la zona.'],
       ['¿Cómo funciona el plan mensual?', 'Elegís el alimento y cada cuánto lo necesitás. Te lo llevamos antes de que se termine con un 10% de descuento fijo. Lo pausás o cancelás cuando quieras, sin costo.'],
       ['¿Qué medios de pago aceptan?', 'Mercado Pago, tarjetas de débito y crédito, transferencia bancaria y efectivo al recibir.'],
       ['¿Puedo cambiar el alimento si no le gustó?', 'Sí. Si la bolsa está cerrada, la cambiamos sin cargo dentro de los 10 días. Si está abierta, consultanos y lo vemos juntos.'],
       ['¿Trabajan con alimentos medicados?', 'Sí, trabajamos líneas veterinarias. Para algunas pedimos la indicación del veterinario.'],
     ].map(([q, a], i) => ({ q, a, open: s.faq === i, icon: s.faq === i ? '−' : '+', toggle: () => this.setState(st => ({ faq: st.faq === i ? -1 : i })) }));
 
-    const curatedTestimonials = [
-      { text: 'Pido la bolsa de 15 kg todos los meses y nunca falló. Me avisan antes de que se termine, una cosa menos en la cabeza.', name: 'Lucía M.', pet: 'Mamá de Toto, golden de 4 años', slot: 'testi-1' },
-      { text: 'Los precios son mejores que en el súper y me la suben hasta el cuarto piso en Nueva Córdoba. Atención de verdad.', name: 'Martín G.', pet: 'Papá de Mora y Simón, gatos', slot: 'testi-2' },
-      { text: 'Me ayudaron a elegir un alimento para mi perra con sobrepeso. En dos meses se notó el cambio.', name: 'Carolina R.', pet: 'Mamá de Frida, beagle', slot: 'testi-3' },
-      { text: 'Rápidos, amables y siempre con fechas de vencimiento largas. Ya los recomendé a todo el edificio.', name: 'Diego F.', pet: 'Papá de Ramón, mestizo', slot: 'testi-4' },
-    ].map(t => ({ ...t, hasPhoto: true, noPhoto: false, initial: '' }));
-    const approvedReviews = s.reviews.filter(r => r.approved).map(r => ({
+    const testimonials = s.reviews.filter(r => r.approved).map(r => ({
       text: r.text, name: r.name, pet: r.pet, slot: null, hasPhoto: false, noPhoto: true, initial: (r.name[0] || '?').toUpperCase(),
     }));
-    const testimonials = [...curatedTestimonials, ...approvedReviews];
-    this.totalTestimonials = testimonials.length;
-    const tIdx = s.tIdx % testimonials.length;
+    this.totalTestimonials = testimonials.length || 1;
+    const tIdx = testimonials.length ? s.tIdx % testimonials.length : 0;
 
     return {
       showBar: this.props.showAnnouncement ?? true,
-      barItems: [0, 1].flatMap(() => ['Envío gratis desde $60.000 en Córdoba capital', 'Plan mensual con 10% off', 'Pedidos hasta las 18 h llegan mañana', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
+      scheduleStatus: this.statusText(),
+      barItems: [0, 1].flatMap(() => ['Envío gratis desde ' + fmt(s.freeThreshold) + ' en Córdoba capital', 'Plan mensual con 10% off', 'Pedidos hasta las 18 h llegan mañana', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
       brandsLoop: [0, 1].flatMap(() => ['Royal Canin', 'Pro Plan', 'Eukanuba', 'Old Prince', 'Vital Can', 'Excellent', "Hill's", 'Sieger']),
       cartCount, openCart: () => this.setState({ cartOpen: true }), closeCart: () => this.setState({ cartOpen: false }),
       waLink: this.wa('¡Hola Homer! Quiero hacer un pedido.'),
       waPlan: this.wa('¡Hola Homer! Quiero info del plan mensual para mi ' + s.pet + ' de ' + kg + ' kg.'),
-      waCheckout: this.wa('¡Hola Homer! Quiero hacer este pedido:\n' + lines.join('\n') + '\nZona: ' + z.name + '\nTotal: ' + fmt(subtotal + ship)),
+      hasInstagram: !!CONFIG.social.instagram, instagramUrl: CONFIG.social.instagram || '#',
+      hasTiktok: !!CONFIG.social.tiktok, tiktokUrl: CONFIG.social.tiktok || '#',
+      hasFacebook: !!CONFIG.social.facebook, facebookUrl: CONFIG.social.facebook || '#',
+      hasAnySocial: !!(CONFIG.social.instagram || CONFIG.social.tiktok || CONFIG.social.facebook),
+      scheduleFull: CONFIG.scheduleFull,
+      freeThresholdFmt: fmt(s.freeThreshold),
+      pricesUpdatedAtText: s.pricesUpdatedAt ? 'Precios actualizados · ' + new Date(s.pricesUpdatedAt).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }) : 'Precios sujetos a disponibilidad',
       catCards: [
         { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: 'perro.jpg', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
         { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: 'gato.jpg', kicker: 'Seco, húmedo y medicados', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
@@ -613,7 +712,7 @@ class Component extends DCLogic {
         price: fmt(monthly * ppk * 0.9),
       },
       dots: testimonials.map((_, i) => ({ active: tIdx === i, idle: tIdx !== i, pick: () => this.setState({ tIdx: i }) })),
-      testimonials, tOffset: (-100 * tIdx) + '%',
+      testimonials, hasTestimonials: testimonials.length > 0, noTestimonials: testimonials.length === 0, tOffset: (-100 * tIdx) + '%',
       revName: s.revName, revPet: s.revPet, revText: s.revText,
       setRevName: e => this.setState({ revName: e.target.value }),
       setRevPet: e => this.setState({ revPet: e.target.value }),
@@ -622,8 +721,18 @@ class Component extends DCLogic {
       faqs,
       toast: s.toast, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
       cartItems: s.cart.map(c => ({ brand: c.p.brand, name: c.p.name, size: c.p.sizes[c.si][0], qty: c.qty, totalFmt: fmt(c.p.sizes[c.si][1] * c.qty), inc: () => this.qty(c.key, 1), dec: () => this.qty(c.key, -1) })),
-      subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : ship === 0 ? 'Gratis' : fmt(ship), totalFmt: fmt(subtotal + ship),
-      freeHint: s.cart.length && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
+      subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : !zoneChosen ? 'Elegí tu zona' : ship === 0 ? 'Gratis' : fmt(ship),
+      totalFmt: fmt(cartTotal),
+      freeHint: s.cart.length && zoneChosen && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
+      zoneChosen, cartHasItems: s.cart.length > 0,
+      ckName: s.ckName, ckPhone: s.ckPhone, ckAddress: s.ckAddress, ckNotes: s.ckNotes, ckError: s.ckError, ckSaving: s.ckSaving,
+      setCkName: e => this.setState({ ckName: e.target.value }),
+      setCkPhone: e => this.setState({ ckPhone: e.target.value }),
+      setCkAddress: e => this.setState({ ckAddress: e.target.value }),
+      setCkNotes: e => this.setState({ ckNotes: e.target.value }),
+      paymentOpts: pick([['mercadopago', 'Mercado Pago'], ['transferencia', 'Transferencia'], ['efectivo', 'Efectivo']], s.ckPayment, v => this.setState({ ckPayment: v })),
+      finalizeOrder: () => this.finalizeOrder(),
+      finalizeLabel: s.ckSaving ? 'Guardando…' : 'Finalizar pedido por WhatsApp',
     };
   }
 }
