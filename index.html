@@ -38,7 +38,7 @@
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
-#inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas{scroll-margin-top:92px}
+#inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:92px}
 body{margin:0;background:#F5EFE4;color:#1C2620;font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}
 a{color:#1C2620;text-decoration:none}
@@ -53,18 +53,19 @@ input[type=range]{accent-color:#E2583A}
 @keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @media (max-width:760px){
-  .headerNav{order:3 !important;width:100% !important;margin-left:0 !important;flex-wrap:nowrap !important;overflow-x:auto !important;gap:18px !important;padding-top:2px}
-  .headerNav a{white-space:nowrap}
+  .headerNav{display:none !important}
+  .menuBtn{display:flex !important}
   .heroVisual{min-height:360px !important}
   .heroBadge{width:110px !important;height:110px !important;top:2% !important}
   .heroBadge .heroBadgeNum{font-size:26px !important}
-  .heroFeatures{display:grid !important;grid-template-columns:repeat(2,1fr) !important;gap:14px 16px !important;padding-top:14px !important}
+  .heroFeatures{gap:8px !important;font-size:13px !important}
   .svcSticky{position:static !important;top:auto !important}
   .videoBox{aspect-ratio:auto !important;min-height:0 !important;height:220px !important}
-  #inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas{scroll-margin-top:148px}
+  .stepsGrid{grid-template-columns:1fr !important}
+  #inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:148px}
 }
-@media (max-width:480px){
-  .cartLabel{display:none}
+@media (min-width:761px) and (max-width:1000px){
+  .stepsGrid{grid-template-columns:repeat(2,1fr) !important}
 }
 </style>
 </helmet>
@@ -81,7 +82,7 @@ input[type=range]{accent-color:#E2583A}
 </sc-if>
 
 <header style="position:sticky;top:0;z-index:40;background:rgba(245,239,228,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,38,32,.1)">
-<div style="max-width:1320px;margin:0 auto;padding:14px clamp(18px,4vw,48px);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+<div style="max-width:1320px;margin:0 auto;padding:14px clamp(18px,4vw,48px);display:flex;align-items:center;gap:24px">
 <a href="#inicio" style="display:flex;align-items:flex-end;gap:3px;font-weight:800;font-size:30px;letter-spacing:-.05em;line-height:1">Homer<span style="width:9px;height:9px;border-radius:50%;background:#E2583A;margin-bottom:5px"></span></a>
 <nav class="headerNav" style="display:flex;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;font-size:15px;font-weight:500;margin-left:auto">
 <a href="#productos">Productos</a>
@@ -91,8 +92,21 @@ input[type=range]{accent-color:#E2583A}
 <a href="#calculadora">Calculadora</a>
 <a href="#preguntas">Ayuda</a>
 </nav>
-<button onClick="{{ openCart }}" style="display:flex;align-items:center;gap:10px;background:#1C2620;color:#F5EFE4;border:0;border-radius:999px;padding:10px 12px 10px 18px;font-size:14px;font-weight:600;transition:transform .2s" style-hover="transform:translateY(-1px)"><span class="cartLabel">Carrito</span><span style="min-width:24px;height:24px;border-radius:999px;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:12px;font-family:'JetBrains Mono',monospace;padding:0 6px">{{ cartCount }}</span></button>
+<div class="headerRight" style="display:flex;align-items:center;gap:10px;margin-left:auto">
+<button onClick="{{ openCart }}" aria-label="Carrito, {{ cartCount }} productos" style="display:flex;align-items:center;gap:8px;min-height:44px;background:#1C2620;color:#F5EFE4;border:0;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:600;transition:transform .2s" style-hover="transform:translateY(-1px)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span style="min-width:20px;height:20px;border-radius:999px;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:12px;font-family:'JetBrains Mono',monospace;padding:0 6px">{{ cartCount }}</span></button>
+<button onClick="{{ toggleMobileMenu }}" class="menuBtn" aria-label="Abrir menú" aria-expanded="{{ mobileMenuOpen }}" style="display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620"><span style="font-size:18px">{{ menuIcon }}</span></button>
 </div>
+</div>
+<sc-if value="{{ mobileMenuOpen }}">
+<nav style="display:flex;flex-direction:column;padding:8px clamp(18px,4vw,48px) 18px;gap:4px;border-top:1px solid rgba(28,38,32,.1);background:#F5EFE4" onClick="{{ closeMobileMenu }}">
+<a href="#productos" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Productos</a>
+<a href="#marcas" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Marcas</a>
+<a href="#servicios" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Servicios</a>
+<a href="#envios" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Envíos</a>
+<a href="#calculadora" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Calculadora</a>
+<a href="#preguntas" style="padding:12px 4px;font-size:16px;font-weight:600">Ayuda</a>
+</nav>
+</sc-if>
 </header>
 
 <section id="inicio" style="max-width:1320px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(18px,4vw,48px) clamp(56px,7vw,100px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,5vw,72px);align-items:center">
@@ -104,11 +118,7 @@ input[type=range]{accent-color:#E2583A}
 <a href="#productos" style="display:inline-flex;align-items:center;gap:10px;background:#E2583A;color:#FBF8F2;padding:17px 26px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#C9452A;color:#FBF8F2;transform:translateY(-2px)">Ver productos y precios <span>→</span></a>
 <a href="{{ waLink }}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;border:1.5px solid #1C2620;padding:16px 24px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">Pedir por WhatsApp</a>
 </div>
-<div data-reveal="320" class="heroFeatures" style="display:flex;gap:28px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249">
-<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Envío en 24 h</strong>Córdoba capital</div>
-<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Plan mensual</strong>10% off fijo</div>
-<div style="display:flex;flex-direction:column;gap:2px"><strong style="color:#1C2620;font-size:15px">Pagás como quieras</strong>Mercado Pago, transferencia o efectivo</div>
-</div>
+<div data-reveal="320" class="heroFeatures" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:18px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249"><strong style="color:#1C2620">Envío en 24 h</strong>·<strong style="color:#1C2620">Plan mensual 10% off</strong>·<strong style="color:#1C2620">Pagás como quieras</strong></div>
 </div>
 <div data-reveal="150" class="heroVisual" style="position:relative;min-height:560px">
 <div style="position:absolute;top:0;right:0;width:82%;height:88%;border-radius:220px 220px 28px 28px;overflow:hidden;background:#E8DFCE">
@@ -125,7 +135,7 @@ input[type=range]{accent-color:#E2583A}
 </section>
 
 <section id="marcas" style="border-top:1px solid rgba(28,38,32,.14);border-bottom:1px solid rgba(28,38,32,.14);background:#FBF8F2;overflow:hidden">
-<div style="max-width:1320px;margin:0 auto;padding:22px clamp(18px,4vw,48px) 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">Distribuidores oficiales de</div>
+<div style="max-width:1320px;margin:0 auto;padding:22px clamp(18px,4vw,48px) 0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">Trabajamos las mejores marcas</div>
 <div style="display:flex;width:max-content;animation:marquee 42s linear infinite;padding:14px 0 26px">
 <sc-for list="{{ brandsLoop }}" as="br" hint-placeholder-count="12">
 <span style="display:flex;align-items:center;gap:44px;padding-right:44px;white-space:nowrap;font-size:clamp(34px,4.4vw,60px);letter-spacing:-.03em;font-weight:600;color:#1C2620">{{ br }}<span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#E2583A;font-size:.8em">✳</span></span>
@@ -135,7 +145,7 @@ input[type=range]{accent-color:#E2583A}
 
 <section style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px) 0">
 <div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:36px">
-<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:720px">¿Para quién <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">compramos</span> hoy?</h2>
+<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:720px">¿Para quién compramos hoy?</h2>
 <p style="margin:0;max-width:360px;color:#4A5249;font-size:16px;line-height:1.5">Elegí tu compañero y te mostramos lo que mejor le va según edad y tamaño.</p>
 </div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
@@ -157,7 +167,7 @@ input[type=range]{accent-color:#E2583A}
 <div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px">
 <div style="display:flex;flex-direction:column;gap:14px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">{{ pricesUpdatedAtText }}</span>
-<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Lo más pedido <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">de la semana</span></h2>
+<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Lo más pedido de la semana</h2>
 </div>
 <div style="display:flex;gap:10px;align-items:center">
 <button onClick="{{ prev }}" aria-label="Anterior" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">←</button>
@@ -202,6 +212,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;flex-direction:column;gap:2px">
 <sc-if value="{{ p.oldFmt }}"><span style="font-size:13px;color:#8A8F86;text-decoration:line-through">{{ p.oldFmt }}</span></sc-if>
 <span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
+<sc-if value="{{ p.perKgFmt }}"><span style="font-size:12px;color:#8A8F86">{{ p.perKgFmt }}</span></sc-if>
 </div>
 <button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
 </div>
@@ -237,22 +248,15 @@ input[type=range]{accent-color:#E2583A}
 <section style="background:#1C2620;color:#F5EFE4;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px)">
 <div style="max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:36px">
 <div data-reveal="0" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
-<h2 style="margin:0;font-size:clamp(36px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:800px">Así arma <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#F2C45A">Homer</span> cada pedido.</h2>
+<h2 style="margin:0;font-size:clamp(36px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:800px">Así arma Homer cada pedido.</h2>
 <p style="margin:0;max-width:340px;font-size:16px;line-height:1.55;color:#C9CEC4">Controlamos vencimiento y estado de cada bolsa antes de salir. Si algo no está perfecto, no sale.</p>
 </div>
-<div data-reveal="100" class="videoBox" style="position:relative;aspect-ratio:16/8;min-height:300px;border-radius:28px;overflow:hidden;background:#2A362E">
 <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
+<div data-reveal="100" class="videoBox" style="position:relative;aspect-ratio:16/8;min-height:300px;border-radius:28px;overflow:hidden;background:#2A362E">
 <video src="{{ videoUrl }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="width:100%;height:100%;object-fit:cover;display:block"></video>
-</sc-if>
-<sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
-<image-slot id="video-poster" shape="rect" placeholder="Video del local (cargalo en Tweaks → URL del video) o una foto de portada"></image-slot>
-<div style="position:absolute;left:28px;bottom:26px;display:flex;align-items:center;gap:16px;pointer-events:none">
-<span style="width:72px;height:72px;border-radius:50%;background:#F2C45A;display:grid;place-items:center;color:#1C2620;font-size:22px;padding-left:4px">▶</span>
-<span style="display:flex;flex-direction:column;gap:2px"><strong style="font-size:18px">Así preparamos tu pedido</strong><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#C9CEC4">01:24</span></span>
 </div>
 </sc-if>
-</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1px;background:rgba(245,239,228,.14);border-radius:20px;overflow:hidden">
+<div class="stepsGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(245,239,228,.14);border-radius:20px;overflow:hidden">
 <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
 <div data-reveal="{{ st.delay }}" style="background:#1C2620;padding:28px 24px;display:flex;flex-direction:column;gap:12px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#F2C45A;letter-spacing:.08em">{{ st.n }}</span>
@@ -299,7 +303,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:center">
 <div data-reveal="0" style="display:flex;flex-direction:column;gap:20px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Calculadora de ración</span>
-<h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">¿Cuánto come <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">por mes?</span></h2>
+<h2 style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700">¿Cuánto come por mes?</h2>
 <p style="margin:0;font-size:17px;line-height:1.55;max-width:440px">Una estimación rápida para que no te quedes sin alimento. Para una dieta exacta, consultá con tu veterinario.</p>
 </div>
 <div data-reveal="120" style="background:#FBF8F2;border-radius:28px;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;gap:26px;box-shadow:0 30px 60px -40px rgba(28,38,32,.5)">
@@ -371,8 +375,7 @@ input[type=range]{accent-color:#E2583A}
 <section id="resenas" style="max-width:900px;margin:0 auto;padding:0 clamp(18px,4vw,48px) clamp(72px,9vw,120px)">
 <div data-reveal="0" style="background:#FBF8F2;border:1px solid rgba(28,38,32,.12);border-radius:28px;padding:clamp(28px,4vw,44px);display:flex;flex-direction:column;gap:20px;box-shadow:0 30px 60px -40px rgba(28,38,32,.35)">
 <div style="display:flex;flex-direction:column;gap:8px">
-<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Tu opinión nos importa</span>
-<h2 style="margin:0;font-size:clamp(28px,3.2vw,40px);letter-spacing:-.03em;font-weight:700">Dejá tu <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">reseña.</span></h2>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,40px);letter-spacing:-.03em;font-weight:700">Dejá tu reseña</h2>
 </div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
 <input value="{{ revName }}" onChange="{{ setRevName }}" placeholder="Tu nombre" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4"></input>
@@ -385,7 +388,7 @@ input[type=range]{accent-color:#E2583A}
 
 <section id="preguntas" style="border-top:1px solid rgba(28,38,32,.14)">
 <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,5vw,72px)">
-<h2 data-reveal="0" style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;align-self:start">Preguntas <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400">frecuentes</span></h2>
+<h2 data-reveal="0" style="margin:0;font-size:clamp(40px,5vw,72px);line-height:.95;letter-spacing:-.045em;font-weight:700;align-self:start">Preguntas frecuentes</h2>
 <div style="display:flex;flex-direction:column">
 <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
 <div style="border-bottom:1px solid rgba(28,38,32,.16)">
@@ -399,16 +402,42 @@ input[type=range]{accent-color:#E2583A}
 </div>
 </section>
 
+<sc-if value="{{ showAboutUs }}">
+<section id="quienes-somos" style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px;align-items:center">
+<div style="height:320px;border-radius:24px;overflow:hidden;background:#E8DFCE"><image-slot id="equipo-somos" shape="rect" placeholder="Foto: el equipo Homer"></image-slot></div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-.03em">Quiénes somos</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#4A5249">{{ aboutUsText }}</p>
+</div>
+</div>
+</section>
+</sc-if>
+
+<section id="politica-cambios" style="max-width:900px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 0">
+<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Cambios y devoluciones</h3>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#4A5249">Estamos redactando esta sección. Mientras tanto, escribinos por WhatsApp ante cualquier duda sobre cambios o devoluciones.</p>
+</section>
+<section id="terminos" style="max-width:900px;margin:0 auto;padding:32px clamp(18px,4vw,48px) 0">
+<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Términos y condiciones</h3>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#4A5249">Estamos redactando esta sección. Mientras tanto, escribinos por WhatsApp ante cualquier consulta.</p>
+</section>
+<section id="privacidad" style="max-width:900px;margin:0 auto;padding:32px clamp(18px,4vw,48px) 48px">
+<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Política de privacidad</h3>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#4A5249">Estamos redactando esta sección. Mientras tanto, escribinos por WhatsApp ante cualquier consulta.</p>
+</section>
+
 <footer style="background:#1C2620;color:#F5EFE4;padding:clamp(56px,7vw,100px) clamp(18px,4vw,48px) 28px;overflow:hidden">
 <div style="max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:56px">
 <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap">
-<h2 data-reveal="0" style="margin:0;font-size:clamp(36px,5vw,68px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:760px">¿Se está terminando la bolsa? <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#F2C45A">Escribinos.</span></h2>
+<h2 data-reveal="0" style="margin:0;font-size:clamp(36px,5vw,68px);line-height:.95;letter-spacing:-.045em;font-weight:700;max-width:760px">¿Se está terminando la bolsa? Escribinos.</h2>
 <a href="{{ waLink }}" target="_blank" style="background:#F2C45A;color:#1C2620;padding:20px 30px;border-radius:999px;font-weight:700;font-size:18px;transition:transform .2s" style-hover="transform:translateY(-2px);color:#1C2620">Pedir por WhatsApp →</a>
 </div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px;padding-top:40px;border-top:1px solid rgba(245,239,228,.16);font-size:15px;line-height:1.7;color:#C9CEC4">
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Dónde estamos</span>Córdoba capital<br>Venta online con envío a domicilio</div>
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: {{ scheduleFull }}</div>
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Medios de pago</span>Mercado Pago · Tarjetas<br>Transferencia · Efectivo</div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Legal</span><a href="#politica-cambios" style="color:#F5EFE4">Cambios y devoluciones</a><a href="#terminos" style="color:#F5EFE4">Términos y condiciones</a><a href="#privacidad" style="color:#F5EFE4">Privacidad</a></div>
 <sc-if value="{{ hasAnySocial }}">
 <div style="display:flex;flex-direction:column"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span>
 <sc-if value="{{ hasInstagram }}"><a href="{{ instagramUrl }}" target="_blank" style="color:#F5EFE4">Instagram</a></sc-if>
@@ -422,7 +451,9 @@ input[type=range]{accent-color:#E2583A}
 </div>
 </footer>
 
+<sc-if value="{{ showFloatingWa }}">
 <a href="{{ waLink }}" target="_blank" style="position:fixed;right:20px;bottom:20px;z-index:45;display:flex;align-items:center;gap:10px;background:#24513C;color:#F5EFE4;padding:14px 20px 14px 16px;border-radius:999px;font-weight:600;font-size:15px;box-shadow:0 16px 36px -14px rgba(28,38,32,.6);transition:transform .2s" style-hover="transform:translateY(-3px);color:#F5EFE4"><span style="width:10px;height:10px;border-radius:50%;background:#7BE39B;box-shadow:0 0 0 4px rgba(123,227,155,.25)"></span>Escribinos</a>
+</sc-if>
 
 <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;left:50%;bottom:24px;z-index:60;transform:translateX(-50%);background:#1C2620;color:#F5EFE4;padding:14px 18px;border-radius:16px;display:flex;align-items:center;gap:14px;font-size:15px;box-shadow:0 20px 40px -16px rgba(0,0,0,.45);animation:toastIn .35s cubic-bezier(.2,.7,.2,1)"><span style="width:26px;height:26px;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:13px">✓</span><span>{{ toast }}</span><button onClick="{{ openCart }}" style="border:0;background:transparent;color:#F2C45A;font-weight:600;font-size:15px;padding:0">Ver carrito</button></div>
@@ -485,6 +516,8 @@ const CONFIG = {
   scheduleShort: 'Lun a Vie 9 a 20 h',
   scheduleFull: 'Lunes a viernes, 9 a 20 h. Sábados, 9 a 14 h.',
   social: { instagram: null, tiktok: null, facebook: null },
+  showAboutUs: false,
+  aboutUsText: 'TODO: contanos la historia de Homer y quiénes están del otro lado — esto todavía no lo escribió el dueño.',
 };
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
 
@@ -493,6 +526,7 @@ class Component extends DCLogic {
     cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: -1, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0,
     products: [], zones: [], freeThreshold: 60000, pricesUpdatedAt: null, reviews: [], revName: '', revPet: '', revText: '',
     ckName: '', ckPhone: '', ckAddress: '', ckPayment: '', ckNotes: '', ckError: null, ckSaving: false,
+    mobileMenuOpen: false, nearFooter: false,
   };
   trackRef = React.createRef();
 
@@ -504,6 +538,9 @@ class Component extends DCLogic {
     this.mo = new MutationObserver(() => this.scan());
     this.mo.observe(document.body, { childList: true, subtree: true });
     this.timer = setInterval(() => this.setState(s => ({ tIdx: (s.tIdx + 1) % (this.totalTestimonials || 4) })), 6500);
+    this.footerIO = new IntersectionObserver(es => es.forEach(e => this.setState({ nearFooter: e.isIntersecting })), { rootMargin: '0px 0px -10% 0px' });
+    const footerEl = document.querySelector('footer');
+    if (footerEl) this.footerIO.observe(footerEl);
 
     this.sb = window.supabase.createClient(SB_URL, SB_KEY);
     await Promise.all([this.loadProducts(), this.loadZones(), this.loadReviews(), this.loadSettings()]);
@@ -514,7 +551,7 @@ class Component extends DCLogic {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => this.loadSettings())
       .subscribe();
   }
-  componentWillUnmount() { this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); clearInterval(this.timer); clearTimeout(this.tt); this.channel && this.sb.removeChannel(this.channel); }
+  componentWillUnmount() { this.io && this.io.disconnect(); this.mo && this.mo.disconnect(); this.footerIO && this.footerIO.disconnect(); clearInterval(this.timer); clearTimeout(this.tt); this.channel && this.sb.removeChannel(this.channel); }
 
   async loadProducts() { const { data } = await this.sb.from('products').select('*').eq('active', true).order('created_at'); this.setState({ products: data || [] }); }
   async loadZones() { const { data } = await this.sb.from('zones').select('*').order('sort_order'); this.setState({ zones: data || [] }); }
@@ -562,6 +599,8 @@ class Component extends DCLogic {
     clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
   }
   qty(key, d) { this.setState(s => ({ cart: s.cart.map(c => c.key === key ? { ...c, qty: c.qty + d } : c).filter(c => c.qty > 0) })); }
+  toggleMobileMenu() { this.setState(s => ({ mobileMenuOpen: !s.mobileMenuOpen })); }
+  closeMobileMenu() { this.setState({ mobileMenuOpen: false }); }
 
   statusText() {
     const now = new Date(), day = now.getDay(), hour = now.getHours() + now.getMinutes() / 60;
@@ -627,10 +666,13 @@ class Component extends DCLogic {
     const pick = (list, cur, set) => list.map(([v, label]) => ({ label, active: cur === v, idle: cur !== v, pick: () => set(v) }));
     const tabs = pick([['todos', 'Todo'], ['perro', 'Perros'], ['gato', 'Gatos'], ['extra', 'Snacks y accesorios']], s.cat, cat => { this.setState({ cat }); this.trackRef.current && this.trackRef.current.scrollTo({ left: 0, behavior: 'smooth' }); });
     const visibleProducts = s.products.filter(p => s.cat === 'todos' || p.cat === s.cat).map(p => {
-      const si = s.sel[p.id] ?? 0; const [, price, old] = p.sizes[si];
+      const si = s.sel[p.id] ?? 0; const [sizeLabel, price, old] = p.sizes[si];
+      const kgMatch = String(sizeLabel).replace(',', '.').match(/([\d.]+)\s*kg/i);
+      const perKg = kgMatch ? price / parseFloat(kgMatch[1]) : null;
       return {
         slot: 'prod-' + p.id, ph: 'Packshot ' + p.brand, brand: p.brand, name: p.name, desc: p.desc, tag: p.tag || null,
         priceFmt: fmt(price), oldFmt: old ? fmt(old) : null, off: old ? '-' + Math.round((1 - price / old) * 100) + '%' : null,
+        perKgFmt: perKg ? fmt(perKg) + '/kg' : null,
         sizes: p.sizes.map((z, i) => ({ label: z[0], active: i === si, idle: i !== si, pick: () => this.setState(st => ({ sel: { ...st.sel, [p.id]: i } })) })),
         add: () => this.add(p, si),
       };
@@ -670,7 +712,10 @@ class Component extends DCLogic {
       scheduleStatus: this.statusText(),
       barItems: [0, 1].flatMap(() => ['Envío gratis desde ' + fmt(s.freeThreshold) + ' en Córdoba capital', 'Plan mensual con 10% off', 'Pedidos hasta las 18 h llegan mañana', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
       brandsLoop: [0, 1].flatMap(() => ['Royal Canin', 'Pro Plan', 'Eukanuba', 'Old Prince', 'Vital Can', 'Excellent', "Hill's", 'Sieger']),
-      cartCount, openCart: () => this.setState({ cartOpen: true }), closeCart: () => this.setState({ cartOpen: false }),
+      cartCount, openCart: () => this.setState({ cartOpen: true, mobileMenuOpen: false }), closeCart: () => this.setState({ cartOpen: false }),
+      mobileMenuOpen: s.mobileMenuOpen, menuIcon: s.mobileMenuOpen ? '✕' : '☰',
+      toggleMobileMenu: () => this.toggleMobileMenu(), closeMobileMenu: () => this.closeMobileMenu(),
+      showFloatingWa: !s.nearFooter && !s.cartOpen,
       waLink: this.wa('¡Hola Homer! Quiero hacer un pedido.'),
       waPlan: this.wa('¡Hola Homer! Quiero info del plan mensual para mi ' + s.pet + ' de ' + kg + ' kg.'),
       hasInstagram: !!CONFIG.social.instagram, instagramUrl: CONFIG.social.instagram || '#',
@@ -678,6 +723,7 @@ class Component extends DCLogic {
       hasFacebook: !!CONFIG.social.facebook, facebookUrl: CONFIG.social.facebook || '#',
       hasAnySocial: !!(CONFIG.social.instagram || CONFIG.social.tiktok || CONFIG.social.facebook),
       scheduleFull: CONFIG.scheduleFull,
+      showAboutUs: CONFIG.showAboutUs, aboutUsText: CONFIG.aboutUsText,
       freeThresholdFmt: fmt(s.freeThreshold),
       pricesUpdatedAtText: s.pricesUpdatedAt ? 'Precios actualizados · ' + new Date(s.pricesUpdatedAt).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }) : 'Precios sujetos a disponibilidad',
       catCards: [
