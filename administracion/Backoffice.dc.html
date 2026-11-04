@@ -12,7 +12,7 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="./image-slot.js"></script>
 <style>
@@ -83,7 +83,7 @@ input,textarea{font-family:inherit;outline:none}
 <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
 <div style="display:flex;flex-direction:column;gap:8px">
 <span class="eyebrow">Dashboard</span>
-<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Hola, equipo <span style="font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#E2583A">Homer</span>.</h1>
+<h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Hola, equipo <span style="color:#E2583A">Homer</span>.</h1>
 <p style="margin:0;font-size:15px;color:#4A5249;max-width:440px">Así viene funcionando el negocio con los pedidos registrados.</p>
 </div>
 <span class="label">{{ todayFmt }}</span>
@@ -347,6 +347,17 @@ input,textarea{font-family:inherit;outline:none}
 </sc-for>
 </div>
 </div>
+<sc-if value="{{ p.isDog }}">
+<div style="display:flex;flex-direction:column;gap:7px">
+<span class="label">Tamaño de raza</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ p.breedSizeOpts }}" as="bs" hint-placeholder-count="3">
+<sc-if value="{{ bs.active }}"><button onClick="{{ bs.pick }}" class="pillOn" style="padding:8px 14px;font-size:13px">{{ bs.label }}</button></sc-if>
+<sc-if value="{{ bs.idle }}"><button onClick="{{ bs.pick }}" class="pillOff" style="padding:8px 14px;font-size:13px">{{ bs.label }}</button></sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 <div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:4px"><span style="color:#8A8F86">$</span><input class="field" type="number" value="{{ p.price }}" onChange="{{ p.setPrice }}" style-focus="border-color:#E2583A"></input></div></div>
 <div style="display:flex;flex-direction:column;gap:5px"><span class="label">Stock</span><input class="field" type="number" value="{{ p.stock }}" onChange="{{ p.setStock }}" style-focus="border-color:#E2583A"></input></div>
@@ -399,14 +410,18 @@ input,textarea{font-family:inherit;outline:none}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 const CATS = [['perro','Perros'],['gato','Gatos'],['extra','Snacks y accesorios']];
+const BREED_SIZES = [['chico','Chico'],['mediano','Mediano'],['grande','Grande']];
 const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
 const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
 const SEED_PRODUCTS = [
-  { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult', cat: 'perro', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900, null], ['15 kg', 98500, 109000]], price: 98500, stock: 42, active: true },
-  { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas', cat: 'perro', desc: 'Con OptiHealth, pollo y arroz.', tag: null, sizes: [['3 kg', 26400, null], ['15 kg', 92300, null]], price: 92300, stock: 15, active: true },
-  { id: 'op-eq', brand: 'Old Prince', name: 'Equilibrium Adulto', cat: 'perro', desc: 'Cordero y arroz, todas las razas.', tag: 'Precio Homer', sizes: [['3 kg', 17800, null], ['15 kg', 64900, 71500]], price: 64900, stock: 8, active: true },
-  { id: 'eu-pup', brand: 'Eukanuba', name: 'Puppy Razas Medianas', cat: 'perro', desc: 'Cachorros de 2 a 12 meses.', tag: null, sizes: [['3 kg', 27500, null], ['15 kg', 95000, null]], price: 95000, stock: 20, active: true },
-  { id: 'vc-bal', brand: 'Vital Can', name: 'Balanced Adulto', cat: 'perro', desc: 'Alta digestibilidad, sin colorantes.', tag: null, sizes: [['3 kg', 15900, null], ['20 kg', 71200, null]], price: 71200, stock: 30, active: true },
+  { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult', cat: 'perro', breed_size: 'mediano', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900, null], ['15 kg', 98500, 109000]], price: 98500, stock: 42, active: true },
+  { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas', cat: 'perro', breed_size: 'mediano', desc: 'Con OptiHealth, pollo y arroz.', tag: null, sizes: [['3 kg', 26400, null], ['15 kg', 92300, null]], price: 92300, stock: 15, active: true },
+  { id: 'op-eq', brand: 'Old Prince', name: 'Equilibrium Adulto', cat: 'perro', breed_size: 'grande', desc: 'Cordero y arroz, todas las razas.', tag: 'Precio Homer', sizes: [['3 kg', 17800, null], ['15 kg', 64900, 71500]], price: 64900, stock: 8, active: true },
+  { id: 'eu-pup', brand: 'Eukanuba', name: 'Puppy Razas Medianas', cat: 'perro', breed_size: 'mediano', desc: 'Cachorros de 2 a 12 meses.', tag: null, sizes: [['3 kg', 27500, null], ['15 kg', 95000, null]], price: 95000, stock: 20, active: true },
+  { id: 'vc-bal', brand: 'Vital Can', name: 'Balanced Adulto', cat: 'perro', breed_size: 'grande', desc: 'Alta digestibilidad, sin colorantes.', tag: null, sizes: [['3 kg', 15900, null], ['20 kg', 71200, null]], price: 71200, stock: 30, active: true },
+  { id: 'rc-mini', brand: 'Royal Canin', name: 'Mini Adult', cat: 'perro', breed_size: 'chico', desc: 'Perros adultos de hasta 10 kg, razas pequeñas.', tag: null, sizes: [['1,5 kg', 18900, null], ['7,5 kg', 52900, null]], price: 52900, stock: 18, active: true },
+  { id: 'pp-peq', brand: 'Pro Plan', name: 'Adulto Razas Pequeñas', cat: 'perro', breed_size: 'chico', desc: 'Fórmula para perros adultos de razas pequeñas.', tag: null, sizes: [['3 kg', 24900, null], ['7,5 kg', 54900, null]], price: 54900, stock: 16, active: true },
+  { id: 'rc-maxi', brand: 'Royal Canin', name: 'Maxi Adult', cat: 'perro', breed_size: 'grande', desc: 'Perros adultos de más de 26 kg, razas grandes.', tag: null, sizes: [['4 kg', 32900, null], ['15 kg', 99900, null]], price: 99900, stock: 12, active: true },
   { id: 'rc-ind', brand: 'Royal Canin', name: 'Indoor 27', cat: 'gato', desc: 'Gatos de interior, control de bolas de pelo.', tag: 'Más vendido', sizes: [['1,5 kg', 24300, null], ['7,5 kg', 89900, null]], price: 89900, stock: 25, active: true },
   { id: 'pp-cat', brand: 'Pro Plan', name: 'Cat Adulto Pollo', cat: 'gato', desc: 'Protección urinaria y piel sana.', tag: null, sizes: [['1 kg', 15200, null], ['7,5 kg', 79800, 88600]], price: 79800, stock: 5, active: true },
   { id: 'ex-cat', brand: 'Excellent', name: 'Cat Adulto', cat: 'gato', desc: 'Pollo y arroz, fórmula completa.', tag: null, sizes: [['1 kg', 11900, null], ['7,5 kg', 62400, null]], price: 62400, stock: 18, active: true },
@@ -589,6 +604,8 @@ class Component extends DCLogic {
       setPrice: e => this.setProductPrice(p.id, Number(e.target.value) || 0),
       setStock: e => this.setProductField(p.id, 'stock', Number(e.target.value) || 0),
       catOpts: pick(CATS, p.cat, cat => this.setProductField(p.id, 'cat', cat)),
+      isDog: p.cat === 'perro',
+      breedSizeOpts: pick(BREED_SIZES, p.breed_size, breed_size => this.setProductField(p.id, 'breed_size', breed_size)),
       toggle: () => this.setProductField(p.id, 'active', !p.active),
       remove: () => this.removeProductConfirm(p.id),
     }));
