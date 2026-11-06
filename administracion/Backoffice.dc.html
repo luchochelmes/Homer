@@ -339,7 +339,7 @@ input,textarea{font-family:inherit;outline:none}
 <sc-if value="{{ p.image }}"><img src="{{ p.image }}" style="width:100%;height:100%;object-fit:cover;display:block"></img></sc-if>
 <sc-if value="{{ p.noImage }}"><span style="font-size:12px;color:#8A8F86">Sin foto</span></sc-if>
 <sc-if value="{{ p.uploading }}"><div style="position:absolute;inset:0;background:rgba(28,38,32,.55);color:#F5EFE4;display:flex;align-items:center;justify-content:center;font-size:11px">Subiendo…</div></sc-if>
-<input type="file" accept="image/png,image/jpeg,image/webp" onChange="{{ p.onFile }}" title="Cambiar foto" style="position:absolute;inset:0;opacity:0;cursor:pointer"></input>
+<input type="file" accept="image/png,image/jpeg,image/webp,image/avif" onChange="{{ p.onFile }}" title="Cambiar foto" style="position:absolute;inset:0;opacity:0;cursor:pointer"></input>
 </div>
 <div style="display:flex;flex-direction:column;gap:14px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
