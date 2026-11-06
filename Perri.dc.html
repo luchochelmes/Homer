@@ -205,7 +205,7 @@ input[type=range]{accent-color:#E2583A}
 </sc-if>
 <sc-if value="{{ hasProducts }}">
 <div ref="{{ trackRef }}" style="display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:clamp(18px,4vw,48px);padding:4px clamp(18px,4vw,48px) 24px;scrollbar-width:none">
-<sc-for list="{{ visibleProducts }}" as="p" hint-placeholder-count="4">
+<sc-for list="{{ homeProducts }}" as="p" hint-placeholder-count="4">
 <article style="flex:0 0 clamp(270px,24vw,310px);width:clamp(270px,24vw,310px);min-width:0;max-width:clamp(270px,24vw,310px);scroll-snap-align:start;background:#FBF8F2;border:1px solid rgba(28,38,32,.1);border-radius:24px;padding:12px 12px 18px;display:flex;flex-direction:column;gap:16px;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s" style-hover="transform:translateY(-6px);box-shadow:0 26px 50px -30px rgba(28,38,32,.45)">
 <div onClick="{{ p.openDetail }}" style="cursor:pointer;display:flex;flex-direction:column;gap:16px">
 <div class="prodImgBox" style="position:relative;height:270px;border-radius:16px;overflow:hidden;background:#FFFFFF">
@@ -911,6 +911,7 @@ class Component extends DCLogic {
     });
     const hasProducts = productsInCat.length > 0;
     const noProductsFound = !hasProducts && !!searchTerm;
+    const homeProducts = visibleProducts.slice(0, 8);
     const zoneChosen = s.zone !== -1 && !!s.zones[s.zone];
     const z = zoneChosen ? s.zones[s.zone] : { free: false, price: 0, name: 'Elegí tu zona', eta: '—', note: 'Elegí una zona para ver el costo y tiempo de envío.' };
     const { subtotal, ship, total: cartTotal } = this.computeTotals(s.cart);
@@ -994,7 +995,7 @@ class Component extends DCLogic {
         { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: 'perro.jpg', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
         { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: 'gato.jpg', kicker: 'Seco, húmedo y medicados', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
       ],
-      tabs, visibleProducts, trackRef: this.trackRef,
+      tabs, visibleProducts, homeProducts, trackRef: this.trackRef,
       prodSearch: s.prodSearch, setProdSearch: e => this.setState({ prodSearch: e.target.value }), noProductsFound, hasProducts,
       prev: () => this.trackRef.current && this.trackRef.current.scrollBy({ left: -330, behavior: 'smooth' }),
       next: () => this.trackRef.current && this.trackRef.current.scrollBy({ left: 330, behavior: 'smooth' }),
