@@ -312,7 +312,10 @@ input,textarea{font-family:inherit;outline:none}
 <sc-for list="{{ productRows }}" as="p" hint-placeholder-count="6">
 <div style="display:flex;flex-direction:column;border-bottom:1px solid rgba(28,38,32,.06)">
 <div class="prodRowGrid" style="display:grid;grid-template-columns:40px 2.2fr 1fr .9fr .9fr 1fr;gap:12px;padding:14px 20px;align-items:center;border-radius:14px;transition:background .15s" style-hover="background:rgba(28,38,32,.03)">
-<div style="width:40px;height:40px;border-radius:10px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ p.imgSlotId }}" shape="rect" placeholder="Foto"></image-slot></div>
+<div style="width:40px;height:40px;border-radius:10px;overflow:hidden;background:#EFE7D8;display:flex;align-items:center;justify-content:center">
+<sc-if value="{{ p.image }}"><img src="{{ p.image }}" style="width:100%;height:100%;object-fit:cover;display:block"></img></sc-if>
+<sc-if value="{{ p.noImage }}"><span style="font-size:10px;color:#8A8F86">Foto</span></sc-if>
+</div>
 <div style="display:flex;flex-direction:column;gap:3px">
 <span style="font-weight:600;font-size:15px">{{ p.name }}</span>
 <span class="label" style="color:#8A8F86">{{ p.brand }}</span>
@@ -332,7 +335,12 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 <sc-if value="{{ p.editing }}">
 <div class="editPanel" style="display:grid;grid-template-columns:120px 1fr;gap:22px;padding:8px 20px 24px 60px;animation:fadeIn .25s ease">
-<div style="width:120px;height:120px;border-radius:16px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ p.imgSlotId }}" shape="rect" placeholder="Foto producto"></image-slot></div>
+<div style="position:relative;width:120px;height:120px;border-radius:16px;overflow:hidden;background:#EFE7D8;display:flex;align-items:center;justify-content:center">
+<sc-if value="{{ p.image }}"><img src="{{ p.image }}" style="width:100%;height:100%;object-fit:cover;display:block"></img></sc-if>
+<sc-if value="{{ p.noImage }}"><span style="font-size:12px;color:#8A8F86">Sin foto</span></sc-if>
+<sc-if value="{{ p.uploading }}"><div style="position:absolute;inset:0;background:rgba(28,38,32,.55);color:#F5EFE4;display:flex;align-items:center;justify-content:center;font-size:11px">Subiendo…</div></sc-if>
+<input type="file" accept="image/png,image/jpeg,image/webp" onChange="{{ p.onFile }}" title="Cambiar foto" style="position:absolute;inset:0;opacity:0;cursor:pointer"></input>
+</div>
 <div style="display:flex;flex-direction:column;gap:14px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 <div style="display:flex;flex-direction:column;gap:5px"><span class="label">Marca</span><input class="field" value="{{ p.brand }}" onChange="{{ p.setBrand }}" style-focus="border-color:#E2583A"></input></div>
@@ -413,6 +421,7 @@ const CATS = [['perro','Perros'],['gato','Gatos'],['extra','Snacks y accesorios'
 const BREED_SIZES = [['chico','Chico'],['mediano','Mediano'],['grande','Grande']];
 const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
 const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
+const IMAGE_BUCKET = 'product-images';
 const SEED_PRODUCTS = [
   { id: 'rc-med', brand: 'Royal Canin', name: 'Medium Adult', cat: 'perro', breed_size: 'mediano', desc: 'Perros adultos de 11 a 25 kg.', tag: 'Más vendido', sizes: [['3 kg', 28900, null], ['15 kg', 98500, 109000]], price: 98500, stock: 42, active: true },
   { id: 'pp-med', brand: 'Pro Plan', name: 'Adulto Razas Medianas', cat: 'perro', breed_size: 'mediano', desc: 'Con OptiHealth, pollo y arroz.', tag: null, sizes: [['3 kg', 26400, null], ['15 kg', 92300, null]], price: 92300, stock: 15, active: true },
@@ -491,6 +500,7 @@ class Component extends DCLogic {
     newRevName: '', newRevPet: '', newRevText: '',
     orderFilter: 'todos', orderSearch: '', showAddOrderForm: false,
     noName: '', noItems: '', noTotal: '', noZone: 0,
+    uploadingId: null,
   };
 
   async componentDidMount() {
@@ -541,6 +551,25 @@ class Component extends DCLogic {
   setProductField(id, field, value) {
     this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, [field]: value } : p) }));
     this.sb.from('products').update({ [field]: value }).eq('id', id);
+  }
+  async uploadProductImage(id, file) {
+    if (!file) return;
+    this.setState({ uploadingId: id });
+    try {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = id + '-' + Date.now() + '.' + ext;
+      const { error: upErr } = await this.sb.storage.from(IMAGE_BUCKET).upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data } = this.sb.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+      const image_url = data.publicUrl;
+      this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, image_url } : p) }));
+      const { error } = await this.sb.from('products').update({ image_url }).eq('id', id);
+      this.flashSaved(error);
+    } catch (e) {
+      this.flashSaved(e);
+    } finally {
+      this.setState({ uploadingId: null });
+    }
   }
   setProductPrice(id, price) {
     const p = this.state.products.find(x => x.id === id);
@@ -620,7 +649,8 @@ class Component extends DCLogic {
     const productRows = filtered.map(p => ({
       name: p.name, brand: p.brand, catLabel: catLabel(p.cat), price: p.price, priceFmt: fmt(p.price), stock: p.stock,
       low: p.stock < 10, active: p.active, inactive: !p.active,
-      imgSlotId: 'prod-' + p.id,
+      image: p.image_url || '', noImage: !p.image_url, uploading: s.uploadingId === p.id,
+      onFile: e => { const f = e.target.files && e.target.files[0]; if (f) this.uploadProductImage(p.id, f); e.target.value = ''; },
       editing: s.editingId === p.id, editLabel: s.editingId === p.id ? 'Cerrar' : 'Editar',
       toggleEdit: () => this.toggleEdit(p.id),
       setBrand: e => this.setProductField(p.id, 'brand', e.target.value),
