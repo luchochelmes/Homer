@@ -38,7 +38,7 @@
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
-#inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:92px}
+#inicio,#marcas,#productos,#catalogo,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:92px}
 body{margin:0;background:#F5EFE4;color:#1C2620;font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}
 a{color:#1C2620;text-decoration:none}
@@ -64,7 +64,7 @@ input[type=range]{accent-color:#E2583A}
   .svcSticky{position:static !important;top:auto !important}
   .videoBox{aspect-ratio:auto !important;min-height:0 !important;height:220px !important}
   .stepsGrid{grid-template-columns:1fr !important}
-  #inicio,#marcas,#productos,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:148px}
+  #inicio,#marcas,#productos,#catalogo,#servicios,#envios,#calculadora,#resenas,#preguntas,#quienes-somos,#politica-cambios,#terminos,#privacidad{scroll-margin-top:148px}
 }
 @media (min-width:761px) and (max-width:1000px){
   .stepsGrid{grid-template-columns:repeat(2,1fr) !important}
@@ -88,6 +88,7 @@ input[type=range]{accent-color:#E2583A}
 <a href="#inicio" style="display:flex;align-items:flex-end;gap:3px;font-weight:800;font-size:30px;letter-spacing:-.05em;line-height:1">Homer<span style="width:9px;height:9px;border-radius:50%;background:#E2583A;margin-bottom:5px"></span></a>
 <nav class="headerNav" style="display:flex;gap:clamp(14px,2.4vw,30px);flex-wrap:wrap;font-size:15px;font-weight:500;margin-left:auto">
 <a href="#productos">Productos</a>
+<a href="#catalogo">Catálogo</a>
 <a href="#marcas">Marcas</a>
 <a href="#servicios">Servicios</a>
 <a href="#envios">Envíos</a>
@@ -102,6 +103,7 @@ input[type=range]{accent-color:#E2583A}
 <sc-if value="{{ mobileMenuOpen }}">
 <nav style="display:flex;flex-direction:column;padding:8px clamp(18px,4vw,48px) 18px;gap:4px;border-top:1px solid rgba(28,38,32,.1);background:#F5EFE4" onClick="{{ closeMobileMenu }}">
 <a href="#productos" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Productos</a>
+<a href="#catalogo" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Catálogo</a>
 <a href="#marcas" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Marcas</a>
 <a href="#servicios" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Servicios</a>
 <a href="#envios" style="padding:12px 4px;font-size:16px;font-weight:600;border-bottom:1px solid rgba(28,38,32,.08)">Envíos</a>
@@ -171,10 +173,7 @@ input[type=range]{accent-color:#E2583A}
 <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">{{ pricesUpdatedAtText }}</span>
 <h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Lo más pedido de la semana</h2>
 </div>
-<div style="display:flex;gap:10px;align-items:center">
-<button onClick="{{ prev }}" aria-label="Anterior" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">←</button>
-<button onClick="{{ next }}" aria-label="Siguiente" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">→</button>
-</div>
+<a href="#catalogo" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid #1C2620;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15px;white-space:nowrap;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">Ver todo el catálogo <span>→</span></a>
 </div>
 <div style="position:relative;max-width:420px;margin-bottom:18px">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#8A8F86;pointer-events:none"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
@@ -234,6 +233,82 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;flex-direction:column;gap:2px">
 <sc-if value="{{ p.oldFmt }}"><span style="font-size:13px;color:#8A8F86;text-decoration:line-through">{{ p.oldFmt }}</span></sc-if>
 <span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
+<sc-if value="{{ p.perKgFmt }}"><span style="font-size:12px;color:#8A8F86">{{ p.perKgFmt }}</span></sc-if>
+</div>
+<button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
+</div>
+</article>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:center;gap:10px;padding:0 clamp(18px,4vw,48px) clamp(48px,6vw,80px)">
+<button onClick="{{ prev }}" aria-label="Anterior" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">←</button>
+<button onClick="{{ next }}" aria-label="Siguiente" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">→</button>
+</div>
+</sc-if>
+</section>
+
+<section id="catalogo" style="max-width:1320px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(18px,4vw,48px);border-top:1px solid rgba(28,38,32,.14)">
+<div data-reveal="0" style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px">
+<span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Catálogo completo</span>
+<h2 style="margin:0;font-size:clamp(36px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;font-weight:700">Todos los productos</h2>
+</div>
+<div style="position:relative;max-width:420px;margin-bottom:18px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#8A8F86;pointer-events:none"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+<input value="{{ prodSearch }}" onChange="{{ setProdSearch }}" placeholder="Buscar producto o marca…" style="width:100%;border:1.5px solid rgba(28,38,32,.2);border-radius:999px;padding:13px 16px 13px 44px;font-size:15px;background:#FBF8F2"></input>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<sc-if value="{{ t.active }}">
+<button onClick="{{ t.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:999px;padding:10px 18px;white-space:nowrap;font-size:15px;font-weight:600">{{ t.label }}</button>
+</sc-if>
+<sc-if value="{{ t.idle }}">
+<button onClick="{{ t.pick }}" style="border:1.5px solid rgba(28,38,32,.22);background:transparent;color:#1C2620;border-radius:999px;padding:10px 18px;white-space:nowrap;font-size:15px;font-weight:500;transition:border-color .2s" style-hover="border-color:#1C2620">{{ t.label }}</button>
+</sc-if>
+</sc-for>
+</div>
+<sc-if value="{{ showBreedSizes }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+<sc-for list="{{ breedSizeTabs }}" as="bt" hint-placeholder-count="4">
+<sc-if value="{{ bt.active }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px;font-weight:600">{{ bt.label }}</button></sc-if>
+<sc-if value="{{ bt.idle }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px" style-hover="border-color:#24513C">{{ bt.label }}</button></sc-if>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ noProductsFound }}">
+<div style="padding:40px 0;text-align:center;color:#4A5249">
+<span style="font-weight:700;font-size:20px;color:#1C2620">No encontramos productos que coincidan con tu búsqueda.</span><br>Probá con otro nombre o marca.
+</div>
+</sc-if>
+<sc-if value="{{ hasProducts }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:18px">
+<sc-for list="{{ visibleProducts }}" as="p" hint-placeholder-count="8">
+<article style="background:#FBF8F2;border:1px solid rgba(28,38,32,.1);border-radius:24px;padding:12px 12px 18px;display:flex;flex-direction:column;gap:16px;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s" style-hover="transform:translateY(-6px);box-shadow:0 26px 50px -30px rgba(28,38,32,.45)">
+<div onClick="{{ p.openDetail }}" style="cursor:pointer;display:flex;flex-direction:column;gap:16px">
+<div class="prodImgBox" style="position:relative;height:220px;border-radius:16px;overflow:hidden;background:#FFFFFF">
+<image-slot id="{{ p.slot }}" shape="rect" fit="contain" src="{{ p.image }}" placeholder="{{ p.ph }}"></image-slot>
+<sc-if value="{{ p.tag }}">
+<span style="position:absolute;top:12px;left:12px;background:#F2C45A;color:#1C2620;border-radius:999px;padding:6px 11px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;pointer-events:none">{{ p.tag }}</span>
+</sc-if>
+<sc-if value="{{ p.off }}">
+<span style="position:absolute;top:12px;right:12px;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:6px 11px;font-size:11px;pointer-events:none">{{ p.off }}</span>
+</sc-if>
+</div>
+<div style="padding:0 6px;display:flex;flex-direction:column;gap:6px">
+<span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">{{ p.brand }}</span>
+<h3 style="margin:0;font-size:18px;line-height:1.15;letter-spacing:-.02em;font-weight:600">{{ p.name }}</h3>
+<span style="font-size:14px;color:#5B6359;line-height:1.4">{{ p.desc }}</span>
+</div>
+</div>
+<div style="padding:0 6px;display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ p.sizes }}" as="s" hint-placeholder-count="2">
+<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
+</sc-for>
+</div>
+<div style="padding:0 6px;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-if value="{{ p.oldFmt }}"><span style="font-size:13px;color:#8A8F86;text-decoration:line-through">{{ p.oldFmt }}</span></sc-if>
+<span style="font-size:24px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
 <sc-if value="{{ p.perKgFmt }}"><span style="font-size:12px;color:#8A8F86">{{ p.perKgFmt }}</span></sc-if>
 </div>
 <button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
