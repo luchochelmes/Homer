@@ -208,7 +208,7 @@ input[type=range]{accent-color:#E2583A}
 <sc-for list="{{ visibleProducts }}" as="p" hint-placeholder-count="4">
 <article style="flex:0 0 clamp(270px,24vw,310px);width:clamp(270px,24vw,310px);min-width:0;max-width:clamp(270px,24vw,310px);scroll-snap-align:start;background:#FBF8F2;border:1px solid rgba(28,38,32,.1);border-radius:24px;padding:12px 12px 18px;display:flex;flex-direction:column;gap:16px;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s" style-hover="transform:translateY(-6px);box-shadow:0 26px 50px -30px rgba(28,38,32,.45)">
 <div onClick="{{ p.openDetail }}" style="cursor:pointer;display:flex;flex-direction:column;gap:16px">
-<div style="position:relative;height:270px;border-radius:16px;overflow:hidden;background:#EFE7D8">
+<div style="position:relative;height:270px;border-radius:16px;overflow:hidden;background:#FFFFFF">
 <image-slot id="{{ p.slot }}" shape="rect" fit="contain" src="{{ p.image }}" placeholder="{{ p.ph }}"></image-slot>
 <sc-if value="{{ p.tag }}">
 <span style="position:absolute;top:12px;left:12px;background:#F2C45A;color:#1C2620;border-radius:999px;padding:6px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;pointer-events:none">{{ p.tag }}</span>
@@ -525,7 +525,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;gap:10px;overflow-x:auto;padding:12px 0 4px">
 <sc-for list="{{ recommended }}" as="rp" hint-placeholder-count="3">
 <div style="flex:0 0 130px;width:130px;display:flex;flex-direction:column;gap:6px">
-<div onClick="{{ rp.openDetail }}" style="cursor:pointer;height:100px;border-radius:12px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ rp.slot }}" shape="rect" fit="contain" src="{{ rp.image }}" placeholder="{{ rp.ph }}"></image-slot></div>
+<div onClick="{{ rp.openDetail }}" style="cursor:pointer;height:100px;border-radius:12px;overflow:hidden;background:#FFFFFF"><image-slot id="{{ rp.slot }}" shape="rect" fit="contain" src="{{ rp.image }}" placeholder="{{ rp.ph }}"></image-slot></div>
 <span style="font-size:12px;font-weight:600;line-height:1.25">{{ rp.name }}</span>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
 <span style="font-size:12px;font-weight:700">{{ rp.priceFmt }}</span>
@@ -574,7 +574,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="max-width:960px;margin:0 auto;padding:clamp(18px,4vw,48px)">
 <button onClick="{{ closeDetail }}" style="display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;color:#1C2620;font-weight:600;font-size:15px;padding:12px 0;margin-bottom:8px">← Volver al catálogo</button>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(28px,4vw,56px);align-items:start">
-<div style="height:clamp(320px,40vw,480px);border-radius:24px;overflow:hidden;background:#EFE7D8"><image-slot id="{{ detail.slot }}" shape="rect" fit="contain" src="{{ detail.image }}" placeholder="{{ detail.ph }}"></image-slot></div>
+<div style="height:clamp(320px,40vw,480px);border-radius:24px;overflow:hidden;background:#FFFFFF"><image-slot id="{{ detail.slot }}" shape="rect" fit="contain" src="{{ detail.image }}" placeholder="{{ detail.ph }}"></image-slot></div>
 <div style="display:flex;flex-direction:column;gap:18px">
 <div style="display:flex;flex-direction:column;gap:6px">
 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">{{ detail.brand }}</span>
