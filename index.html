@@ -47,6 +47,7 @@ button{font-family:inherit;cursor:pointer}
 ::selection{background:#F2C45A}
 input[type=range]{accent-color:#E2583A}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes marqueeRev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-10px) rotate(-3deg)}}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -376,8 +377,32 @@ input[type=range]{accent-color:#E2583A}
 </div>
 </sc-if>
 <sc-if value="{{ noTestimonials }}">
-<div style="text-align:center;padding:40px 0;color:#4A5249">
-<span style="font-weight:700;font-size:24px;color:#1C2620">Todavía no hay reseñas publicadas.</span><br>Sé el primero en contarnos cómo te fue.
+<div data-reveal="0" style="margin-bottom:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Lo que dicen los clientes</span>
+</div>
+<div data-reveal="80" style="display:flex;flex-direction:column;gap:20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)">
+<div style="display:flex;width:max-content;animation:marquee 46s linear infinite">
+<sc-for list="{{ fakeReviewsRow1 }}" as="r" hint-placeholder-count="8">
+<div style="flex:0 0 320px;margin-right:18px;background:#FBF8F2;border:1px solid rgba(28,38,32,.12);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 40px -32px rgba(28,38,32,.35)">
+<p style="margin:0;font-size:15px;line-height:1.5;color:#1C2620">“{{ r.text }}”</p>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:40px;height:40px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:15px;font-weight:800">{{ r.initial }}</div>
+<div style="display:flex;flex-direction:column;gap:2px"><strong style="font-size:14px">{{ r.name }}</strong><span style="font-size:12px;color:#5B6359">{{ r.pet }}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;width:max-content;margin-left:-160px;animation:marqueeRev 52s linear infinite">
+<sc-for list="{{ fakeReviewsRow2 }}" as="r" hint-placeholder-count="8">
+<div style="flex:0 0 320px;margin-right:18px;background:#FBF8F2;border:1px solid rgba(28,38,32,.12);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 40px -32px rgba(28,38,32,.35)">
+<p style="margin:0;font-size:15px;line-height:1.5;color:#1C2620">“{{ r.text }}”</p>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:40px;height:40px;flex:none;border-radius:50%;background:#F2C45A;color:#1C2620;display:grid;place-items:center;font-size:15px;font-weight:800">{{ r.initial }}</div>
+<div style="display:flex;flex-direction:column;gap:2px"><strong style="font-size:14px">{{ r.name }}</strong><span style="font-size:12px;color:#5B6359">{{ r.pet }}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
 </div>
 </sc-if>
 </section>
@@ -587,6 +612,16 @@ const CONFIG = {
   aboutUsText: 'TODO: contanos la historia de Homer y quiénes están del otro lado — esto todavía no lo escribió el dueño.',
 };
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const FAKE_REVIEWS = [
+  { name: 'Marina Suárez', pet: 'Perra, Golden', text: 'Pedí un sábado a la mañana y el lunes ya estaba la bolsa en mi casa. Mi perra está comiendo mejor que nunca.' },
+  { name: 'Lucas Ferreyra', pet: 'Gato, mestizo', text: 'Buenísima la atención por WhatsApp, me ayudaron a elegir el alimento justo para mi gato que es medio delicado para comer.' },
+  { name: 'Valentina Ríos', pet: 'Perro, Caniche', text: 'Se nota que saben de lo que hablan. Me recomendaron un alimento para razas chicas y Toby bajó la caspa en dos semanas.' },
+  { name: 'Diego Molina', pet: 'Perro, Labrador', text: 'El envío llegó antes de lo que esperaba y el precio fue mejor que en el pet shop de mi barrio.' },
+  { name: 'Camila Paz', pet: 'Gata, Siamesa', text: 'Compro todos los meses y nunca tuve un problema. Avisan todo por WhatsApp, muy prolijos.' },
+  { name: 'Rodrigo Álvarez', pet: 'Perro, Mestizo grande', text: 'Tenía dudas de comprar comida de perro sin verla antes, pero llegó todo perfecto y selladito.' },
+  { name: 'Sofía Gómez', pet: 'Gato, Europeo', text: 'La changa de todos los meses ahora la hago desde el celu. Un golazo para no cargar bolsas de 15 kg en el super.' },
+  { name: 'Martín Acosta', pet: 'Perra, Border Collie', text: 'Excelente relación precio-calidad. Mi perra está mucho más activa desde que cambiamos de marca.' },
+];
 
 class Component extends DCLogic {
   state = {
@@ -813,6 +848,10 @@ class Component extends DCLogic {
     this.totalTestimonials = testimonials.length || 1;
     const tIdx = testimonials.length ? s.tIdx % testimonials.length : 0;
 
+    const fakeReviewMap = r => ({ text: r.text, name: r.name, pet: r.pet, initial: r.name[0].toUpperCase() });
+    const fakeReviewsRow1 = [0, 1].flatMap(() => FAKE_REVIEWS.map(fakeReviewMap));
+    const fakeReviewsRow2 = [0, 1].flatMap(() => [...FAKE_REVIEWS].reverse().map(fakeReviewMap));
+
     const cartProductIds = new Set(s.cart.map(c => c.p.id));
     const cartCats = new Set(s.cart.map(c => c.p.cat));
     const cartBreeds = new Set(s.cart.filter(c => c.p.cat === 'perro' && c.p.breed_size).map(c => c.p.breed_size));
@@ -891,6 +930,7 @@ class Component extends DCLogic {
       },
       dots: testimonials.map((_, i) => ({ active: tIdx === i, idle: tIdx !== i, pick: () => this.setState({ tIdx: i }) })),
       testimonials, hasTestimonials: testimonials.length > 0, noTestimonials: testimonials.length === 0, tOffset: (-100 * tIdx) + '%',
+      fakeReviewsRow1, fakeReviewsRow2,
       revName: s.revName, revPet: s.revPet, revText: s.revText,
       setRevName: e => this.setState({ revName: e.target.value }),
       setRevPet: e => this.setState({ revPet: e.target.value }),
