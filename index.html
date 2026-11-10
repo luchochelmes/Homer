@@ -543,12 +543,17 @@ input[type=range]{accent-color:#E2583A}
 </section>
 </sc-if>
 
-<section id="politica-cambios" style="max-width:900px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 0">
-<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Cambios y devoluciones</h3>
+<sc-if value="{{ hasLegal }}">
+<div style="position:fixed;inset:0;z-index:85;background:#F5EFE4;overflow-y:auto;animation:fadeIn .25s ease">
+<div style="max-width:900px;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(18px,4vw,48px) clamp(64px,8vw,120px)">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px">
+<h3 style="margin:0;font-size:22px;font-weight:700">{{ legalTitle }}</h3>
+<button onClick="{{ closeLegal }}" aria-label="Cerrar" style="width:52px;height:52px;flex:none;border-radius:50%;border:1.5px solid #1C2620;background:transparent;font-size:20px;color:#1C2620;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">✕</button>
+</div>
+<sc-if value="{{ showCambios }}">
 <p style="margin:0;font-size:15px;line-height:1.6;color:#4A5249">Estamos redactando esta sección. Mientras tanto, escribinos por WhatsApp ante cualquier duda sobre cambios o devoluciones.</p>
-</section>
-<section id="terminos" style="max-width:900px;margin:0 auto;padding:32px clamp(18px,4vw,48px) 0">
-<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Términos y condiciones</h3>
+</sc-if>
+<sc-if value="{{ showTerminos }}">
 <div style="font-size:15px;line-height:1.65;color:#4A5249;display:flex;flex-direction:column;gap:16px">
 <p style="margin:0">Última actualización: noviembre de 2026. Estos Términos y Condiciones regulan el uso del sitio web de Homer y la compra de productos a través de él. Al realizar un pedido, el usuario declara haber leído y aceptado estas condiciones.</p>
 <div><strong style="color:#1C2620">1. Quiénes somos</strong><p style="margin:6px 0 0">Homer es un emprendimiento 100% online dedicado a la venta de alimento balanceado y accesorios para mascotas, con envíos a domicilio en Córdoba Capital. No contamos con local a la calle: los pedidos se coordinan por WhatsApp y se entregan directamente en el domicilio indicado por el cliente.</p></div>
@@ -561,9 +566,8 @@ input[type=range]{accent-color:#E2583A}
 <div><strong style="color:#1C2620">8. Modificaciones</strong><p style="margin:6px 0 0">Homer podrá modificar estos Términos y Condiciones en cualquier momento. Los cambios entran en vigencia desde su publicación en el sitio.</p></div>
 <div><strong style="color:#1C2620">9. Contacto</strong><p style="margin:6px 0 0">Ante cualquier consulta sobre estos términos, escribinos por WhatsApp.</p></div>
 </div>
-</section>
-<section id="privacidad" style="max-width:900px;margin:0 auto;padding:32px clamp(18px,4vw,48px) 48px">
-<h3 style="margin:0 0 10px;font-size:22px;font-weight:700">Política de privacidad</h3>
+</sc-if>
+<sc-if value="{{ showPrivacidad }}">
 <div style="font-size:15px;line-height:1.65;color:#4A5249;display:flex;flex-direction:column;gap:16px">
 <p style="margin:0">Última actualización: noviembre de 2026. En Homer respetamos la privacidad de quienes visitan y compran en nuestro sitio. Esta política explica qué datos recolectamos, para qué los usamos y qué derechos tenés sobre ellos, en línea con la Ley 25.326 de Protección de Datos Personales de la República Argentina.</p>
 <div><strong style="color:#1C2620">1. Qué datos recolectamos</strong><p style="margin:6px 0 0">Al realizar un pedido recolectamos los datos que nos proporcionás vía WhatsApp o el sitio: nombre, número de teléfono, dirección de entrega y, en caso de dejarla, una reseña con tu nombre y el de tu mascota. No solicitamos datos de tarjetas ni información financiera: los pagos se coordinan a través de Mercado Pago u otros medios directamente con el proveedor correspondiente, que cuenta con su propia política de privacidad.</p></div>
@@ -575,7 +579,10 @@ input[type=range]{accent-color:#E2583A}
 <div><strong style="color:#1C2620">7. Cambios en esta política</strong><p style="margin:6px 0 0">Esta política puede actualizarse periódicamente. Te recomendamos revisarla de tanto en tanto. Los cambios entran en vigencia desde su publicación en el sitio.</p></div>
 <div><strong style="color:#1C2620">8. Contacto</strong><p style="margin:6px 0 0">Ante cualquier consulta sobre el tratamiento de tus datos personales, escribinos por WhatsApp.</p></div>
 </div>
-</section>
+</sc-if>
+</div>
+</div>
+</sc-if>
 
 <footer style="background:#1C2620;color:#F5EFE4;padding:clamp(56px,7vw,100px) clamp(18px,4vw,48px) 28px;overflow:hidden">
 <div style="max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:56px">
@@ -587,7 +594,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Dónde estamos</span>Córdoba capital<br>Venta online con envío a domicilio</div>
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: {{ scheduleFull }}</div>
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Medios de pago</span>Mercado Pago · Tarjetas<br>Transferencia · Efectivo</div>
-<div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Legal</span><a href="#politica-cambios" style="color:#F5EFE4">Cambios y devoluciones</a><a href="#terminos" style="color:#F5EFE4">Términos y condiciones</a><a href="#privacidad" style="color:#F5EFE4">Privacidad</a></div>
+<div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Legal</span><button onClick="{{ openCambios }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Cambios y devoluciones</button><button onClick="{{ openTerminos }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Términos y condiciones</button><button onClick="{{ openPrivacidad }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Privacidad</button></div>
 <sc-if value="{{ hasAnySocial }}">
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span>
 <sc-if value="{{ hasInstagram }}"><a href="{{ instagramUrl }}" target="_blank" style="color:#F5EFE4">Instagram</a></sc-if>
@@ -746,6 +753,7 @@ class Component extends DCLogic {
     mobileMenuOpen: false, nearFooter: false,
     sizeFilter: 'todos', prodSearch: '', detailProductId: null, detailSi: 0, detailQty: 1,
     catalogOpen: false,
+    legalOpen: null,
   };
   trackRef = React.createRef();
 
@@ -765,9 +773,11 @@ class Component extends DCLogic {
     if (initialP) this.setState({ detailProductId: initialP, detailSi: 0, detailQty: 1 });
     const initialCatalog = new URLSearchParams(window.location.search).get('catalogo');
     if (initialCatalog) this.setState({ catalogOpen: true });
+    const initialLegal = new URLSearchParams(window.location.search).get('legal');
+    if (initialLegal) this.setState({ legalOpen: initialLegal });
     this.onPopState = () => {
       const params = new URLSearchParams(window.location.search);
-      this.setState({ detailProductId: params.get('p'), detailSi: 0, detailQty: 1, catalogOpen: !!params.get('catalogo') });
+      this.setState({ detailProductId: params.get('p'), detailSi: 0, detailQty: 1, catalogOpen: !!params.get('catalogo'), legalOpen: params.get('legal') });
     };
     window.addEventListener('popstate', this.onPopState);
 
@@ -855,6 +865,16 @@ class Component extends DCLogic {
   closeCatalog() {
     window.history.pushState(null, '', window.location.pathname);
     this.setState({ catalogOpen: false });
+  }
+
+  openLegal(key) {
+    window.history.pushState(null, '', '?legal=' + key);
+    this.setState({ legalOpen: key });
+    window.scrollTo({ top: 0 });
+  }
+  closeLegal() {
+    window.history.pushState(null, '', window.location.pathname);
+    this.setState({ legalOpen: null });
   }
 
   statusText() {
@@ -1078,6 +1098,10 @@ class Component extends DCLogic {
       showBreedSizes, breedSizeTabs,
       hasDetail: !!detail, detail, closeDetail: () => this.closeDetail(),
       catalogOpen: s.catalogOpen, openCatalog: () => this.openCatalog(), closeCatalog: () => this.closeCatalog(),
+      hasLegal: !!s.legalOpen, closeLegal: () => this.closeLegal(),
+      showCambios: s.legalOpen === 'cambios', showTerminos: s.legalOpen === 'terminos', showPrivacidad: s.legalOpen === 'privacidad',
+      legalTitle: s.legalOpen === 'terminos' ? 'Términos y condiciones' : s.legalOpen === 'privacidad' ? 'Política de privacidad' : 'Cambios y devoluciones',
+      openCambios: () => this.openLegal('cambios'), openTerminos: () => this.openLegal('terminos'), openPrivacidad: () => this.openLegal('privacidad'),
       subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : !zoneChosen ? 'Elegí tu zona' : ship === 0 ? 'Gratis' : fmt(ship),
       totalFmt: fmt(cartTotal),
       freeHint: s.cart.length && zoneChosen && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
