@@ -660,9 +660,9 @@ input[type=range]{accent-color:#E2583A}
 <sc-if value="{{ z2.idle }}"><button onClick="{{ z2.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;font-size:13px">{{ z2.name }}</button></sc-if>
 </sc-for>
 </div>
-<input value="{{ ckName }}" onChange="{{ setCkName }}" placeholder="Nombre y apellido" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
-<input value="{{ ckPhone }}" onChange="{{ setCkPhone }}" placeholder="Teléfono (WhatsApp)" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
-<input value="{{ ckAddress }}" onChange="{{ setCkAddress }}" placeholder="Dirección y barrio" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<input value="{{ ckName }}" onChange="{{ setCkName }}" placeholder="Nombre y apellido" autocomplete="name" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<input value="{{ ckPhone }}" onChange="{{ setCkPhone }}" placeholder="Teléfono (WhatsApp)" type="tel" autocomplete="tel" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
+<input value="{{ ckAddress }}" onChange="{{ setCkAddress }}" placeholder="Dirección y barrio" autocomplete="street-address" style="border:1.5px solid rgba(28,38,32,.18);border-radius:12px;padding:12px 14px;font-size:15px;font-family:inherit;background:#FFFFFF"></input>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{ paymentOpts }}" as="po" hint-placeholder-count="3">
 <sc-if value="{{ po.active }}"><button onClick="{{ po.pick }}" style="padding:9px 14px;border-radius:999px;border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;font-size:13px;font-weight:600">{{ po.label }}</button></sc-if>
@@ -675,8 +675,9 @@ input[type=range]{accent-color:#E2583A}
 </sc-if>
 <div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Subtotal</span><span>{{ subtotalFmt }}</span></div>
 <div style="display:flex;justify-content:space-between;font-size:15px;color:#4A5249"><span>Envío · {{ zone.name }}</span><span>{{ shipFmt }}</span></div>
+<sc-if value="{{ shipQuote }}"><div style="font-size:13px;color:#8A6A1F;background:#FBF1D6;border-radius:10px;padding:10px 12px">El costo de envío a tu zona se cotiza por WhatsApp según peso y destino, no está incluido en el total.</div></sc-if>
 <sc-if value="{{ freeHint }}"><div style="font-size:13px;color:#24513C;background:#E1EBE3;border-radius:10px;padding:10px 12px">{{ freeHint }}</div></sc-if>
-<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px"><span style="font-size:17px;font-weight:600">Total</span><span style="font-size:30px;font-weight:700;letter-spacing:-.03em">{{ totalFmt }}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:8px"><span style="font-size:17px;font-weight:600">{{ totalLabel }}</span><span style="font-size:30px;font-weight:700;letter-spacing:-.03em">{{ totalFmt }}</span></div>
 <button onClick="{{ finalizeOrder }}" style="text-align:center;background:#E2583A;color:#FBF8F2;padding:17px;border-radius:999px;font-weight:600;font-size:16px;border:0;font-family:inherit;cursor:pointer" style-hover="background:#C9452A;color:#FBF8F2">{{ finalizeLabel }}</button>
 </div>
 </aside>
@@ -730,7 +731,7 @@ const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
 const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
 const CONFIG = {
   whatsapp: '5493516159285',
-  scheduleShort: 'Lun a Vie 9 a 20 h',
+  scheduleShort: 'Lun a vie 9-20h · Sáb 9-14h',
   scheduleFull: 'Lunes a viernes, 9 a 20 h. Sábados, 9 a 14 h.',
   social: { instagram: null, tiktok: null, facebook: null },
   showAboutUs: false,
@@ -786,6 +787,7 @@ class Component extends DCLogic {
 
     this.sb = window.supabase.createClient(SB_URL, SB_KEY);
     await Promise.all([this.loadProducts(), this.loadZones(), this.loadReviews(), this.loadSettings()]);
+    this.restoreCart();
     this.channel = this.sb.channel('homer-sync-landing')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => this.loadReviews())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => this.loadProducts())
@@ -845,7 +847,23 @@ class Component extends DCLogic {
     });
     clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
   }
-  qty(key, d) { this.setState(s => ({ cart: s.cart.map(c => c.key === key ? { ...c, qty: c.qty + d } : c).filter(c => c.qty > 0) })); }
+  qty(key, d) { this.setState(s => ({ cart: s.cart.map(c => c.key === key ? { ...c, qty: Math.min(c.p.stock, c.qty + d) } : c).filter(c => c.qty > 0) })); }
+  restoreCart() {
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem('homer_cart') || '[]'); } catch (e) {}
+    if (!saved.length) return;
+    const cart = saved.map(c => {
+      const p = this.state.products.find(x => x.id === c.id);
+      if (!p || !p.sizes[c.si]) return null;
+      return { key: c.id + '-' + c.si, p, si: c.si, qty: Math.max(1, Math.min(p.stock, c.qty)) };
+    }).filter(Boolean);
+    if (cart.length) this.setState({ cart });
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.cart !== this.state.cart) {
+      try { localStorage.setItem('homer_cart', JSON.stringify(this.state.cart.map(c => ({ id: c.p.id, si: c.si, qty: c.qty })))); } catch (e) {}
+    }
+  }
   toggleMobileMenu() { this.setState(s => ({ mobileMenuOpen: !s.mobileMenuOpen })); }
   closeMobileMenu() { this.setState({ mobileMenuOpen: false }); }
 
@@ -901,8 +919,9 @@ class Component extends DCLogic {
     const zoneObj = s.zone === -1 ? null : (s.zones[s.zone] || null);
     const subtotal = cart.reduce((a, c) => a + c.p.sizes[c.si][1] * c.qty, 0);
     const freeEligible = !!(zoneObj && zoneObj.free && subtotal >= s.freeThreshold);
-    const ship = cart.length === 0 ? 0 : !zoneObj ? null : (freeEligible ? 0 : zoneObj.price);
-    return { zoneObj, subtotal, freeEligible, ship, total: ship == null ? subtotal : subtotal + ship };
+    const shipQuote = !!(zoneObj && zoneObj.from_price && !freeEligible);
+    const ship = cart.length === 0 ? 0 : !zoneObj ? null : (freeEligible ? 0 : shipQuote ? null : zoneObj.price);
+    return { zoneObj, subtotal, freeEligible, shipQuote, ship, total: ship == null ? subtotal : subtotal + ship };
   }
 
   async finalizeOrder() {
@@ -913,7 +932,15 @@ class Component extends DCLogic {
       this.setState({ ckError: 'Completá nombre, teléfono, zona, dirección y forma de pago para finalizar.' });
       return;
     }
-    const { zoneObj, subtotal, ship, total } = this.computeTotals(s.cart);
+    if (phone.replace(/\D/g, '').length < 10) {
+      this.setState({ ckError: 'Revisá el teléfono: necesitamos un número de WhatsApp válido (10 dígitos o más).' });
+      return;
+    }
+    if (address.length < 6) {
+      this.setState({ ckError: 'Completá la dirección con calle, altura y barrio para poder entregarte el pedido.' });
+      return;
+    }
+    const { zoneObj, subtotal, ship, shipQuote, total } = this.computeTotals(s.cart);
     const lines = s.cart.map(c => c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
     const row = {
       id: 'o-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
@@ -928,7 +955,7 @@ class Component extends DCLogic {
       if (error) throw error;
       const waMsg = '¡Hola Homer! Quiero hacer este pedido:\n' + lines.join('\n')
         + '\nZona: ' + zoneObj.name + '\nDirección: ' + address + '\nPago: ' + s.ckPayment
-        + (row.notes ? '\nNotas: ' + row.notes : '') + '\nTotal: ' + fmt(total)
+        + (row.notes ? '\nNotas: ' + row.notes : '') + '\nTotal: ' + fmt(total) + (shipQuote ? ' (sin envío, a cotizar)' : '')
         + '\nNombre: ' + name + '\nTeléfono: ' + phone;
       const waUrl = this.wa(waMsg);
       if (win) win.location.href = waUrl; else window.open(waUrl, '_blank');
@@ -984,7 +1011,7 @@ class Component extends DCLogic {
     const homeProducts = visibleProducts.slice(0, 8);
     const zoneChosen = s.zone !== -1 && !!s.zones[s.zone];
     const z = zoneChosen ? s.zones[s.zone] : { free: false, price: 0, name: 'Elegí tu zona', eta: '—', note: 'Elegí una zona para ver el costo y tiempo de envío.' };
-    const { subtotal, ship, total: cartTotal } = this.computeTotals(s.cart);
+    const { subtotal, ship, shipQuote, total: cartTotal } = this.computeTotals(s.cart);
     const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
     const lines = s.cart.map(c => '• ' + c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
 
@@ -1002,7 +1029,7 @@ class Component extends DCLogic {
       ['¿Cuál es el monto mínimo de compra?', 'No hay mínimo. Superando ' + fmt(s.freeThreshold) + ' el envío es gratis en Córdoba capital; por debajo se cobra según la zona.'],
       ['¿Qué medios de pago aceptan?', 'Mercado Pago, tarjetas de débito y crédito, transferencia bancaria y efectivo al recibir.'],
       ['¿Puedo cambiar el alimento si no le gustó?', 'Sí. Si la bolsa está cerrada, la cambiamos sin cargo dentro de los 10 días. Si está abierta, consultanos y lo vemos juntos.'],
-      ['¿Trabajan con alimentos medicados?', 'Sí, trabajamos líneas veterinarias. Para algunas pedimos la indicación del veterinario.'],
+      ['¿Trabajan con alimentos medicados?', 'Por ahora nuestro catálogo tiene alimento balanceado estándar, sin líneas veterinarias o medicadas. Si necesitás una, escribinos por WhatsApp y te decimos si lo podemos conseguir.'],
     ].map(([q, a], i) => ({ q, a, open: s.faq === i, icon: s.faq === i ? '−' : '+', toggle: () => this.setState(st => ({ faq: st.faq === i ? -1 : i })) }));
 
     const testimonials = s.reviews.filter(r => r.approved).map(r => ({
@@ -1046,7 +1073,7 @@ class Component extends DCLogic {
     return {
       showBar: this.props.showAnnouncement ?? true,
       scheduleStatus: this.statusText(),
-      barItems: [0, 1].flatMap(() => ['Envío gratis desde ' + fmt(s.freeThreshold) + ' en Córdoba capital', 'Pedidos hasta las 18 h llegan mañana', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
+      barItems: [0, 1].flatMap(() => ['Envío gratis desde ' + fmt(s.freeThreshold) + ' en Córdoba capital', 'Pedís hoy, lo tenés mañana en Córdoba capital', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
       brandsLoop: [0, 1].flatMap(() => ['Royal Canin', 'Pro Plan', 'Eukanuba', 'Old Prince', 'Vital Can', 'Excellent', 'Sieger']),
       cartCount, openCart: () => this.setState({ cartOpen: true, mobileMenuOpen: false }), closeCart: () => this.setState({ cartOpen: false }),
       mobileMenuOpen: s.mobileMenuOpen, menuIcon: s.mobileMenuOpen ? '✕' : '☰',
@@ -1063,8 +1090,8 @@ class Component extends DCLogic {
       freeThresholdFmt: fmt(s.freeThreshold),
       pricesUpdatedAtText: s.pricesUpdatedAt ? 'Precios actualizados · ' + new Date(s.pricesUpdatedAt).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }) : 'Precios sujetos a disponibilidad',
       catCards: [
-        { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: 'perro.jpg', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
-        { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: 'gato.jpg', kicker: 'Seco, húmedo y medicados', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
+        { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: '', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
+        { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: '', kicker: 'Alimento seco para gatos', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
       ],
       tabs, visibleProducts, homeProducts, trackRef: this.trackRef,
       prodSearch: s.prodSearch, setProdSearch: e => this.setState({ prodSearch: e.target.value }), noProductsFound, hasProducts,
@@ -1112,7 +1139,8 @@ class Component extends DCLogic {
       showCambios: s.legalOpen === 'cambios', showTerminos: s.legalOpen === 'terminos', showPrivacidad: s.legalOpen === 'privacidad',
       legalTitle: s.legalOpen === 'terminos' ? 'Términos y condiciones' : s.legalOpen === 'privacidad' ? 'Política de privacidad' : 'Cambios y devoluciones',
       openCambios: () => this.openLegal('cambios'), openTerminos: () => this.openLegal('terminos'), openPrivacidad: () => this.openLegal('privacidad'),
-      subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : !zoneChosen ? 'Elegí tu zona' : ship === 0 ? 'Gratis' : fmt(ship),
+      subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : !zoneChosen ? 'Elegí tu zona' : shipQuote ? 'A cotizar' : ship === 0 ? 'Gratis' : fmt(ship),
+      shipQuote, totalLabel: shipQuote ? 'Total (sin envío)' : 'Total',
       totalFmt: fmt(cartTotal),
       freeHint: s.cart.length && zoneChosen && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
       zoneChosen, cartHasItems: s.cart.length > 0,
