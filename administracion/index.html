@@ -366,10 +366,30 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 </div>
 </sc-if>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:4px"><span style="color:#8A8F86">$</span><input class="field" type="number" value="{{ p.price }}" onChange="{{ p.setPrice }}" style-focus="border-color:#E2583A"></input></div></div>
-<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Stock</span><input class="field" type="number" value="{{ p.stock }}" onChange="{{ p.setStock }}" style-focus="border-color:#E2583A"></input></div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span class="label">Descripción</span>
+<textarea class="field" value="{{ p.desc }}" onChange="{{ p.setDesc }}" rows="2" style-focus="border-color:#E2583A"></textarea>
 </div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span class="label">Etiqueta</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ p.tagOpts }}" as="tg" hint-placeholder-count="3">
+<sc-if value="{{ tg.active }}"><button onClick="{{ tg.pick }}" class="pillOn" style="padding:8px 14px;font-size:13px">{{ tg.label }}</button></sc-if>
+<sc-if value="{{ tg.idle }}"><button onClick="{{ tg.pick }}" class="pillOff" style="padding:8px 14px;font-size:13px">{{ tg.label }}</button></sc-if>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span class="label">Precio por tamaño</span>
+<sc-for list="{{ p.sizeRows }}" as="sz" hint-placeholder-count="2">
+<div style="display:grid;grid-template-columns:70px 1fr 1fr;gap:10px;align-items:center">
+<span style="font-size:13px;color:#4A5249">{{ sz.label }}</span>
+<div style="display:flex;align-items:center;gap:4px"><span style="color:#8A8F86">$</span><input class="field" type="number" value="{{ sz.price }}" onChange="{{ sz.setPrice }}" placeholder="Precio" style-focus="border-color:#E2583A"></input></div>
+<div style="display:flex;align-items:center;gap:4px"><span style="color:#8A8F86">$</span><input class="field" type="number" value="{{ sz.oldPrice }}" onChange="{{ sz.setOld }}" placeholder="Precio anterior (opcional)" style-focus="border-color:#E2583A"></input></div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:5px;max-width:200px"><span class="label">Stock</span><input class="field" type="number" value="{{ p.stock }}" onChange="{{ p.setStock }}" style-focus="border-color:#E2583A"></input></div>
 <div><button onClick="{{ p.toggleEdit }}" class="btnDark" style-hover="transform:translateY(-1px)">Guardar y cerrar</button></div>
 </div>
 </div>
@@ -419,6 +439,7 @@ input,textarea{font-family:inherit;outline:none}
 <script type="text/x-dc" data-dc-script>
 const CATS = [['perro','Perros'],['gato','Gatos'],['extra','Snacks y accesorios']];
 const BREED_SIZES = [['chico','Chico'],['mediano','Mediano'],['grande','Grande']];
+const TAGS = [[null,'Ninguna'],['Más vendido','Más vendido'],['Precio Homer','Precio Homer']];
 const SB_URL = 'https://bpgjbcscjotgpjsfwqds.supabase.co';
 const SB_KEY = 'sb_publishable_6wjJbxiiSUXUDSf0aQCAyQ_b45Uu-5Z';
 const IMAGE_BUCKET = 'product-images';
@@ -569,13 +590,15 @@ class Component extends DCLogic {
       this.setState({ uploadingId: null });
     }
   }
-  setProductPrice(id, price) {
+  setSizePrice(id, idx, field, rawValue) {
     const p = this.state.products.find(x => x.id === id);
     if (!p) return;
-    const sizes = (p.sizes || [[p.name, p.price, null]]).map((sz, i) => i === 0 ? [sz[0], price, sz[2]] : sz);
+    const value = field === 'old' ? (rawValue === '' ? null : Number(rawValue) || 0) : (Number(rawValue) || 0);
+    const sizes = p.sizes.map((sz, i) => i !== idx ? sz : field === 'price' ? [sz[0], value, sz[2] ?? null] : [sz[0], sz[1], value]);
+    const price = sizes[0][1];
     const now = Date.now();
-    this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, price, sizes } : x), pricesUpdatedAt: now }));
-    this.sb.from('products').update({ price, sizes }).eq('id', id);
+    this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, sizes, price } : x), pricesUpdatedAt: now }));
+    this.sb.from('products').update({ sizes, price }).eq('id', id).then(({ error }) => this.flashSaved(error));
     this.sb.from('settings').upsert({ key: 'pricesUpdatedAt', value: now });
   }
   removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); this.sb.from('products').delete().eq('id', id); }
@@ -653,11 +676,17 @@ class Component extends DCLogic {
       toggleEdit: () => this.toggleEdit(p.id),
       setBrand: e => this.setProductField(p.id, 'brand', e.target.value),
       setName: e => this.setProductField(p.id, 'name', e.target.value),
-      setPrice: e => this.setProductPrice(p.id, Number(e.target.value) || 0),
+      setDesc: e => this.setProductField(p.id, 'desc', e.target.value),
+      sizeRows: p.sizes.map((sz, i) => ({
+        label: sz[0], price: sz[1], oldPrice: sz[2] ?? '',
+        setPrice: e => this.setSizePrice(p.id, i, 'price', e.target.value),
+        setOld: e => this.setSizePrice(p.id, i, 'old', e.target.value),
+      })),
       setStock: e => this.setProductField(p.id, 'stock', Number(e.target.value) || 0),
       catOpts: pick(CATS, p.cat, cat => this.setProductField(p.id, 'cat', cat)),
       isDog: p.cat === 'perro',
       breedSizeOpts: pick(BREED_SIZES, p.breed_size, breed_size => this.setProductField(p.id, 'breed_size', breed_size)),
+      tagOpts: pick(TAGS, p.tag || null, tag => this.setProductField(p.id, 'tag', tag)),
       toggle: () => this.setProductField(p.id, 'active', !p.active),
       remove: () => this.removeProductConfirm(p.id),
     }));

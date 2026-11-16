@@ -235,7 +235,8 @@ input[type=range]{accent-color:#E2583A}
 <span style="font-size:26px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
 <sc-if value="{{ p.perKgFmt }}"><span style="font-size:12px;color:#8A8F86">{{ p.perKgFmt }}</span></sc-if>
 </div>
-<button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
+<sc-if value="{{ p.inStock }}"><button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button></sc-if>
+<sc-if value="{{ p.outOfStock }}"><span style="border:1.5px solid rgba(28,38,32,.2);color:#8A8F86;border-radius:999px;padding:12px 16px;font-size:13px;font-weight:600;white-space:nowrap">Sin stock</span></sc-if>
 </div>
 </article>
 </sc-for>
@@ -316,7 +317,8 @@ input[type=range]{accent-color:#E2583A}
 <span style="font-size:24px;font-weight:700;letter-spacing:-.03em">{{ p.priceFmt }}</span>
 <sc-if value="{{ p.perKgFmt }}"><span style="font-size:12px;color:#8A8F86">{{ p.perKgFmt }}</span></sc-if>
 </div>
-<button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button>
+<sc-if value="{{ p.inStock }}"><button onClick="{{ p.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:12px 16px;font-size:14px;font-weight:600;transition:background .2s" style-hover="background:#C9452A">Agregar +</button></sc-if>
+<sc-if value="{{ p.outOfStock }}"><span style="border:1.5px solid rgba(28,38,32,.2);color:#8A8F86;border-radius:999px;padding:12px 16px;font-size:13px;font-weight:600;white-space:nowrap">Sin stock</span></sc-if>
 </div>
 </article>
 </sc-for>
@@ -712,7 +714,8 @@ input[type=range]{accent-color:#E2583A}
 </div>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;border-top:1px solid rgba(28,38,32,.14)">
 <span style="font-size:32px;font-weight:700;letter-spacing:-.03em">{{ detail.priceFmt }}</span>
-<button onClick="{{ detail.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:16px 28px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#C9452A">Agregar al carrito</button>
+<sc-if value="{{ detail.inStock }}"><button onClick="{{ detail.add }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:16px 28px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#C9452A">Agregar al carrito</button></sc-if>
+<sc-if value="{{ detail.outOfStock }}"><span style="border:1.5px solid rgba(28,38,32,.2);color:#8A8F86;border-radius:999px;padding:16px 28px;font-weight:600;font-size:16px">Sin stock</span></sc-if>
 </div>
 </div>
 </div>
@@ -830,10 +833,14 @@ class Component extends DCLogic {
   }
   add(p, si, qty) {
     qty = qty || 1;
+    if (p.stock <= 0) return;
     const key = p.id + '-' + si;
     this.setState(s => {
       const cart = s.cart.slice(); const i = cart.findIndex(c => c.key === key);
-      if (i >= 0) cart[i] = { ...cart[i], qty: cart[i].qty + qty }; else cart.push({ key, p, si, qty });
+      const current = i >= 0 ? cart[i].qty : 0;
+      const next = Math.min(p.stock, current + qty);
+      if (next === current) return null;
+      if (i >= 0) cart[i] = { ...cart[i], qty: next }; else cart.push({ key, p, si, qty: next });
       return { cart, toast: p.brand + ' ' + p.name + ' · ' + p.sizes[si][0] };
     });
     clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
@@ -961,6 +968,7 @@ class Component extends DCLogic {
       const si = s.sel[p.id] ?? 0; const [sizeLabel, price, old] = p.sizes[si];
       const kgMatch = String(sizeLabel).replace(',', '.').match(/([\d.]+)\s*kg/i);
       const perKg = kgMatch ? price / parseFloat(kgMatch[1]) : null;
+      const outOfStock = p.stock <= 0;
       return {
         id: p.id, slot: 'prod-' + p.id, image: p.image_url || '', ph: 'Packshot ' + p.brand, brand: p.brand, name: p.name, desc: p.desc, tag: p.tag || null,
         priceFmt: fmt(price), oldFmt: old ? fmt(old) : null, off: old ? '-' + Math.round((1 - price / old) * 100) + '%' : null,
@@ -968,6 +976,7 @@ class Component extends DCLogic {
         sizes: p.sizes.map((z, i) => ({ label: z[0], active: i === si, idle: i !== si, pick: () => this.setState(st => ({ sel: { ...st.sel, [p.id]: i } })) })),
         add: () => this.add(p, si),
         openDetail: () => this.openDetail(p.id),
+        outOfStock, inStock: !outOfStock,
       };
     });
     const hasProducts = productsInCat.length > 0;
@@ -1010,7 +1019,7 @@ class Component extends DCLogic {
     const cartCats = new Set(s.cart.map(c => c.p.cat));
     const cartBreeds = new Set(s.cart.filter(c => c.p.cat === 'perro' && c.p.breed_size).map(c => c.p.breed_size));
     const recommended = s.cart.length === 0 ? [] : s.products
-      .filter(p => !cartProductIds.has(p.id) && cartCats.has(p.cat) && (p.cat !== 'perro' || cartBreeds.size === 0 || cartBreeds.has(p.breed_size)))
+      .filter(p => p.stock > 0 && !cartProductIds.has(p.id) && cartCats.has(p.cat) && (p.cat !== 'perro' || cartBreeds.size === 0 || cartBreeds.has(p.breed_size)))
       .slice(0, 3)
       .map(p => ({
         slot: 'prod-' + p.id, image: p.image_url || '', ph: 'Packshot ' + p.brand, brand: p.brand, name: p.name, priceFmt: fmt(p.sizes[0][1]),
@@ -1027,9 +1036,10 @@ class Component extends DCLogic {
         sizes: detailSrc.sizes.map((z, i) => ({ label: z[0], active: i === dsi, idle: i !== dsi, pick: () => this.setState({ detailSi: i }) })),
         priceFmt: fmt(dPrice * s.detailQty), unitPriceFmt: fmt(dPrice),
         qty: s.detailQty,
-        incQty: () => this.setState(st => ({ detailQty: st.detailQty + 1 })),
+        incQty: () => this.setState(st => ({ detailQty: Math.min(detailSrc.stock, st.detailQty + 1) })),
         decQty: () => this.setState(st => ({ detailQty: Math.max(1, st.detailQty - 1) })),
         add: () => this.addFromDetail(detailSrc),
+        outOfStock: detailSrc.stock <= 0, inStock: detailSrc.stock > 0,
       };
     }
 
