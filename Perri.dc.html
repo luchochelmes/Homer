@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1C2620">
 <link rel="canonical" href="https://homerab.vercel.app/">
-<link rel="icon" type="image/jpeg" href="/logo-homer.jpeg">
+<link rel="icon" type="image/png" href="/logo-homer.png">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Homer">
@@ -34,7 +34,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
@@ -604,7 +604,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Dónde estamos</span>Córdoba capital<br>Venta online con envío a domicilio</div>
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Horarios</span>WhatsApp: {{ scheduleFull }}</div>
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Medios de pago</span>Mercado Pago · Tarjetas<br>Transferencia · Efectivo</div>
-<div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Legal</span><button onClick="{{ openCambios }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Cambios y devoluciones</button><button onClick="{{ openTerminos }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Términos y condiciones</button><button onClick="{{ openPrivacidad }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Privacidad</button></div>
+<div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Legal</span><button onClick="{{ openCambios }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Cambios y devoluciones</button><button onClick="{{ openTerminos }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Términos y condiciones</button><button onClick="{{ openPrivacidad }}" style="background:transparent;border:0;padding:0;text-align:left;font:inherit;color:#F5EFE4;cursor:pointer">Privacidad</button><a href="{{ waArrepentimiento }}" target="_blank" style="color:#F5EFE4">Botón de arrepentimiento</a></div>
 <sc-if value="{{ hasAnySocial }}">
 <div style="display:flex;flex-direction:column"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A;margin-bottom:10px">Seguinos</span>
 <sc-if value="{{ hasInstagram }}"><a href="{{ instagramUrl }}" target="_blank" style="color:#F5EFE4">Instagram</a></sc-if>
@@ -1058,7 +1058,7 @@ class Component extends DCLogic {
 
     const faqs = [
       ['¿Cuál es el monto mínimo de compra?', 'No hay mínimo. Superando ' + fmt(s.freeThreshold) + ' el envío es gratis en Córdoba capital; por debajo se cobra según la zona.'],
-      ['¿Qué medios de pago aceptan?', 'Mercado Pago, tarjetas de débito y crédito, transferencia bancaria y efectivo al recibir.'],
+      ['¿Qué medios de pago aceptan?', 'Mercado Pago, tarjetas de débito y crédito, transferencia bancaria y efectivo al recibir. Las cuotas sin interés dependen del banco o la promoción vigente en Mercado Pago/tarjeta al momento de tu compra; confirmamos el detalle por WhatsApp.'],
       ['¿Puedo cambiar el alimento si no le gustó?', 'Sí. Si la bolsa está cerrada, la cambiamos sin cargo dentro de los 10 días. Si está abierta, consultanos y lo vemos juntos.'],
       ['¿Trabajan con alimentos medicados?', 'Por ahora nuestro catálogo tiene alimento balanceado estándar, sin líneas veterinarias o medicadas. Si necesitás una, escribinos por WhatsApp y te decimos si lo podemos conseguir.'],
     ].map(([q, a], i) => ({ q, a, open: s.faq === i, icon: s.faq === i ? '−' : '+', toggle: () => this.setState(st => ({ faq: st.faq === i ? -1 : i })) }));
@@ -1173,6 +1173,7 @@ class Component extends DCLogic {
       showCambios: s.legalOpen === 'cambios', showTerminos: s.legalOpen === 'terminos', showPrivacidad: s.legalOpen === 'privacidad',
       legalTitle: s.legalOpen === 'terminos' ? 'Términos y condiciones' : s.legalOpen === 'privacidad' ? 'Política de privacidad' : 'Cambios y devoluciones',
       openCambios: () => this.openLegal('cambios'), openTerminos: () => this.openLegal('terminos'), openPrivacidad: () => this.openLegal('privacidad'),
+      waArrepentimiento: this.wa('Hola, quiero ejercer el botón de arrepentimiento sobre una compra que hice en Homer. Mi pedido es:'),
       subtotalFmt: fmt(subtotal), shipFmt: s.cart.length === 0 ? '—' : !zoneChosen ? 'Elegí tu zona' : shipQuote ? 'A cotizar' : ship === 0 ? 'Gratis' : fmt(ship),
       shipQuote, totalLabel: shipQuote ? 'Total (sin envío)' : 'Total',
       totalFmt: fmt(cartTotal),

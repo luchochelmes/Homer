@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Administración — Homer</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/jpeg" href="/logo-homer.jpeg">
+<link rel="icon" type="image/png" href="/logo-homer.png">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -13,7 +13,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
 <script src="./image-slot.js"></script>
 <style>
 html{scroll-behavior:smooth}
@@ -167,7 +167,7 @@ input,textarea{font-family:inherit;outline:none}
 <div style="display:flex;flex-direction:column;gap:8px">
 <span class="eyebrow">Pedidos</span>
 <h1 style="margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:-.035em;font-weight:700">Pedidos</h1>
-<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Cargá los pedidos que te llegan por WhatsApp y seguí su estado.</p>
+<p style="margin:0;font-size:15px;color:#4A5249;max-width:460px">Los pedidos de la web llegan solos acá. Si querés, también podés cargar a mano uno que te hicieron por WhatsApp.</p>
 </div>
 <button onClick="{{ toggleAddOrderForm }}" class="btnPrimary" style-hover="background:#C9452A;transform:translateY(-2px)">{{ addOrderFormLabel }}</button>
 </div>
@@ -407,7 +407,7 @@ input,textarea{font-family:inherit;outline:none}
 </sc-for>
 </div>
 <div style="display:flex;flex-direction:column;gap:5px;max-width:200px"><span class="label">Stock</span><input class="field" type="number" value="{{ p.stock }}" onChange="{{ p.setStock }}" style-focus="border-color:#E2583A"></input></div>
-<div><button onClick="{{ p.toggleEdit }}" class="btnDark" style-hover="transform:translateY(-1px)">Guardar y cerrar</button></div>
+<div><button onClick="{{ p.toggleEdit }}" class="btnDark" style-hover="transform:translateY(-1px)">Cerrar</button></div>
 </div>
 </div>
 </sc-if>
@@ -436,11 +436,11 @@ input,textarea{font-family:inherit;outline:none}
 <sc-for list="{{ zoneRows }}" as="z" hint-placeholder-count="5">
 <div class="card zoneRow" style="padding:24px;display:grid;grid-template-columns:1.3fr .9fr .9fr auto 1.6fr;gap:22px;align-items:center">
 <span style="font-weight:600;font-size:16px">{{ z.name }}</span>
-<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:3px"><span style="color:#8A8F86">$</span><input type="text" inputmode="numeric" value="{{ z.priceFmt }}" onChange="{{ z.setPrice }}" class="field" style="width:84px;padding:7px 9px"></input></div></div>
-<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Entrega</span><input value="{{ z.eta }}" onChange="{{ z.setEta }}" class="field" style="width:104px;padding:7px 9px"></input></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Precio</span><div style="display:flex;align-items:center;gap:3px"><span style="color:#8A8F86">$</span><input type="text" inputmode="numeric" aria-label="Precio de envío para {{ z.name }}" value="{{ z.priceFmt }}" onChange="{{ z.setPrice }}" class="field" style="width:84px;padding:7px 9px"></input></div></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span class="label">Entrega</span><input aria-label="Tiempo de entrega para {{ z.name }}" value="{{ z.eta }}" onChange="{{ z.setEta }}" class="field" style="width:104px;padding:7px 9px"></input></div>
 <sc-if value="{{ z.free }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:600;white-space:nowrap">Envío gratis ✓</button></sc-if>
 <sc-if value="{{ z.notFree }}"><button onClick="{{ z.toggleFree }}" style="border:1.5px solid rgba(28,38,32,.18);background:transparent;color:#5B6359;border-radius:999px;padding:9px 15px;font-size:12px;white-space:nowrap">Sin envío gratis</button></sc-if>
-<input value="{{ z.note }}" onChange="{{ z.setNote }}" class="field" style="font-size:13px;color:#4A5249"></input>
+<input aria-label="Nota para {{ z.name }}" value="{{ z.note }}" onChange="{{ z.setNote }}" class="field" style="font-size:13px;color:#4A5249"></input>
 </div>
 </sc-for>
 </div>
@@ -573,10 +573,29 @@ class Component extends DCLogic {
       .subscribe();
   }
   componentWillUnmount() { this.channel && this.sb.removeChannel(this.channel); }
+  componentDidUpdate(prevProps, prevState) {
+    const prevCount = (prevState.orders || []).filter(o => o.status === 'nuevo').length;
+    const count = this.state.orders.filter(o => o.status === 'nuevo').length;
+    if (count !== prevCount) {
+      document.title = count > 0 ? '(' + count + ') Nuevo pedido · Administración — Homer' : 'Administración — Homer';
+    }
+    if (count > prevCount && this.state.authed) this.playPing();
+  }
+  playPing() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880; g.gain.value = 0.15;
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+      o.start(); o.stop(ctx.currentTime + 0.35);
+    } catch (e) {}
+  }
 
   async seedIfEmpty() {
-    const { count } = await this.sb.from('products').select('*', { count: 'exact', head: true });
-    if (!count) {
+    const { count, error } = await this.sb.from('products').select('*', { count: 'exact', head: true });
+    if (error) return;
+    if (count === 0) {
       await this.sb.from('products').insert(SEED_PRODUCTS);
       await this.sb.from('zones').insert(SEED_ZONES);
       await this.sb.from('orders').insert(SEED_ORDERS);
@@ -638,7 +657,12 @@ class Component extends DCLogic {
   toggleEdit(id) { this.setState(s => ({ editingId: s.editingId === id ? null : id })); }
   setProductField(id, field, value) {
     this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, [field]: value } : p) }));
-    this.sb.from('products').update({ [field]: value }).eq('id', id);
+    this.debouncedWrite('product-' + id + '-' + field, () => this.sb.from('products').update({ [field]: value }).eq('id', id).then(({ error }) => this.flashSaved(error)));
+  }
+  debouncedWrite(key, fn) {
+    this._writeTimers = this._writeTimers || {};
+    clearTimeout(this._writeTimers[key]);
+    this._writeTimers[key] = setTimeout(fn, 500);
   }
   async uploadProductImage(id, file) {
     if (!file) return;
@@ -667,8 +691,10 @@ class Component extends DCLogic {
     const price = sizes[0][1];
     const now = Date.now();
     this.setState(s => ({ products: s.products.map(x => x.id === id ? { ...x, sizes, price } : x), pricesUpdatedAt: now }));
-    this.sb.from('products').update({ sizes, price }).eq('id', id).then(({ error }) => this.flashSaved(error));
-    this.sb.from('settings').upsert({ key: 'pricesUpdatedAt', value: now });
+    this.debouncedWrite('size-' + id, () => {
+      this.sb.from('products').update({ sizes, price }).eq('id', id).then(({ error }) => this.flashSaved(error));
+      this.sb.from('settings').upsert({ key: 'pricesUpdatedAt', value: now });
+    });
   }
   removeProduct(id) { this.setState(s => ({ products: s.products.filter(p => p.id !== id) })); this.sb.from('products').delete().eq('id', id); }
   removeProductConfirm(id) { if (window.confirm('Esto borra el producto para siempre y no se puede deshacer. ¿Continuar?')) this.removeProduct(id); }
@@ -870,7 +896,7 @@ class Component extends DCLogic {
       saveToast: s.saveToast,
       zoneRows: s.zones.map(z => ({
         name: z.name, price: z.price, priceFmt: fmtNum(z.price), eta: z.eta, note: z.note, free: z.free, notFree: !z.free,
-        setPrice: e => this.setZone(z.id, { price: parseNum(e.target.value) }),
+        setPrice: e => { const price = parseNum(e.target.value); if (price > 0) this.setZone(z.id, { price }); },
         setEta: e => this.setZone(z.id, { eta: e.target.value }),
         setNote: e => this.setZone(z.id, { note: e.target.value }),
         toggleFree: () => this.setZone(z.id, { free: !z.free }),
