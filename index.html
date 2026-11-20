@@ -74,7 +74,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="min-height:100vh;overflow-x:clip">
 
 <sc-if value="{{ showBar }}" hint-placeholder-val="{{ true }}">
-<div style="background:#1C2620;color:#F5EFE4;overflow:hidden;font-size:12px;letter-spacing:.08em;text-transform:uppercase">
+<div aria-hidden="true" style="background:#1C2620;color:#F5EFE4;overflow:hidden;font-size:12px;letter-spacing:.08em;text-transform:uppercase">
 <div style="display:flex;width:max-content;animation:marquee 38s linear infinite;padding:10px 0">
 <sc-for list="{{ barItems }}" as="b" hint-placeholder-count="8">
 <span style="display:flex;align-items:center;gap:28px;padding-right:28px;white-space:nowrap">{{ b }}<span style="width:6px;height:6px;border-radius:50%;background:#E2583A"></span></span>
@@ -115,16 +115,16 @@ input[type=range]{accent-color:#E2583A}
 
 <section id="inicio" style="max-width:1320px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(18px,4vw,48px) clamp(56px,7vw,100px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,5vw,72px);align-items:center">
 <div style="display:flex;flex-direction:column;gap:28px">
-<div data-reveal="0" style="display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#24513C"><span style="width:8px;height:8px;border-radius:50%;background:#24513C;box-shadow:0 0 0 4px rgba(36,81,60,.15)"></span>{{ scheduleStatus }}</div>
-<h1 data-reveal="80" style="margin:0;font-size:clamp(48px,7.2vw,104px);line-height:.92;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Comida rica para los que <span style="color:#E2583A">te esperan en la puerta.</span></h1>
-<p data-reveal="160" style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;max-width:520px;color:#4A5249;text-wrap:pretty">Alimento balanceado de las mejores marcas para perros y gatos. Somos 100% online en Córdoba capital: pedís hoy y te lo llevamos mañana, hasta tu casa.</p>
-<div data-reveal="240" style="display:flex;gap:12px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#24513C"><span style="width:8px;height:8px;border-radius:50%;background:#24513C;box-shadow:0 0 0 4px rgba(36,81,60,.15)"></span>{{ scheduleStatus }}</div>
+<h1 style="margin:0;font-size:clamp(48px,7.2vw,104px);line-height:.92;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Comida rica para los que <span style="color:#E2583A">te esperan en la puerta.</span></h1>
+<p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;max-width:520px;color:#4A5249;text-wrap:pretty">Alimento balanceado de las mejores marcas para perros y gatos. Somos 100% online en Córdoba capital: pedís hoy y te lo llevamos mañana, hasta tu casa.</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
 <a href="#productos" style="display:inline-flex;align-items:center;gap:10px;background:#E2583A;color:#FBF8F2;padding:17px 26px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#C9452A;color:#FBF8F2;transform:translateY(-2px)">Ver productos y precios <span>→</span></a>
 <a href="{{ waLink }}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;border:1.5px solid #1C2620;padding:16px 24px;border-radius:999px;font-weight:600;font-size:16px;white-space:nowrap;transition:background .2s,color .2s" style-hover="background:#1C2620;color:#F5EFE4">Pedir por WhatsApp</a>
 </div>
-<div data-reveal="320" class="heroFeatures" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:18px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249"><strong style="color:#1C2620">Envío en 24 h</strong>·<strong style="color:#1C2620">Pagás como quieras</strong></div>
+<div class="heroFeatures" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:18px;border-top:1px solid rgba(28,38,32,.14);font-size:14px;color:#4A5249"><strong style="color:#1C2620">Envío en 24 h</strong>·<strong style="color:#1C2620">Pagás como quieras</strong></div>
 </div>
-<div data-reveal="150" class="heroVisual" style="position:relative;min-height:560px">
+<div class="heroVisual" style="position:relative;min-height:560px">
 <div style="position:absolute;top:0;right:0;width:82%;height:88%;border-radius:220px 220px 28px 28px;overflow:hidden;background:#E8DFCE">
 <image-slot id="hero-perro" shape="rect" src="perrocomiendo.jpg" placeholder="Foto principal: perro feliz con su bowl"></image-slot>
 </div>
@@ -140,7 +140,7 @@ input[type=range]{accent-color:#E2583A}
 
 <section id="marcas" style="border-top:1px solid rgba(28,38,32,.14);border-bottom:1px solid rgba(28,38,32,.14);background:#FBF8F2;overflow:hidden">
 <div style="max-width:1320px;margin:0 auto;padding:22px clamp(18px,4vw,48px) 0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5B6359">Trabajamos las mejores marcas</div>
-<div style="display:flex;width:max-content;animation:marquee 42s linear infinite;padding:14px 0 26px">
+<div aria-hidden="true" style="display:flex;width:max-content;animation:marquee 42s linear infinite;padding:14px 0 26px">
 <sc-for list="{{ brandsLoop }}" as="br" hint-placeholder-count="12">
 <span style="display:flex;align-items:center;gap:44px;padding-right:44px;white-space:nowrap;font-size:clamp(34px,4.4vw,60px);letter-spacing:-.03em;font-weight:600;color:#1C2620">{{ br }}<span style="color:#E2583A;font-size:.7em">✳</span></span>
 </sc-for>
@@ -192,8 +192,8 @@ input[type=range]{accent-color:#E2583A}
 <sc-if value="{{ showBreedSizes }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
 <sc-for list="{{ breedSizeTabs }}" as="bt" hint-placeholder-count="4">
-<sc-if value="{{ bt.active }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px;font-weight:600">{{ bt.label }}</button></sc-if>
-<sc-if value="{{ bt.idle }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px" style-hover="border-color:#24513C">{{ bt.label }}</button></sc-if>
+<sc-if value="{{ bt.active }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px;font-weight:600">{{ bt.label }}</button></sc-if>
+<sc-if value="{{ bt.idle }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px" style-hover="border-color:#24513C">{{ bt.label }}</button></sc-if>
 </sc-for>
 </div>
 </sc-if>
@@ -225,8 +225,8 @@ input[type=range]{accent-color:#E2583A}
 </div>
 <div style="padding:0 6px;display:flex;gap:6px;flex-wrap:wrap">
 <sc-for list="{{ p.sizes }}" as="s" hint-placeholder-count="2">
-<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
-<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;min-height:44px;display:inline-flex;align-items:center;font-size:13px">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;min-height:44px;display:inline-flex;align-items:center;font-size:13px">{{ s.label }}</button></sc-if>
 </sc-for>
 </div>
 <div style="padding:0 6px;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
@@ -275,8 +275,8 @@ input[type=range]{accent-color:#E2583A}
 <sc-if value="{{ showBreedSizes }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
 <sc-for list="{{ breedSizeTabs }}" as="bt" hint-placeholder-count="4">
-<sc-if value="{{ bt.active }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px;font-weight:600">{{ bt.label }}</button></sc-if>
-<sc-if value="{{ bt.idle }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;white-space:nowrap;font-size:13px" style-hover="border-color:#24513C">{{ bt.label }}</button></sc-if>
+<sc-if value="{{ bt.active }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid #24513C;background:#E1EBE3;color:#24513C;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px;font-weight:600">{{ bt.label }}</button></sc-if>
+<sc-if value="{{ bt.idle }}"><button onClick="{{ bt.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px" style-hover="border-color:#24513C">{{ bt.label }}</button></sc-if>
 </sc-for>
 </div>
 </sc-if>
@@ -307,8 +307,8 @@ input[type=range]{accent-color:#E2583A}
 </div>
 <div style="padding:0 6px;display:flex;gap:6px;flex-wrap:wrap">
 <sc-for list="{{ p.sizes }}" as="s" hint-placeholder-count="2">
-<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
-<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;font-size:13px">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.active }}"><button onClick="{{ s.pick }}" style="border:1.5px solid #1C2620;background:#1C2620;color:#F5EFE4;border-radius:10px;padding:7px 12px;min-height:44px;display:inline-flex;align-items:center;font-size:13px">{{ s.label }}</button></sc-if>
+<sc-if value="{{ s.idle }}"><button onClick="{{ s.pick }}" style="border:1.5px solid rgba(28,38,32,.2);background:transparent;color:#1C2620;border-radius:10px;padding:7px 12px;min-height:44px;display:inline-flex;align-items:center;font-size:13px">{{ s.label }}</button></sc-if>
 </sc-for>
 </div>
 <div style="padding:0 6px;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
@@ -461,6 +461,7 @@ input[type=range]{accent-color:#E2583A}
 <div style="display:flex;transition:transform .9s cubic-bezier(.7,0,.2,1);transform:translateX({{ tOffset }})">
 <sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="1">
 <figure style="flex:0 0 100%;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,4vw,64px);align-items:center">
+<span style="grid-column:span 2;color:#F2C45A;font-size:18px;letter-spacing:3px">{{ q.stars }}</span>
 <blockquote style="margin:0;font-weight:700;font-size:clamp(28px,3.6vw,48px);line-height:1.1;letter-spacing:-.025em;grid-column:span 2;text-wrap:pretty">“{{ q.text }}”</blockquote>
 <figcaption style="display:flex;align-items:center;gap:16px">
 <sc-if value="{{ q.hasPhoto }}"><div style="width:84px;height:84px;flex:none;border-radius:50%;overflow:hidden;background:#E8DFCE"><image-slot id="{{ q.slot }}" shape="circle" placeholder="foto"></image-slot></div></sc-if>
@@ -476,7 +477,7 @@ input[type=range]{accent-color:#E2583A}
 <div data-reveal="0" style="margin-bottom:28px">
 <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A8431F">Lo que dicen los clientes</span>
 </div>
-<div data-reveal="80" style="display:flex;flex-direction:column;gap:20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)">
+<div data-reveal="80" aria-hidden="true" style="display:flex;flex-direction:column;gap:20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)">
 <div style="display:flex;width:max-content;animation:marquee 46s linear infinite">
 <sc-for list="{{ fakeReviewsRow1 }}" as="r" hint-placeholder-count="8">
 <div style="flex:0 0 320px;margin-right:18px;background:#FBF8F2;border:1px solid rgba(28,38,32,.12);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 40px -32px rgba(28,38,32,.35)">
@@ -513,7 +514,14 @@ input[type=range]{accent-color:#E2583A}
 <input value="{{ revPet }}" onChange="{{ setRevPet }}" placeholder="Tu mascota (ej: Toto, golden)" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4"></input>
 </div>
 <textarea value="{{ revText }}" onChange="{{ setRevText }}" placeholder="Contanos cómo te fue con tu pedido…" rows="3" style="border:1.5px solid rgba(28,38,32,.2);border-radius:12px;padding:13px 16px;font-size:15px;background:#F5EFE4;resize:vertical;font-family:inherit"></textarea>
-<div><button onClick="{{ submitReview }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:15px 24px;font-weight:600;font-size:15px" style-hover="background:#C9452A;color:#FBF8F2">Enviar reseña</button></div>
+<div style="display:flex;align-items:center;gap:4px">
+<sc-for list="{{ revStars }}" as="rs" hint-placeholder-count="5">
+<sc-if value="{{ rs.filled }}"><button onClick="{{ rs.pick }}" aria-label="Puntaje {{ rs.n }}" style="border:0;background:transparent;padding:2px;font-size:24px;line-height:1;cursor:pointer;color:#F2C45A">★</button></sc-if>
+<sc-if value="{{ rs.idle }}"><button onClick="{{ rs.pick }}" aria-label="Puntaje {{ rs.n }}" style="border:0;background:transparent;padding:2px;font-size:24px;line-height:1;cursor:pointer;color:#8A8F86">☆</button></sc-if>
+</sc-for>
+</div>
+<sc-if value="{{ revError }}"><div style="font-size:13px;color:#E2583A">{{ revError }}</div></sc-if>
+<div><button onClick="{{ submitReview }}" style="border:0;background:#E2583A;color:#FBF8F2;border-radius:999px;padding:15px 24px;font-weight:600;font-size:15px" style-hover="background:#C9452A;color:#FBF8F2">{{ submitLabel }}</button></div>
 </div>
 </section>
 
@@ -752,7 +760,7 @@ const FAKE_REVIEWS = [
 class Component extends DCLogic {
   state = {
     cat: 'todos', sel: {}, cart: [], cartOpen: false, toast: null, zone: -1, pet: 'perro', kg: 14, act: 1, tIdx: 0, faq: 0,
-    products: [], zones: [], freeThreshold: 60000, pricesUpdatedAt: null, reviews: [], revName: '', revPet: '', revText: '',
+    products: [], zones: [], freeThreshold: 60000, pricesUpdatedAt: null, reviews: [], revName: '', revPet: '', revText: '', revRating: 5, revSaving: false, revError: null,
     ckName: '', ckPhone: '', ckAddress: '', ckPayment: '', ckNotes: '', ckError: null, ckSaving: false,
     mobileMenuOpen: false, nearFooter: false,
     sizeFilter: 'todos', prodSearch: '', detailProductId: null, detailSi: 0, detailQty: 1,
@@ -801,7 +809,7 @@ class Component extends DCLogic {
   async loadZones() { const { data } = await this.sb.from('zones').select('*').order('sort_order'); this.setState({ zones: data || [] }); }
   async loadReviews() {
     const { data } = await this.sb.from('reviews').select('*').order('created_at', { ascending: false });
-    this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
+    this.setState({ reviews: (data || []).map(r => ({ id: r.id, name: r.name, pet: r.pet, text: r.text, rating: r.rating || 5, approved: r.approved, createdAt: new Date(r.created_at).getTime() })) });
   }
   async loadSettings() {
     const { data } = await this.sb.from('settings').select('*');
@@ -811,11 +819,19 @@ class Component extends DCLogic {
 
   async submitReview() {
     const name = this.state.revName.trim(), text = this.state.revText.trim();
-    if (!name || !text) return;
-    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.revPet.trim() || 'Cliente Homer', text, approved: false };
-    this.setState(s => ({ reviews: [{ ...review, createdAt: Date.now() }, ...s.reviews], revName: '', revPet: '', revText: '', toast: '¡Gracias! Tu reseña se publicará pronto.' }));
+    if (name.length < 2 || text.length < 10) {
+      this.setState({ revError: 'Contanos tu nombre y al menos una oración sobre tu experiencia (10 caracteres o más).' });
+      return;
+    }
+    const review = { id: Date.now() + '-' + Math.random().toString(36).slice(2), name, pet: this.state.revPet.trim() || 'Cliente Homer', text, rating: this.state.revRating, approved: false };
+    this.setState({ revSaving: true, revError: null });
+    const { error } = await this.sb.from('reviews').insert(review);
+    if (error) {
+      this.setState({ revSaving: false, revError: 'No pudimos guardar tu reseña. Probá de nuevo en un momento.' });
+      return;
+    }
+    this.setState(s => ({ reviews: [{ ...review, createdAt: Date.now() }, ...s.reviews], revName: '', revPet: '', revText: '', revRating: 5, revSaving: false, toast: '¡Gracias! Tu reseña se publicará pronto.' }));
     clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2600);
-    await this.sb.from('reviews').insert(review);
   }
   scan() {
     document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
@@ -978,11 +994,26 @@ class Component extends DCLogic {
     const breedSizeOrder = { chico: 0, mediano: 1, grande: 2 };
     const breedSizeTabs = pick([['todos', 'Todos los tamaños'], ['chico', 'Chico'], ['mediano', 'Mediano'], ['grande', 'Grande']], s.sizeFilter, sizeFilter => this.setState({ sizeFilter }));
     const norm = str => (str || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    const searchTerm = norm(s.prodSearch.trim());
+    const searchTokens = norm(s.prodSearch.trim()).split(/\s+/).filter(Boolean);
+    const productHaystack = p => {
+      const parts = [p.brand, p.name, p.desc, p.cat, p.breed_size, ...p.sizes.map(z => z[0])];
+      if (p.cat === 'gato') parts.push('gato cat felino');
+      if (p.cat === 'perro') parts.push('perro dog canino');
+      const blob = norm(parts.join(' '));
+      if (/puppy|cachorro/.test(blob)) parts.push('cachorro puppy cria');
+      if (/kitten|gatito/.test(blob)) parts.push('gatito kitten cria');
+      if (/senior|ageing|mayor/.test(blob)) parts.push('senior mayor');
+      if (/\badult\b|adulto/.test(blob)) parts.push('adulto adult');
+      return norm(parts.join(' '));
+    };
     const productsInCat = s.products
       .filter(p => s.cat === 'todos' || p.cat === s.cat)
       .filter(p => !showBreedSizes || s.sizeFilter === 'todos' || p.breed_size === s.sizeFilter)
-      .filter(p => !searchTerm || norm(p.name).includes(searchTerm) || norm(p.brand).includes(searchTerm) || norm(p.desc).includes(searchTerm))
+      .filter(p => {
+        if (!searchTokens.length) return true;
+        const hay = productHaystack(p);
+        return searchTokens.every(t => hay.includes(t));
+      })
       .slice()
       .sort((a, b) => {
         if (a.cat === 'perro' && b.cat === 'perro') {
@@ -1007,7 +1038,7 @@ class Component extends DCLogic {
       };
     });
     const hasProducts = productsInCat.length > 0;
-    const noProductsFound = !hasProducts && !!searchTerm;
+    const noProductsFound = !hasProducts && searchTokens.length > 0;
     const homeProducts = visibleProducts.slice(0, 8);
     const zoneChosen = s.zone !== -1 && !!s.zones[s.zone];
     const z = zoneChosen ? s.zones[s.zone] : { free: false, price: 0, name: 'Elegí tu zona', eta: '—', note: 'Elegí una zona para ver el costo y tiempo de envío.' };
@@ -1021,7 +1052,7 @@ class Component extends DCLogic {
     const grams = 70 * Math.pow(kg, 0.75) * mult / 3.7;
     const monthly = grams * 30 / 1000;
     const bags = s.pet === 'perro' ? [3, 7.5, 15, 20] : [1, 1.5, 3, 7.5];
-    const bag = bags.find(b => b >= monthly) || bags[bags.length - 1];
+    const bag = bags.find(b => b >= monthly * 0.95) || bags[bags.length - 1];
     const nb = Math.ceil(monthly / bag);
     const ppk = s.pet === 'perro' ? 5600 : 9800;
 
@@ -1034,6 +1065,7 @@ class Component extends DCLogic {
 
     const testimonials = s.reviews.filter(r => r.approved).map(r => ({
       text: r.text, name: r.name, pet: r.pet, slot: null, hasPhoto: false, noPhoto: true, initial: (r.name[0] || '?').toUpperCase(),
+      stars: '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5)),
     }));
     this.totalTestimonials = testimonials.length || 1;
     const tIdx = testimonials.length ? s.tIdx % testimonials.length : 0;
@@ -1074,13 +1106,13 @@ class Component extends DCLogic {
       showBar: this.props.showAnnouncement ?? true,
       scheduleStatus: this.statusText(),
       barItems: [0, 1].flatMap(() => ['Envío gratis desde ' + fmt(s.freeThreshold) + ' en Córdoba capital', 'Pedís hoy, lo tenés mañana en Córdoba capital', 'Hasta 3 cuotas sin interés', 'Atención por WhatsApp']),
-      brandsLoop: [0, 1].flatMap(() => ['Royal Canin', 'Pro Plan', 'Eukanuba', 'Old Prince', 'Vital Can', 'Excellent', 'Sieger']),
+      brandsLoop: [0, 1].flatMap(() => [...new Set(s.products.map(p => p.brand))].sort()),
       cartCount, openCart: () => this.setState({ cartOpen: true, mobileMenuOpen: false }), closeCart: () => this.setState({ cartOpen: false }),
       mobileMenuOpen: s.mobileMenuOpen, menuIcon: s.mobileMenuOpen ? '✕' : '☰',
       toggleMobileMenu: () => this.toggleMobileMenu(), closeMobileMenu: () => this.closeMobileMenu(),
       showFloatingWa: !s.nearFooter && !s.cartOpen,
       waLink: this.wa('¡Hola Homer! Quiero hacer un pedido.'),
-      waCalc: this.wa('¡Hola Homer! Tengo un(a) ' + s.pet + ' de ' + kg + ' kg y quiero pedir alimento.'),
+      waCalc: this.wa('¡Hola Homer! Tengo un ' + s.pet + ' de ' + kg + ' kg y quiero pedir alimento.'),
       hasInstagram: !!CONFIG.social.instagram, instagramUrl: CONFIG.social.instagram || '#',
       hasTiktok: !!CONFIG.social.tiktok, tiktokUrl: CONFIG.social.tiktok || '#',
       hasFacebook: !!CONFIG.social.facebook, facebookUrl: CONFIG.social.facebook || '#',
@@ -1123,10 +1155,12 @@ class Component extends DCLogic {
       dots: testimonials.map((_, i) => ({ active: tIdx === i, idle: tIdx !== i, pick: () => this.setState({ tIdx: i }) })),
       testimonials, hasTestimonials: testimonials.length > 0, noTestimonials: testimonials.length === 0, tOffset: (-100 * tIdx) + '%',
       fakeReviewsRow1, fakeReviewsRow2,
-      revName: s.revName, revPet: s.revPet, revText: s.revText,
-      setRevName: e => this.setState({ revName: e.target.value }),
+      revName: s.revName, revPet: s.revPet, revText: s.revText, revError: s.revError,
+      submitLabel: s.revSaving ? 'Enviando…' : 'Enviar reseña',
+      setRevName: e => this.setState({ revName: e.target.value, revError: null }),
       setRevPet: e => this.setState({ revPet: e.target.value }),
-      setRevText: e => this.setState({ revText: e.target.value }),
+      setRevText: e => this.setState({ revText: e.target.value, revError: null }),
+      revStars: [1, 2, 3, 4, 5].map(n => ({ n, filled: n <= s.revRating, idle: n > s.revRating, pick: () => this.setState({ revRating: n }) })),
       submitReview: () => this.submitReview(),
       faqs,
       toast: s.toast, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
