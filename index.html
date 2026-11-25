@@ -1122,8 +1122,8 @@ class Component extends DCLogic {
       freeThresholdFmt: fmt(s.freeThreshold),
       pricesUpdatedAtText: s.pricesUpdatedAt ? 'Precios actualizados · ' + new Date(s.pricesUpdatedAt).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }) : 'Precios sujetos a disponibilidad',
       catCards: [
-        { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: '', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
-        { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: '', kicker: 'Alimento seco para gatos', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
+        { slot: 'cat-perros', ph: 'Foto: perro (vertical)', src: 'perro.jpg', kicker: 'Cachorros, adultos y senior', title: 'Perros', delay: 0, go: () => this.goProducts('perro') },
+        { slot: 'cat-gatos', ph: 'Foto: gato (vertical)', src: 'gato.jpg', kicker: 'Alimento seco para gatos', title: 'Gatos', delay: 120, go: () => this.goProducts('gato') },
       ],
       tabs, visibleProducts, homeProducts, trackRef: this.trackRef,
       prodSearch: s.prodSearch, setProdSearch: e => this.setState({ prodSearch: e.target.value }), noProductsFound, hasProducts,
