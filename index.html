@@ -393,7 +393,7 @@ input[type=range]{accent-color:#E2583A}
 </div>
 </div>
 <div data-reveal="120" style="position:sticky;top:110px;background:#24513C;color:#F5EFE4;border-radius:28px;padding:clamp(28px,3.4vw,44px);display:flex;flex-direction:column;gap:28px;overflow:hidden">
-<span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A">Tu envío a {{ zone.name }}</span>
+<span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#F2C45A">{{ zoneHeading }}</span>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
 <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;color:#C6D6CB">Costo</span><span style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-.04em;line-height:1">{{ zone.priceFmt }}</span></div>
 <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;color:#C6D6CB">Llega en</span><span style="font-size:clamp(36px,4vw,54px);font-weight:700;letter-spacing:-.04em;line-height:1">{{ zone.eta }}</span></div>
@@ -1042,6 +1042,7 @@ class Component extends DCLogic {
     const homeProducts = visibleProducts.slice(0, 8);
     const zoneChosen = s.zone !== -1 && !!s.zones[s.zone];
     const z = zoneChosen ? s.zones[s.zone] : { free: false, price: 0, name: 'Elegí tu zona', eta: '—', note: 'Elegí una zona para ver el costo y tiempo de envío.' };
+    const zoneHeading = zoneChosen ? 'Tu envío a ' + z.name : 'Elegí tu zona';
     const { subtotal, ship, shipQuote, total: cartTotal } = this.computeTotals(s.cart);
     const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
     const lines = s.cart.map(c => '• ' + c.qty + 'x ' + c.p.brand + ' ' + c.p.name + ' ' + c.p.sizes[c.si][0]);
@@ -1178,7 +1179,7 @@ class Component extends DCLogic {
       shipQuote, totalLabel: shipQuote ? 'Total (sin envío)' : 'Total',
       totalFmt: fmt(cartTotal),
       freeHint: s.cart.length && zoneChosen && z.free && subtotal < s.freeThreshold ? 'Te faltan ' + fmt(s.freeThreshold - subtotal) + ' para el envío gratis.' : null,
-      zoneChosen, cartHasItems: s.cart.length > 0,
+      zoneChosen, zoneHeading, cartHasItems: s.cart.length > 0,
       ckName: s.ckName, ckPhone: s.ckPhone, ckAddress: s.ckAddress, ckNotes: s.ckNotes, ckError: s.ckError, ckSaving: s.ckSaving,
       setCkName: e => this.setState({ ckName: e.target.value }),
       setCkPhone: e => this.setState({ ckPhone: e.target.value }),
