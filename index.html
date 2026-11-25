@@ -197,6 +197,12 @@ input[type=range]{accent-color:#E2583A}
 </sc-for>
 </div>
 </sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+<sc-for list="{{ brandTabs }}" as="bd" hint-placeholder-count="6">
+<sc-if value="{{ bd.active }}"><button onClick="{{ bd.pick }}" style="border:1.5px solid #A8431F;background:#FBE6DC;color:#A8431F;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px;font-weight:600">{{ bd.label }}</button></sc-if>
+<sc-if value="{{ bd.idle }}"><button onClick="{{ bd.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px" style-hover="border-color:#A8431F">{{ bd.label }}</button></sc-if>
+</sc-for>
+</div>
 </div>
 <sc-if value="{{ noProductsFound }}">
 <div style="max-width:1320px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 64px;text-align:center;color:#4A5249">
@@ -280,6 +286,12 @@ input[type=range]{accent-color:#E2583A}
 </sc-for>
 </div>
 </sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+<sc-for list="{{ brandTabs }}" as="bd" hint-placeholder-count="6">
+<sc-if value="{{ bd.active }}"><button onClick="{{ bd.pick }}" style="border:1.5px solid #A8431F;background:#FBE6DC;color:#A8431F;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px;font-weight:600">{{ bd.label }}</button></sc-if>
+<sc-if value="{{ bd.idle }}"><button onClick="{{ bd.pick }}" style="border:1.5px solid rgba(28,38,32,.16);background:transparent;color:#4A5249;border-radius:999px;padding:8px 14px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap;font-size:13px" style-hover="border-color:#A8431F">{{ bd.label }}</button></sc-if>
+</sc-for>
+</div>
 <sc-if value="{{ noProductsFound }}">
 <div style="padding:40px 0;text-align:center;color:#4A5249">
 <span style="font-weight:700;font-size:20px;color:#1C2620">{{ emptyTitle }}</span><br>{{ emptySubtitle }}
@@ -763,7 +775,7 @@ class Component extends DCLogic {
     products: [], zones: [], freeThreshold: 60000, pricesUpdatedAt: null, reviews: [], revName: '', revPet: '', revText: '', revRating: 5, revSaving: false, revError: null,
     ckName: '', ckPhone: '', ckAddress: '', ckPayment: '', ckNotes: '', ckError: null, ckSaving: false,
     mobileMenuOpen: false, nearFooter: false,
-    sizeFilter: 'todos', prodSearch: '', detailProductId: null, detailSi: 0, detailQty: 1,
+    sizeFilter: 'todos', brandFilter: 'todos', prodSearch: '', detailProductId: null, detailSi: 0, detailQty: 1,
     catalogOpen: false,
     legalOpen: null,
   };
@@ -1006,9 +1018,12 @@ class Component extends DCLogic {
       if (/\badult\b|adulto/.test(blob)) parts.push('adulto adult');
       return norm(parts.join(' '));
     };
+    const brandList = [...new Set(s.products.map(p => p.brand))].sort();
+    const brandTabs = pick([['todos', 'Todas las marcas'], ...brandList.map(b => [b, b])], s.brandFilter, brandFilter => this.setState({ brandFilter }));
     const productsInCat = s.products
       .filter(p => s.cat === 'todos' || p.cat === s.cat)
       .filter(p => !showBreedSizes || s.sizeFilter === 'todos' || p.breed_size === s.sizeFilter)
+      .filter(p => s.brandFilter === 'todos' || p.brand === s.brandFilter)
       .filter(p => {
         if (!searchTokens.length) return true;
         const hay = productHaystack(p);
@@ -1169,7 +1184,7 @@ class Component extends DCLogic {
       toast: s.toast, cartOpen: s.cartOpen, cartEmpty: s.cart.length === 0,
       cartItems: s.cart.map(c => ({ brand: c.p.brand, name: c.p.name, size: c.p.sizes[c.si][0], qty: c.qty, totalFmt: fmt(c.p.sizes[c.si][1] * c.qty), inc: () => this.qty(c.key, 1), dec: () => this.qty(c.key, -1) })),
       recommended, hasRecommended: recommended.length > 0,
-      showBreedSizes, breedSizeTabs,
+      showBreedSizes, breedSizeTabs, brandTabs,
       hasDetail: !!detail, detail, closeDetail: () => this.closeDetail(),
       catalogOpen: s.catalogOpen, openCatalog: () => this.openCatalog(), closeCatalog: () => this.closeCatalog(),
       hasLegal: !!s.legalOpen, closeLegal: () => this.closeLegal(),
